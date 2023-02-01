@@ -9,9 +9,8 @@ const axiosHeaders = {
   }
 
   const createOptions = {
-    baseURL: 'http://localhost:8000/',
-    headers: axiosHeaders
-    
+    baseURL: 'https://ballpensup.com/',
+    headers: axiosHeaders  
   }
   
   const apiService = axios.create(createOptions);
@@ -28,7 +27,6 @@ const axiosHeaders = {
   //     console.log('config', config)
   //     return config
   //    }
-   
 
   // }
   // apiService.interceptors.request.use(addAuthorization)

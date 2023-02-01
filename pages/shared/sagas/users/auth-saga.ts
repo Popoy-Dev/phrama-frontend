@@ -34,22 +34,8 @@ function* fetchSignup(action: any) {
     }
 }
 
-function* fetchSignout(action: any) {
-    console.log('action payload', action.payload)
-    try {
-
-        const { data } = yield call(authService.signout, action.payload);
-        yield put(verifySignoutSuccess(data));
-
-        console.log('yield')
-
-        yield put(verifyLoginSuccess([]));
-    } catch (e) {
-        console.log('error')
-        yield put(verifyLoginSuccess([]));
-
-        yield put(verifySignoutFailed(e));
-    }
+function* fetchSignout() {
+    yield put(verifyLoginSuccess([]));
 }
 
 export default function* root() {

@@ -174,19 +174,20 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       Authorization: token ? `Bearer ${token}` : '',
     }
     const createOptions = {
-      baseURL: 'http://localhost:8000/',
+      baseURL: 'https://ballpensup.com/',
       headers: axiosHeaders,
     }
     const apiService = axios.create(createOptions)
     apiService
       .post(`/api/logout`)
       .then((res) => {
+        dispatch(verifySignout())
         localStorage.removeItem('token')
         router.push('/')
       })
       .catch((err) => console.log('err', err))
   }
-
+  console.log('token in logout', localStorage.getItem('token'))
   return (
     <Flex
       ml={{ base: 0, md: 60 }}

@@ -24,7 +24,7 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 const Signup = () => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const { data } = useSelector((state: any) => state.auth)
+  const { login } = useSelector((state: any) => state.auth)
   const { verifySignup }: any = authSlice.actions
   const [showPassword, setShowPassword] = useState(false)
   const formik = useFormik({
@@ -40,8 +40,16 @@ const Signup = () => {
     },
   })
   useEffect(() => {
-    if(data?.data) router.push('/dashboard')
- }, [data, router])
+    if(login?.success === true) {
+      console.log('data?.data', login?.data)
+      localStorage.setItem('token', login?.data?.token);
+      router.push('/dashboard')
+
+    } 
+    
+ }, [login, router])
+ console.log('data', login)
+
   return (
     <Flex
       minH={'100vh'}
