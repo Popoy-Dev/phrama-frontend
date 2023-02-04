@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, use, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   IconButton,
@@ -38,8 +38,8 @@ import { IconType } from 'react-icons'
 import Logo from './../public/fayne-pharmacy-logo.ico'
 import { useRouter } from 'next/router'
 import { ReactText } from 'react'
-import authSlice from './shared/slices/auth-slice'
-import axios from 'axios'
+import authSlice from './../shared/slices/auth-slice'
+import { supabase } from './../supabaseClient'
 
 interface LinkItemProps {
   name: string
@@ -53,12 +53,25 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Settings', icon: FiSettings },
 ]
 
-export default function SidebarWithHeader({
-  children,
-}: {
-  children: ReactNode
-}) {
+const SidebarWithHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  // const [info, setInfo]: any = useState([])
+  const [userInfo, setUserInfo]: any = useState([])
+  const getInfo = async () => {
+    const { data, error } : any = await supabase.auth.getSession()
+
+    if(data) {
+      const  result:  any = await supabase.from("user").select().eq("uid", data?.session?.user?.user_metadata?.user_id);
+       setUserInfo(result?.data)
+       console.log('setUserInfo', result?.data)
+    
+    }
+  }
+
+useEffect(() => {
+  getInfo()
+
+}, [])
 
   return (
     <Box minH='100vh' bg={useColorModeValue('gray.100', 'gray.900')}>
@@ -80,9 +93,9 @@ export default function SidebarWithHeader({
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
+      <MobileNav onOpen={onOpen} userInfo={userInfo} />
       <Box ml={{ base: 0, md: 60 }} p='4'>
-        {children}
+      sdsd
       </Box>
     </Box>
   )
@@ -155,39 +168,17 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 }
 
 interface MobileProps extends FlexProps {
-  onOpen: () => void
+  onOpen: () => void,
+  userInfo: any
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-  const dispatch = useDispatch()
+const MobileNav  =  ({ onOpen,  userInfo , ...rest }: MobileProps)  => {
+
   const router = useRouter()
-  const { signout } = useSelector((state: any) => state.auth)
+  const handleSignout = async () => {
+    const { error } = await supabase.auth.signOut();
+    router.push('/')
 
-  const { verifySignout }: any = authSlice.actions
-
-  const handleSignout = () => {
-    const token = localStorage.getItem('token')
-    const axiosHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      crossdomain: true,
-      Authorization: token ? `Bearer ${token}` : '',
-    }
-    const createOptions = {
-      baseURL: 'https://ballpensup.com/',
-      headers: axiosHeaders,
-    }
-    const apiService = axios.create(createOptions)
-    apiService
-      .post(`/api/logout`)
-      .then((res) => {
-        dispatch(verifySignout())
-        localStorage.removeItem('token')
-        router.push('/')
-      })
-      .catch((err) => console.log('err', err))
   }
-  console.log('token in logout', localStorage.getItem('token'))
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -244,7 +235,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing='1px'
                   ml='2'
                 >
-                  <Text fontSize='sm'>Justina Clark</Text>
+                  <Text fontSize='sm'>{`${userInfo[0]?.firstname} ${userInfo[0]?.lastname}` }</Text>
                   <Text fontSize='xs' color='gray.600'>
                     Admin
                   </Text>
@@ -270,3 +261,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     </Flex>
   )
 }
+
+
+export default SidebarWithHeader

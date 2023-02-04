@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
-import authSlice from './shared/slices/auth-slice'
+import { supabase } from './../supabaseClient'
 import {
   Flex,
   Box,
@@ -15,41 +14,42 @@ import {
   Button,
   Heading,
   Text,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+
 } from '@chakra-ui/react'
 
 const SimpleCard = () => {
-  const dispatch = useDispatch()
   const router = useRouter()
-  const { login } = useSelector((state: any) => state.auth)
-  const { verifyLogin }: any = authSlice.actions
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
-    onSubmit: (values: object): any => {
+    onSubmit: async (values: any) => {
       console.log('values', values)
-      dispatch(verifyLogin(values))
+      const { data, error }: any = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      })
+      const uid = data?.user?.user_metadata?.user_id
+
+      console.log('usersdsdsd', uid)
+      if (uid) {
+        router.push('/dashboard')
+      }
+      if (error) {
+        setErrorMessage(error.message)
+      }
+
     },
   })
 
-  useEffect(() => {
-     if(login?.data?.token ) {
-      console.log('data?.data', login?.data)
-      localStorage.setItem('token', login?.data?.token);
-      router.push('/dashboard')
-    } 
-
-    console.log('get token signINNNNN', localStorage.getItem('token'))
-
-    
-  }, [login, router])
-
-  console.log('data', login)
-  console.log('login?.data?.token', login?.data?.token)
   return (
-    <Flex minH={'100vh'} align={'center'} justify={'center'} bg={'gray.00'}>
+    <Flex minH={'100vh'} align={'center'} justify={'center'} bg={'gray.100'}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'}>Sign in to your account</Heading>
@@ -57,7 +57,13 @@ const SimpleCard = () => {
             to enjoy all of our cool <Link color={'blue.400'}>features</Link> ✌️
           </Text>
         </Stack>
-        <Box rounded={'lg'} bg={'gray.300'} boxShadow={'lg'} p={8}>
+        <Box rounded={'lg'} bg={'gray.200'} boxShadow={'lg'} p={8}>
+          {errorMessage && (
+           <Alert status='error'>
+           <AlertIcon />
+           <AlertTitle>{` ${errorMessage}`!}</AlertTitle>
+         </Alert>
+          )}
           <Stack spacing={4}>
             <form onSubmit={formik.handleSubmit}>
               <FormControl id='email'>

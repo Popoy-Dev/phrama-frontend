@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
-import authSlice from './shared/slices/auth-slice'
+import authSlice from './../shared/slices/auth-slice'
 import {
   Flex,
   Box,
