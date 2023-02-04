@@ -15,7 +15,6 @@ import {
   DrawerContent,
   Text,
   useDisclosure,
-  BoxProps,
   FlexProps,
   Menu,
   MenuButton,
@@ -38,9 +37,8 @@ import { IconType } from 'react-icons'
 import Logo from './../public/fayne-pharmacy-logo.ico'
 import { useRouter } from 'next/router'
 import { ReactText } from 'react'
-import authSlice from './../shared/slices/auth-slice'
 import { supabase } from './../supabaseClient'
-
+import Products from './components/Products'
 interface LinkItemProps {
   name: string
   icon: IconType
@@ -74,7 +72,7 @@ useEffect(() => {
 }, [])
 
   return (
-    <Box minH='100vh' bg={useColorModeValue('gray.100', 'gray.900')}>
+    <Box minH='100vh' bg={'gray.100'}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: 'none', md: 'block' }}
@@ -95,7 +93,7 @@ useEffect(() => {
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} userInfo={userInfo} />
       <Box ml={{ base: 0, md: 60 }} p='4'>
-      sdsd
+            <Products/>
       </Box>
     </Box>
   )
