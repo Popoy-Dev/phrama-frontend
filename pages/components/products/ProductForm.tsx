@@ -1,0 +1,233 @@
+import React, { useState } from 'react'
+import { useFormik } from 'formik'
+import {
+  Card,
+  CardHeader,
+  Heading,
+  Flex,
+  Box,
+  Spacer,
+  Button,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  Input,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Alert,
+  Select,
+  AlertIcon,
+  AlertTitle,
+} from '@chakra-ui/react'
+import { supabase } from './../../../supabaseClient'
+
+function ProductForm({ onClose, updateData }: any) {
+  const [errorMessage, setErrorMessage] = useState('')
+  const formik = useFormik({
+    initialValues: {
+      name: updateData[0].name || '',
+      indication: updateData[0].indication || '',
+      code: updateData[0].code || '',
+      //   expiry_date: '',
+      //   batch_number: '',
+      //   srp_price: '',
+      //   manufacture_price: '',
+      //   quantity: '',
+      category: updateData[0].category || '',
+      precaution: updateData[0].precaution || '',
+    },
+    onSubmit: async (values) => {
+      if (updateData?.length !== 0) {
+        const {data, error } = await supabase
+          .from('products')
+          .update({
+            name: values.name,
+            indication: values.indication,
+            code: values.code,
+            category: values.category,
+            precaution: values.precaution,
+          })
+          .eq('id', updateData[0].id)
+          .select()
+
+        if (!error) {
+          onClose(data)
+          // window.location.reload()
+        } else {
+          setErrorMessage('Duplicate Name or Code!')
+        }
+      } else {
+        const { error } = await supabase.from('products').insert({
+          name: values.name,
+          indication: values.indication,
+          code: values.code,
+          //   expiry_date: values.expiry_date,
+          //   batch_number: values.batch_number,
+          //   srp_price: values.srp_price,
+          //   manufacture_price: values.manufacture_price,
+          //   quantity: values.quantity,
+          category: values.category,
+          precaution: values.precaution,
+        })
+        if (!error) {
+          onClose()
+        } else {
+          setErrorMessage('Duplicate Name or Code!')
+        }
+      }
+    },
+  })
+  return (
+    <>
+      <form onSubmit={formik.handleSubmit}>
+        <ModalContent>
+          <ModalHeader>Create Products</ModalHeader>
+          {errorMessage && (
+            <Alert status='error'>
+              <AlertIcon />
+              <AlertTitle>{` ${errorMessage}`!}</AlertTitle>
+            </Alert>
+          )}
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Input
+                onChange={formik.handleChange}
+                value={formik.values.name}
+                id='name'
+                name='name'
+                type='text'
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Indication</FormLabel>
+              <Input
+                onChange={formik.handleChange}
+                value={formik.values.indication}
+                id='indication'
+                name='indication'
+                type='text'
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Code</FormLabel>
+              <Input
+                onChange={formik.handleChange}
+                value={formik.values.code}
+                id='code'
+                name='code'
+                type='text'
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Pre Caution</FormLabel>
+              <Input
+                onChange={formik.handleChange}
+                value={formik.values.precaution}
+                id='precaution'
+                name='precaution'
+                type='text'
+              />
+            </FormControl>
+            {/* <FormControl>
+                <FormLabel>Expiry Date</FormLabel>
+                <Input
+                  onChange={formik.handleChange}
+                  placeholder='Select Date and Time'
+                  size='md'
+                  type='date'
+                  name='expiry_date'
+                />
+              </FormControl> */}
+            {/* <FormControl>
+                <FormLabel>Batch Number</FormLabel>
+                <Input
+                  onChange={formik.handleChange}
+                  value={formik.values.batch_number}
+                  id='batchnumber'
+                  name='batch_number'
+                  type='text'
+                />
+              </FormControl> */}
+            {/* <FormControl>
+                <FormLabel>SRP Price</FormLabel> */}
+
+            {/* <NumberInput>
+                  <NumberInputField
+                    onChange={formik.handleChange}
+                    value={formik.values.srp_price}
+                    name='srp_price'
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput> */}
+            {/* </FormControl> */}
+            {/* <FormControl>
+                <FormLabel>Manufacture Price</FormLabel>
+
+                <NumberInput>
+                  <NumberInputField
+                    onChange={formik.handleChange}
+                    value={formik.values.manufacture_price}
+                    name='manufacture_price'
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl> */}
+            {/* <FormControl>
+                <FormLabel>Quantity</FormLabel>
+                <NumberInput>
+                  <NumberInputField
+                    onChange={formik.handleChange}
+                    value={formik.values.quantity}
+                    name='quantity'
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl> */}
+            <FormControl>
+              <FormLabel>Medicine Type</FormLabel>
+              <Select
+                placeholder='Select Medicine Type'
+                onChange={formik.handleChange}
+                name='category'
+              >
+                <option value='branded'>Branded</option>
+                <option value='generic'>generic</option>
+              </Select>
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button type='submit' colorScheme='blue' mr={3}>
+              {updateData?.length !== 0 ? 'Update' : 'Save'}
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </form>
+    </>
+  )
+}
+
+export default ProductForm
