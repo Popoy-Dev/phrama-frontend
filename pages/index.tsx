@@ -2,8 +2,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
-import Navigation from './components/Navigation'
-import Hero from './components/Hero'
+import Navigation from '../components/Navigation'
+import Hero from '../components/Hero'
 import Logo from './../public/fayne-pharmacy-logo.ico'
 
 

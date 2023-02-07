@@ -12,7 +12,7 @@ import {
   Button,
 } from '@chakra-ui/react'
 
-import { supabase } from '../../../supabaseClient'
+import { supabase } from '../../supabaseClient'
 import ProductModal from './ProductModal'
 import { isAllOf } from '@reduxjs/toolkit'
 
@@ -56,7 +56,7 @@ const ProductList = () => {
 
   if(data) {
     setIsOpen(true)
-    setSelectedProduct(data)
+    setSelectedProduct(data[0])
   }
   }
   return (

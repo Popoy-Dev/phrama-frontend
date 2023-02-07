@@ -1,16 +1,7 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import {
-  Card,
-  CardHeader,
-  Heading,
-  Flex,
-  Box,
-  Spacer,
   Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
@@ -19,32 +10,22 @@ import {
   FormControl,
   FormLabel,
   Input,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Alert,
   Select,
   AlertIcon,
   AlertTitle,
 } from '@chakra-ui/react'
-import { supabase } from './../../../supabaseClient'
+import { supabase } from '../../supabaseClient'
 
-function ProductForm({ onClose, updateData }: any) {
+const ProductForm = ({ onClose, updateData }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
   const formik = useFormik({
     initialValues: {
-      name: updateData[0].name || '',
-      indication: updateData[0].indication || '',
-      code: updateData[0].code || '',
-      //   expiry_date: '',
-      //   batch_number: '',
-      //   srp_price: '',
-      //   manufacture_price: '',
-      //   quantity: '',
-      category: updateData[0].category || '',
-      precaution: updateData[0].precaution || '',
+      name: updateData?.name || '',
+      indication: updateData?.indication || '',
+      code: updateData?.code || '',
+      category: updateData?.category || '',
+      precaution: updateData?.precaution || '',
     },
     onSubmit: async (values) => {
       if (updateData?.length !== 0) {
@@ -57,7 +38,7 @@ function ProductForm({ onClose, updateData }: any) {
             category: values.category,
             precaution: values.precaution,
           })
-          .eq('id', updateData[0].id)
+          .eq('id', updateData?.id)
           .select()
 
         if (!error) {
@@ -71,11 +52,6 @@ function ProductForm({ onClose, updateData }: any) {
           name: values.name,
           indication: values.indication,
           code: values.code,
-          //   expiry_date: values.expiry_date,
-          //   batch_number: values.batch_number,
-          //   srp_price: values.srp_price,
-          //   manufacture_price: values.manufacture_price,
-          //   quantity: values.quantity,
           category: values.category,
           precaution: values.precaution,
         })

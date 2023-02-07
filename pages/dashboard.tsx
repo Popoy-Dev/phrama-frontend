@@ -37,7 +37,7 @@ import Logo from './../public/fayne-pharmacy-logo.ico'
 import { useRouter } from 'next/router'
 import { ReactText } from 'react'
 import { supabase } from './../supabaseClient'
-import Products from './components/Products'
+import Products from '../components/Products'
 interface LinkItemProps {
   name: string
   icon: IconType

@@ -11,7 +11,7 @@ import {
     TableContainer,
   } from '@chakra-ui/react'
 
-  import { supabase } from './../../../supabaseClient'
+  import { supabase } from '../../supabaseClient'
 
   interface Product {
   name: string,

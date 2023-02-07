@@ -24,7 +24,7 @@ import {
   import { Image } from '@chakra-ui/react'
 
 
-  import Logo from './../../public/fayne-pharmacy-logo.ico'
+  import Logo from './../public/fayne-pharmacy-logo.ico'
   
   export default function WithSubnavigation() {
     const { isOpen, onToggle } = useDisclosure();
