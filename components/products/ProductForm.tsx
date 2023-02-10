@@ -32,7 +32,7 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
         const {data, error } = await supabase
           .from('products')
           .update({
-            name: values.name,
+            name: values.name.toUpperCase(),
             indication: values.indication,
             code: values.code,
             category: values.category,
@@ -49,7 +49,7 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
         }
       } else {
         const {data, error } = await supabase.from('products').insert({
-          name: values.name,
+          name: values.name.toUpperCase(),
           indication: values.indication,
           code: values.code,
           category: values.category,
