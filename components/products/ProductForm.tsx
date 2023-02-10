@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { supabase } from '../../supabaseClient'
 
-const ProductForm = ({ onClose, updateData }: any) => {
+const ProductForm = ({ onClose, updateData=[] }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
   const formik = useFormik({
     initialValues: {
@@ -48,21 +48,23 @@ const ProductForm = ({ onClose, updateData }: any) => {
           setErrorMessage('Duplicate Name or Code!')
         }
       } else {
-        const { error } = await supabase.from('products').insert({
+        const {data, error } = await supabase.from('products').insert({
           name: values.name,
           indication: values.indication,
           code: values.code,
           category: values.category,
           precaution: values.precaution,
-        })
+        }).select()
+        console.log('data save', data)
         if (!error) {
-          onClose()
+          onClose(data)
         } else {
           setErrorMessage('Duplicate Name or Code!')
         }
       }
     },
   })
+  console.log('updateData', updateData)
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
@@ -196,7 +198,7 @@ const ProductForm = ({ onClose, updateData }: any) => {
 
           <ModalFooter>
             <Button type='submit' colorScheme='blue' mr={3}>
-              {updateData?.length !== 0 ? 'Update' : 'Save'}
+              {updateData?.length === 0 ? 'Save' : 'Update'}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>

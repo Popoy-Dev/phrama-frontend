@@ -14,16 +14,22 @@ import ProductModal from './products/ProductModal'
 
 function Products() {
   const [isOpen, setIsOpen] = useState(false)
+  const [reloadList, setReloadList] = useState(false)
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
 
   const onOpen = () => {
     setIsOpen(true)
   }
-  const onClose = () => {
+  const onClose = (data:[])  => {
+    console.log('terst', data)
+    if(data) {
+      setReloadList(true)
+    }
     setIsOpen(false)
   }
 
+console.log('reloadList', reloadList)
   return (
     <div>
       <Card>
@@ -46,7 +52,7 @@ function Products() {
           </Box>
         </Flex>
         <Box p='4'>
-          <ProductList />
+          <ProductList reloadList={reloadList} />
         </Box>
       </Card>
     </div>
