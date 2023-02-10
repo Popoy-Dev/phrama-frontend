@@ -43,7 +43,6 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
 
         if (!error) {
           onClose(data)
-          // window.location.reload()
         } else {
           setErrorMessage('Duplicate Name or Code!')
         }
@@ -55,7 +54,6 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
           category: values.category,
           precaution: values.precaution,
         }).select()
-        console.log('data save', data)
         if (!error) {
           onClose(data)
         } else {
@@ -64,7 +62,6 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
       }
     },
   })
-  console.log('updateData', updateData)
   return (
     <>
       <form onSubmit={formik.handleSubmit}>

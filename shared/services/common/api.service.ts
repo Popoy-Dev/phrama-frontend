@@ -15,19 +15,4 @@ const axiosHeaders = {
   
   const apiService = axios.create(createOptions);
  
-
-
-  // const addAuthorization = (config: any) => {
-  //   const token=  localStorage.getItem('token')
-  //   if (typeof window !== 'undefined') {
-  //     console.log('fengfeng', token);
-  //     const getAuthorizationBearerHeaderValue = () => token ? `Bearer ${token}` : ''
-  
-  //     config.headers.Authorization = getAuthorizationBearerHeaderValue()
-  //     console.log('config', config)
-  //     return config
-  //    }
-
-  // }
-  // apiService.interceptors.request.use(addAuthorization)
 export { apiService };

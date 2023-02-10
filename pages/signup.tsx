@@ -35,20 +35,17 @@ const Signup = () => {
       password: '',
     },
     onSubmit: (values: object): any => {
-      console.log('values', values)
       dispatch(verifySignup(values))
     },
   })
   useEffect(() => {
     if(login?.success === true) {
-      console.log('data?.data', login?.data)
       localStorage.setItem('token', login?.data?.token);
       router.push('/dashboard')
 
     } 
     
  }, [login, router])
- console.log('data', login)
 
   return (
     <Flex

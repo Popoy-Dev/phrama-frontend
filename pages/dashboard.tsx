@@ -52,16 +52,13 @@ const LinkItems: Array<LinkItemProps> = [
 
 const SidebarWithHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  // const [info, setInfo]: any = useState([])
   const [userInfo, setUserInfo]: any = useState([])
   const getInfo = async () => {
     const { data, error } : any = await supabase.auth.getSession()
 
     if(data) {
       const  result:  any = await supabase.from("user").select().eq("uid", data?.session?.user?.user_metadata?.user_id);
-       setUserInfo(result?.data)
-       console.log('setUserInfo', result?.data)
-    
+       setUserInfo(result?.data)    
     }
   }
 

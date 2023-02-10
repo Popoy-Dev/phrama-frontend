@@ -15,7 +15,6 @@ const {
 } = authSlice.actions
 
 function* fetchLogin(action: any) {
-    console.log('action', action)
     try {
         const { data } = yield call(authService.login, action.payload);
         yield put(verifyLoginSuccess(data));
@@ -25,7 +24,6 @@ function* fetchLogin(action: any) {
 }
 
 function* fetchSignup(action: any) {
-    console.log('action', action)
     try {
         const { data } = yield call(authService.register, action.payload);
         yield put(verifyLoginSuccess(data));

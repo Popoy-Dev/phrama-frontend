@@ -30,14 +30,12 @@ const SimpleCard = () => {
       password: '',
     },
     onSubmit: async (values: any) => {
-      console.log('values', values)
       const { data, error }: any = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       })
       const uid = data?.user?.user_metadata?.user_id
 
-      console.log('usersdsdsd', uid)
       if (uid) {
         router.push('/dashboard')
       }

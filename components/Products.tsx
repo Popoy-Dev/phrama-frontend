@@ -22,14 +22,12 @@ function Products() {
     setIsOpen(true)
   }
   const onClose = (data:[])  => {
-    console.log('terst', data)
     if(data) {
       setReloadList(true)
     }
     setIsOpen(false)
   }
 
-console.log('reloadList', reloadList)
   return (
     <div>
       <Card>
