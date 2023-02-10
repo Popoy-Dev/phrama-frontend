@@ -182,13 +182,15 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
               </FormControl> */}
             <FormControl>
               <FormLabel>Medicine Type</FormLabel>
-              <Select
+              <Select as={Select}
                 placeholder='Select Medicine Type'
                 onChange={formik.handleChange}
+                value={formik.values.category}
+
                 name='category'
               >
                 <option value='branded'>Branded</option>
-                <option value='generic'>generic</option>
+                <option value='generic'>Generic</option>
               </Select>
             </FormControl>
           </ModalBody>

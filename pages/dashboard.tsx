@@ -38,13 +38,14 @@ import { useRouter } from 'next/router'
 import { ReactText } from 'react'
 import { supabase } from './../supabaseClient'
 import Products from '../components/Products'
+import Inventory from '@/components/Inventory'
 interface LinkItemProps {
   name: string
   icon: IconType
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
+  { name: 'Products', icon: FiHome },
+  { name: 'Inventory', icon: FiTrendingUp },
   { name: 'Explore', icon: FiCompass },
   { name: 'Favourites', icon: FiStar },
   { name: 'Settings', icon: FiSettings },
@@ -53,6 +54,7 @@ const LinkItems: Array<LinkItemProps> = [
 const SidebarWithHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [userInfo, setUserInfo]: any = useState([])
+  const [content, setContent]: any = useState('')
   const getInfo = async () => {
     const { data, error } : any = await supabase.auth.getSession()
 
@@ -67,11 +69,38 @@ useEffect(() => {
 
 }, [])
 
+useEffect(() => {
+ 
+  ContentDashboard()
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [content])
+
+const ContentDashboard = () : any => {
+  switch (content) {
+    case 'Products':
+    return  <Products/>
+    break;
+
+    case 'Inventory':
+      return  <Inventory/>
+      break;
+
+    default:
+      break;
+  }
+
+}
+const handleDashboardContent = (name: string): any => {
+  setContent(name)
+}
+
   return (
     <Box minH='100vh' bg={'gray.100'}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: 'none', md: 'block' }}
+        handleDashboardContent={handleDashboardContent}
       />
       <Drawer
         autoFocus={false}
@@ -86,16 +115,17 @@ useEffect(() => {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
       <MobileNav onOpen={onOpen} userInfo={userInfo} />
       <Box ml={{ base: 0, md: 60 }} p='4'>
-            <Products/>
+        <ContentDashboard/>
       </Box>
     </Box>
   )
 }
 
-const SidebarContent = ({ onClose, ...rest }: any) => {
+const SidebarContent = ({ onClose, handleDashboardContent, ...rest }: any) => {
+  
+
   return (
     <Box
       transition='3s ease'
@@ -113,7 +143,7 @@ const SidebarContent = ({ onClose, ...rest }: any) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} onClick={() =>handleDashboardContent(link.name)}>
           {link.name}
         </NavItem>
       ))}
