@@ -116,7 +116,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
               >
                 {productData.map((data): any => {
                   return (
-                    <option value={data?.id} key={data.id}>
+                    <option value={data?.name} key={data.id}>
                       {data.name}
                     </option>
                   )
