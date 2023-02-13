@@ -13,19 +13,20 @@ import {
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
-import ProductModal from './ProductModal'
+import InventoryModal from './InventoryModal'
 
 interface Product {
   id: number
-  name: string
-  indication: string
-  category: string
-  code: string
-  precaution: number
+  product_name: string
+  batch_number: number
+  manufacture_price: number
+  srp_price: number
+  quantity: number
+  expiry_date: Date
 }
-const ProductList = ({reloadList}: any) => {
+const InventoryList = ({reloadList}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<Product[]>([])
-  const [productData, setProductData] = useState<Product[]>([])
+  const [inventoryData, setInventoryData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
@@ -40,8 +41,8 @@ const ProductList = ({reloadList}: any) => {
     setIsOpen(false)
   }
   const getProducts = async () => {
-    const { data, error }: any = await supabase.from('products').select().order('name', { ascending: true })
-    setProductData(data)
+    const { data, error }: any = await supabase.from('inventory').select().order('product_name', { ascending: true })
+    setInventoryData(data)
   }
 
   useEffect(() => {
@@ -67,28 +68,30 @@ const ProductList = ({reloadList}: any) => {
   }
   return (
     <TableContainer>
-      <Table variant='striped' colorScheme='teal'>
+      <Table variant='striped' colorScheme='blue'>
         <TableCaption>Fayne Pharmacy 2023</TableCaption>
         <Thead>
           <Tr>
-            <Th>Name</Th>
-            <Th>Indication</Th>
-            <Th>Category</Th>
-            <Th>Code</Th>
-            <Th>Pre-Caution</Th>
-            <Th>Action</Th>
+            <Th>Product Name</Th>
+            <Th>Batch Number</Th>
+            <Th>Manufacture Price</Th>
+            <Th>Store Price</Th>
+            <Th>Quantity</Th>
+            <Th>Expiry Date</Th>
+  
           </Tr>
         </Thead>
         <Tbody>
-          {productData &&
-            productData?.map((data: Product, i: number) => {
+          {inventoryData &&
+            inventoryData?.map((data: Product, i: number) => {
               return (
                 <Tr key={i}>
-                  <Td>{data.name}</Td>
-                  <Td>{data.indication}</Td>
-                  <Td>{data.category}</Td>
-                  <Td>{data.code}</Td>
-                  <Td>{data.precaution}</Td>
+                  <Td>{data.product_name}</Td>
+                  <Td>{data.batch_number}</Td>
+                  <Td>{`PHP ${data.manufacture_price}`}</Td>
+                  <Td>{data.srp_price}</Td>
+                  <Td>{data.quantity}</Td>
+                  <Td>{data.expiry_date.toString()}</Td>
                   <Td>
                     <Button colorScheme='yellow' onClick={() =>handleEditProduct(data.id)}>Edit</Button>
                   </Td>
@@ -104,7 +107,7 @@ const ProductList = ({reloadList}: any) => {
       </Tr>
     </Tfoot> */}
       </Table>
-      <ProductModal
+      <InventoryModal
               initialFocusRef={initialRef}
               finalFocusRef={finalRef}
               isOpen={isOpen}
@@ -115,4 +118,4 @@ const ProductList = ({reloadList}: any) => {
   )
 }
 
-export default ProductList
+export default InventoryList

@@ -9,9 +9,8 @@ import {
   Button,
 } from '@chakra-ui/react'
 
-import ProductList from './products/ProductList'
-import ProductModal from './products/ProductModal'
 import InventoryModal from './invetory/InventoryModal'
+import InventoryList from './invetory/InventoryList'
 
 const Inventory = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -40,7 +39,7 @@ const Inventory = () => {
           <Spacer />
           <Box p='4'>
             <Button colorScheme='gray' size='md' onClick={onOpen}>
-              Create Invetory
+              Create Inventory
             </Button>
             <InventoryModal
               initialFocusRef={initialRef}
@@ -51,7 +50,7 @@ const Inventory = () => {
           </Box>
         </Flex>
         <Box p='4'>
-          <ProductList reloadList={reloadList} />
+          <InventoryList reloadList={reloadList} />
         </Box>
       </Card>
     </div>

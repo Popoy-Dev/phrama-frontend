@@ -14,6 +14,11 @@ import {
   Select,
   AlertIcon,
   AlertTitle,
+  NumberInputField,
+  NumberInputStepper,
+  NumberInput,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
 } from '@chakra-ui/react'
 import { supabase } from '../../supabaseClient'
 
@@ -22,22 +27,27 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
   const [productData, setProductData] = useState([{ id: 0, name: '' }])
   const formik = useFormik({
     initialValues: {
-      name: updateData?.name || '',
-      indication: updateData?.indication || '',
-      code: updateData?.code || '',
-      category: updateData?.category || '',
-      precaution: updateData?.precaution || '',
+      product_name: updateData?.product_name || '',
+      batch_number: updateData?.batch_number || '',
+      srp_price: updateData?.srp_price || '',
+      manufacture_price: updateData?.manufacture_price || '',
+      quantity: updateData?.quantity || '',
+      expiry_date: updateData?.expiry_date || '',
+      
+      
     },
     onSubmit: async (values) => {
+      console.log('valuies',values)
       if (updateData?.length !== 0) {
         const { data, error } = await supabase
-          .from('products')
+          .from('inventory')
           .update({
-            name: values.name.toUpperCase(),
-            indication: values.indication,
-            code: values.code,
-            category: values.category,
-            precaution: values.precaution,
+            product_name: values.product_name,
+            batch_number: values.batch_number,
+            manufacture_price: values.manufacture_price,
+            srp_price: values.srp_price,
+            quantity: values.quantity,
+            expiry_date: values.expiry_date,
           })
           .eq('id', updateData?.id)
           .select()
@@ -49,15 +59,18 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
         }
       } else {
         const { data, error } = await supabase
-          .from('products')
+          .from('inventory')
           .insert({
-            name: values.name.toUpperCase(),
-            indication: values.indication,
-            code: values.code,
-            category: values.category,
-            precaution: values.precaution,
+            product_name: values.product_name,
+            batch_number: values.batch_number,
+            manufacture_price: values.manufacture_price,
+            srp_price: values.srp_price,
+            quantity: values.quantity,
+            expiry_date: values.expiry_date,
           })
           .select()
+      console.log(' data valuies',values)
+          
         if (!error) {
           onClose(data)
         } else {
@@ -98,8 +111,8 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
                 as={Select}
                 placeholder='Select Product Name'
                 onChange={formik.handleChange}
-                value={formik.values.category}
-                name='category'
+                value={formik.values.product_name}
+                name='product_name'
               >
                 {productData.map((data): any => {
                   return (
@@ -110,123 +123,86 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
                 })}
               </Select>
             </FormControl>
-            <FormControl>
-              <FormLabel>Name</FormLabel>
+           
+            {/* <FormControl>
+              <FormLabel>Batch Number</FormLabel>
               <Input
                 onChange={formik.handleChange}
-                value={formik.values.name}
-                id='name'
-                name='name'
+                value={formik.values.batch_number}
+                id='batchnumber'
+                name='batch_number'
                 type='text'
               />
-            </FormControl>
+            </FormControl> */}
             <FormControl>
-              <FormLabel>Indication</FormLabel>
-              <Input
-                onChange={formik.handleChange}
-                value={formik.values.indication}
-                id='indication'
-                name='indication'
-                type='text'
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Code</FormLabel>
-              <Input
-                onChange={formik.handleChange}
-                value={formik.values.code}
-                id='code'
-                name='code'
-                type='text'
-              />
-            </FormControl>
+              <FormLabel>Batch Number</FormLabel>
 
-            <FormControl>
-              <FormLabel>Pre Caution</FormLabel>
-              <Input
-                onChange={formik.handleChange}
-                value={formik.values.precaution}
-                id='precaution'
-                name='precaution'
-                type='text'
-              />
-            </FormControl>
-            {/* <FormControl>
-                <FormLabel>Expiry Date</FormLabel>
-                <Input
-                  onChange={formik.handleChange}
-                  placeholder='Select Date and Time'
-                  size='md'
-                  type='date'
-                  name='expiry_date'
-                />
-              </FormControl> */}
-            {/* <FormControl>
-                <FormLabel>Batch Number</FormLabel>
-                <Input
+              <NumberInput>
+                <NumberInputField
                   onChange={formik.handleChange}
                   value={formik.values.batch_number}
-                  id='batchnumber'
                   name='batch_number'
-                  type='text'
                 />
-              </FormControl> */}
-            {/* <FormControl>
-                <FormLabel>SRP Price</FormLabel> */}
-
-            {/* <NumberInput>
-                  <NumberInputField
-                    onChange={formik.handleChange}
-                    value={formik.values.srp_price}
-                    name='srp_price'
-                  />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput> */}
-            {/* </FormControl> */}
-            {/* <FormControl>
-                <FormLabel>Manufacture Price</FormLabel>
-
-                <NumberInput>
-                  <NumberInputField
-                    onChange={formik.handleChange}
-                    value={formik.values.manufacture_price}
-                    name='manufacture_price'
-                  />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </FormControl> */}
-            {/* <FormControl>
-                <FormLabel>Quantity</FormLabel>
-                <NumberInput>
-                  <NumberInputField
-                    onChange={formik.handleChange}
-                    value={formik.values.quantity}
-                    name='quantity'
-                  />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </FormControl> */}
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
             <FormControl>
-              <FormLabel>Medicine Type</FormLabel>
-              <Select
-                as={Select}
-                placeholder='Select Medicine Type'
+              <FormLabel>Manufacture Price</FormLabel>
+
+              <NumberInput>
+                <NumberInputField
+                  onChange={formik.handleChange}
+                  value={formik.values.manufacture_price}
+                  name='manufacture_price'
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+            <FormControl>
+              <FormLabel>SRP Price</FormLabel>
+
+              <NumberInput>
+                <NumberInputField
+                  onChange={formik.handleChange}
+                  value={formik.values.srp_price}
+                  name='srp_price'
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+           
+            <FormControl>
+              <FormLabel>Quantity</FormLabel>
+              <NumberInput>
+                <NumberInputField
+                  onChange={formik.handleChange}
+                  value={formik.values.quantity}
+                  name='quantity'
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Expiry Date</FormLabel>
+              <Input
                 onChange={formik.handleChange}
-                value={formik.values.category}
-                name='category'
-              >
-                <option value='branded'>Branded</option>
-                <option value='generic'>Generic</option>
-              </Select>
+                placeholder='Select Date and Time'
+                size='md'
+                type='date'
+                name='expiry_date'
+              />
             </FormControl>
           </ModalBody>
 
