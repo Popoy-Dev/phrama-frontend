@@ -1,8 +1,8 @@
 import React from 'react'
 import { Modal, ModalOverlay } from '@chakra-ui/react'
-import ProductForm from './ProductForm'
+import InventoryForm from './InventoryForm'
 
-const ViewModal = ({
+const InventoryModal = ({
   initialFocusRef,
   finalFocusRef,
   isOpen,
@@ -18,10 +18,10 @@ const ViewModal = ({
         size='xl'
       >
         <ModalOverlay />
-        <ProductForm onClose={onClose} />
+        <InventoryForm onClose={onClose} />
       </Modal>
     </>
   )
 }
 
-export default ViewModal
+export default InventoryModal

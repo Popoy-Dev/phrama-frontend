@@ -11,6 +11,7 @@ import {
 
 import ProductList from './products/ProductList'
 import ProductModal from './products/ProductModal'
+import InventoryModal from './invetory/InventoryModal'
 
 const Inventory = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -41,7 +42,7 @@ const Inventory = () => {
             <Button colorScheme='gray' size='md' onClick={onOpen}>
               Create Invetory
             </Button>
-            <ProductModal
+            <InventoryModal
               initialFocusRef={initialRef}
               finalFocusRef={finalRef}
               isOpen={isOpen}

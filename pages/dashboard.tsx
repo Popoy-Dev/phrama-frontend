@@ -80,11 +80,9 @@ const ContentDashboard = () : any => {
   switch (content) {
     case 'Products':
     return  <Products/>
-    break;
 
     case 'Inventory':
       return  <Inventory/>
-      break;
 
     default:
       break;
@@ -93,6 +91,7 @@ const ContentDashboard = () : any => {
 }
 const handleDashboardContent = (name: string): any => {
   setContent(name)
+  onClose()
 }
 
   return (
@@ -112,7 +111,7 @@ const handleDashboardContent = (name: string): any => {
         size='full'
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} handleDashboardContent={handleDashboardContent} />
         </DrawerContent>
       </Drawer>
       <MobileNav onOpen={onOpen} userInfo={userInfo} />
@@ -125,7 +124,6 @@ const handleDashboardContent = (name: string): any => {
 
 const SidebarContent = ({ onClose, handleDashboardContent, ...rest }: any) => {
   
-
   return (
     <Box
       transition='3s ease'
