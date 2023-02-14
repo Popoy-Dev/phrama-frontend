@@ -25,7 +25,7 @@ interface Product {
   expiry_date: Date
 }
 const InventoryList = ({reloadList}: any) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product[]>([])
+  const [selectedInventory, setSelectedInventory] = useState<Product[]>([])
   const [inventoryData, setInventoryData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
@@ -55,16 +55,16 @@ const InventoryList = ({reloadList}: any) => {
   useEffect(() => {
     getProducts()
   }, [])
-  const handleEditProduct = async (id: number) => {
+  const handleEditInventory = async (id: number) => {
     const {data, error } = await supabase
-  .from('products')
+  .from('inventory')
   .select()
   .eq('id', id)
-
   if(data) {
     setIsOpen(true)
-    setSelectedProduct(data[0])
+    setSelectedInventory(data[0])
   }
+
   }
   return (
     <TableContainer>
@@ -93,7 +93,7 @@ const InventoryList = ({reloadList}: any) => {
                   <Td>{data.quantity}</Td>
                   <Td>{data.expiry_date.toString()}</Td>
                   <Td>
-                    <Button colorScheme='yellow' onClick={() =>handleEditProduct(data.id)}>Edit</Button>
+                    <Button colorScheme='yellow' onClick={() =>handleEditInventory(data.id)}>Edit</Button>
                   </Td>
                 </Tr>
               )
@@ -112,7 +112,7 @@ const InventoryList = ({reloadList}: any) => {
               finalFocusRef={finalRef}
               isOpen={isOpen}
               onClose={onClose}
-              updateData={selectedProduct}
+              updateData={selectedInventory}
             />
     </TableContainer>
   )

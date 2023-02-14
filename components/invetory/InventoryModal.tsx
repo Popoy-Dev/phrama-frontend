@@ -7,6 +7,7 @@ const InventoryModal = ({
   finalFocusRef,
   isOpen,
   onClose,
+  updateData,
 }: any) => {
   return (
     <>
@@ -18,7 +19,7 @@ const InventoryModal = ({
         size='xl'
       >
         <ModalOverlay />
-        <InventoryForm onClose={onClose} />
+        <InventoryForm onClose={onClose} updateData={updateData} />
       </Modal>
     </>
   )
