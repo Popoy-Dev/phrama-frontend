@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardHeader,
@@ -7,6 +7,7 @@ import {
   Box,
   Spacer,
   Button,
+  Input,
 } from '@chakra-ui/react'
 
 import InventoryModal from './invetory/InventoryModal'
@@ -22,25 +23,31 @@ interface Inventory {
   quantity: number
   expiry_date: Date
 }
-
-const Inventory = () => {
+const Order = () => {
   const [inventoryData, setInventoryData] = useState<Inventory[]>([])
-  const [isOpen, setIsOpen] = useState(false)
-  const [reloadList, setReloadList] = useState(false)
-  const initialRef = React.useRef(null)
-  const finalRef = React.useRef(null)
+  const [inventoryAllData, setInventoryAllData] = useState<Inventory[]>([])
 
-  const onOpen = () => {
-    setIsOpen(true)
-  }
-  const onClose = (data:[])  => {
-    if(data) {
-      setReloadList(true)
-    }
-    setIsOpen(false)
+  
+  const [reloadList, setReloadList] = useState(false)
+  const [search, setSearch] = useState('')
+
+  const handleSearch = async (e: any) => {
+    const result = inventoryAllData.filter(data => {
+      if(!e.target.value) {
+
+        return   inventoryAllData
+         
+      }
+      return data.product_name.toLocaleLowerCase().includes(e.target.value.toLowerCase())
+    })
+
+    setSearch(e.target.value)
+    setInventoryData(result)
+
   }
   const getProducts = async () => {
     const { data, error }: any = await supabase.from('inventory').select().order('product_name', { ascending: true })
+    setInventoryAllData(data)
     setInventoryData(data)
   }
 
@@ -59,29 +66,20 @@ const Inventory = () => {
     <div>
       <Card>
         <Flex>
-          <CardHeader className='flex justify-between'>
-            <Heading size='md'>Inventory</Heading>
-          </CardHeader>
+          <Box p='4'>
+            <Input placeholder='Search Product' onKeyUp={handleSearch} />
+            <InventoryList reloadList={reloadList} inventoryData={inventoryData} getProducts={getProducts}/>
 
+          </Box>
           <Spacer />
           <Box p='4'>
-            <Button colorScheme='gray' size='md' onClick={onOpen}>
-              Create Inventory
-            </Button>
-            <InventoryModal
-              initialFocusRef={initialRef}
-              finalFocusRef={finalRef}
-              isOpen={isOpen}
-              onClose={onClose}
-            />
+            <Input placeholder='Search Product' onKeyUp={handleSearch} />
+            <InventoryList reloadList={reloadList} inventoryData={inventoryData} getProducts={getProducts}/>
           </Box>
         </Flex>
-        <Box p='4'>
-        <InventoryList reloadList={reloadList} inventoryData={inventoryData} getProducts={getProducts}/>
-        </Box>
       </Card>
     </div>
   )
 }
 
-export default Inventory
+export default Order

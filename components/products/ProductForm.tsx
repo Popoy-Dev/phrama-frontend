@@ -16,13 +16,11 @@ import {
   AlertTitle,
 } from '@chakra-ui/react'
 import { supabase } from '../../supabaseClient'
-import validate from './validate'
 
 
 const ProductForm = ({ onClose, updateData=[] }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
   const formik = useFormik({
-    validate,
     initialValues: {
       name: updateData?.name || '',
       indication: updateData?.indication || '',

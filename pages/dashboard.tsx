@@ -39,6 +39,7 @@ import { ReactText } from 'react'
 import { supabase } from './../supabaseClient'
 import Products from '../components/Products'
 import Inventory from '@/components/Inventory'
+import Order from '@/components/Order'
 interface LinkItemProps {
   name: string
   icon: IconType
@@ -46,7 +47,7 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Products', icon: FiHome },
   { name: 'Inventory', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
+  { name: 'Order', icon: FiCompass },
   { name: 'Favourites', icon: FiStar },
   { name: 'Settings', icon: FiSettings },
 ]
@@ -83,6 +84,9 @@ const ContentDashboard = () : any => {
 
     case 'Inventory':
       return  <Inventory/>
+    
+      case 'Order':
+        return  <Order/>
 
     default:
       break;

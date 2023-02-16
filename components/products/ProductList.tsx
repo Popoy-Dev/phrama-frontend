@@ -23,9 +23,8 @@ interface Product {
   code: string
   precaution: number
 }
-const ProductList = ({reloadList}: any) => {
+const ProductList = ({reloadList, productData, getProducts}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<Product[]>([])
-  const [productData, setProductData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
@@ -39,21 +38,8 @@ const ProductList = ({reloadList}: any) => {
     }
     setIsOpen(false)
   }
-  const getProducts = async () => {
-    const { data, error }: any = await supabase.from('products').select().order('name', { ascending: true })
-    setProductData(data)
-  }
 
-  useEffect(() => {
-    
-    if(reloadList) {
-      getProducts()
-    }
-  }, [reloadList])
 
-  useEffect(() => {
-    getProducts()
-  }, [])
   const handleEditProduct = async (id: number) => {
     const {data, error } = await supabase
   .from('products')

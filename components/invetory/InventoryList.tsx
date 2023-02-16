@@ -15,7 +15,7 @@ import {
 import { supabase } from '../../supabaseClient'
 import InventoryModal from './InventoryModal'
 
-interface Product {
+interface Inventory {
   id: number
   product_name: string
   batch_number: number
@@ -24,9 +24,8 @@ interface Product {
   quantity: number
   expiry_date: Date
 }
-const InventoryList = ({reloadList}: any) => {
-  const [selectedInventory, setSelectedInventory] = useState<Product[]>([])
-  const [inventoryData, setInventoryData] = useState<Product[]>([])
+const InventoryList = ({reloadList, inventoryData, getProducts}: any) => {
+  const [selectedInventory, setSelectedInventory] = useState<Inventory[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
@@ -40,21 +39,9 @@ const InventoryList = ({reloadList}: any) => {
     }
     setIsOpen(false)
   }
-  const getProducts = async () => {
-    const { data, error }: any = await supabase.from('inventory').select().order('product_name', { ascending: true })
-    setInventoryData(data)
-  }
 
-  useEffect(() => {
-    
-    if(reloadList) {
-      getProducts()
-    }
-  }, [reloadList])
 
-  useEffect(() => {
-    getProducts()
-  }, [])
+
   const handleEditInventory = async (id: number) => {
     const {data, error } = await supabase
   .from('inventory')
@@ -83,13 +70,14 @@ const InventoryList = ({reloadList}: any) => {
         </Thead>
         <Tbody>
           {inventoryData &&
-            inventoryData?.map((data: Product, i: number) => {
+            inventoryData?.map((data: Inventory, i: number) => {
+              
               return (
                 <Tr key={i}>
                   <Td>{data.product_name}</Td>
                   <Td>{data.batch_number}</Td>
-                  <Td>{`PHP ${data.manufacture_price}`}</Td>
-                  <Td>{data.srp_price}</Td>
+                  <Td>{`₱ ${data.manufacture_price}`}</Td>
+                  <Td>{`₱ ${data.srp_price}`}</Td>
                   <Td>{data.quantity}</Td>
                   <Td>{data.expiry_date.toString()}</Td>
                   <Td>

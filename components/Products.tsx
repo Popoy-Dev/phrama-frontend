@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Card,
   CardHeader,
@@ -11,8 +11,18 @@ import {
 
 import ProductList from './products/ProductList'
 import ProductModal from './products/ProductModal'
+import { supabase } from '../supabaseClient'
+interface Product {
+  id: number
+  name: string
+  indication: string
+  category: string
+  code: string
+  precaution: number
+}
 
 function Products() {
+  const [productData, setProductData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
   const initialRef = React.useRef(null)
@@ -27,7 +37,19 @@ function Products() {
     }
     setIsOpen(false)
   }
-
+  const getProducts = async () => {
+    const { data, error }: any = await supabase.from('products').select().order('name', { ascending: true })
+    setProductData(data)
+  }
+  useEffect(() => {
+    getProducts()
+  }, [])
+  useEffect(() => {
+    
+    if(reloadList) {
+      getProducts()
+    }
+  }, [reloadList])
   return (
     <div>
       <Card>
@@ -50,7 +72,7 @@ function Products() {
           </Box>
         </Flex>
         <Box p='4'>
-          <ProductList reloadList={reloadList} />
+          <ProductList reloadList={reloadList} productData={productData} getProducts={getProducts} />
         </Box>
       </Card>
     </div>
