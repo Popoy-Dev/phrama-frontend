@@ -22,6 +22,8 @@ interface Product {
   category: string
   code: string
   precaution: number
+  generic_name: string
+  description: string
 }
 const ProductList = ({reloadList, productData, getProducts}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<Product[]>([])
@@ -61,6 +63,8 @@ const ProductList = ({reloadList, productData, getProducts}: any) => {
             <Th>Category</Th>
             <Th>Code</Th>
             <Th>Pre-Caution</Th>
+            <Th>Generic Name</Th>
+            <Th>Description</Th>
             <Th>Action</Th>
           </Tr>
         </Thead>
@@ -74,6 +78,8 @@ const ProductList = ({reloadList, productData, getProducts}: any) => {
                   <Td>{data.category}</Td>
                   <Td>{data.code}</Td>
                   <Td>{data.precaution}</Td>
+                  <Td>{data.generic_name}</Td>
+                  <Td>{data.description}</Td>
                   <Td>
                     <Button colorScheme='yellow' onClick={() =>handleEditProduct(data.id)}>Edit</Button>
                   </Td>
