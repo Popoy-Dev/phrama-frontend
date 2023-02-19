@@ -14,6 +14,7 @@ import {
   Select,
   AlertIcon,
   AlertTitle,
+  Textarea,
 } from '@chakra-ui/react'
 import { supabase } from '../../supabaseClient'
 
@@ -26,6 +27,8 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
       indication: updateData?.indication || '',
       code: updateData?.code || '',
       category: updateData?.category || '',
+      description: updateData?.description || '',
+      generic_name: updateData?.generic_name || '',
       precaution: updateData?.precaution || '',
     },
     onSubmit: async (values) => {
@@ -38,6 +41,8 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
             code: values.code,
             category: values.category,
             precaution: values.precaution,
+            description: values.description,
+            generic_name: values.generic_name,
           })
           .eq('id', updateData?.id)
           .select()
@@ -54,6 +59,8 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
           code: values.code,
           category: values.category,
           precaution: values.precaution,
+          description: values.description,
+          generic_name: values.generic_name,
         }).select()
         if (!error) {
           onClose(data)
@@ -115,6 +122,27 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
                 id='precaution'
                 name='precaution'
                 type='text'
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                placeholder='Add product description...'
+                size='sm'
+                name='description'
+
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Generic Name</FormLabel>
+              <Textarea
+                value={formik.values.generic_name}
+                onChange={formik.handleChange}
+                placeholder='Add product description...'
+                size='sm'
+                name='generic_name'
               />
             </FormControl>
             <FormControl>

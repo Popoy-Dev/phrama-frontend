@@ -45,7 +45,6 @@ const ProductList = ({reloadList, productData, getProducts}: any) => {
   .from('products')
   .select()
   .eq('id', id)
-
   if(data) {
     setIsOpen(true)
     setSelectedProduct(data[0])
