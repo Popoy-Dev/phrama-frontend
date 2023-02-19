@@ -10,27 +10,51 @@ import {
   TableCaption,
   TableContainer,
   Button,
+  Checkbox,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
 
 interface Inventory {
   id: number
-  products: {name: string, category: string}
+  products: { name: string; category: string, generic_name: string }
   batch_number: number
   manufacture_price: number
   srp_price: number
   quantity: number
   expiry_date: Date
 }
-const OrderList = ({
-  inventoryData,
-  handleAddOrder,
-}: any) => {
+const OrderList = ({ inventoryData, handleAddOrder }: any) => {
+  const handleAdd = (data: any, id: any, order_quantity: number) => {
+    const newData = {
+      ...data,
+      discounted: id,
+      order_quantity: order_quantity,
+      product_order: Math.floor(Math.random() * 100)
+    }
+    handleAddOrder(newData)
+  }
+  const [checkedItems, setCheckedItems] = useState<any>([])
+  function handleCheck(item: any) {
+    if (checkedItems.includes(item)) {
+      setCheckedItems(checkedItems.filter((i: any) => i !== item))
+    } else {
+      setCheckedItems([...checkedItems, item])
+    }
+  }
+  const [inputValues, setInputValues] = useState([]);
+  const handleInputChange = (event: any, index: any) => {
 
-
-  const handleAdd = (data: any) => {
-    handleAddOrder(data)
+    setInputValues(prevInputValues => {
+      const updatedInputValues: any = [...prevInputValues];
+      updatedInputValues[index] = event;
+      return updatedInputValues;
+    });
   }
   return (
     <TableContainer>
@@ -40,9 +64,12 @@ const OrderList = ({
           <Tr>
             <Th>Product Name</Th>
             <Th>Type</Th>
+            <Th>Generic name</Th>
             <Th>Manufacture Price</Th>
             <Th>Store Price</Th>
+            <Th>Available Stocks</Th>
             <Th>Quantity</Th>
+            <Th>Discount</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -52,11 +79,43 @@ const OrderList = ({
                 <Tr key={i}>
                   <Td>{data.products.name}</Td>
                   <Td>{data.products.category}</Td>
+                  <Td>{data.products.generic_name}</Td>
                   <Td>{`₱ ${data.manufacture_price}`}</Td>
                   <Td>{`₱ ${data.srp_price}`}</Td>
                   <Td>{data.quantity}</Td>
                   <Td>
-                    <Button colorScheme='blue' onClick={() => handleAdd(data)}>
+                    <NumberInput
+                    key={data.id}
+                    onChange={event => handleInputChange(event, i)}
+                    value={inputValues[i]}
+                    max={data.quantity}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </Td>
+
+                  <Td>
+                    {' '}
+                    <Checkbox
+                      key={data.id}
+                      isChecked={checkedItems.includes(data.id)}
+                      onChange={() => handleCheck(data.id)}
+                    >
+                      {(data.srp_price * (20 / 100)).toFixed(2)}
+                    </Checkbox>
+                  </Td>
+
+                  <Td>
+                    <Button
+                      colorScheme='blue'
+                      onClick={() =>
+                        handleAdd(data, checkedItems.includes(data.id), inputValues[i])
+                      }
+                    >
                       Add
                     </Button>
                   </Td>

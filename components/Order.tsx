@@ -12,10 +12,11 @@ import {
 
 import { supabase } from '../supabaseClient'
 import OrderList from './order/OrderList'
+import CustomerOrder from './order/CustomerOrder'
 
 interface Inventory {
   id: number
-  product_name: string
+  products: {name: string}
   batch_number: number
   manufacture_price: number
   srp_price: number
@@ -24,41 +25,41 @@ interface Inventory {
 }
 const Order = () => {
   const [inventoryData, setInventoryData] = useState<Inventory[]>([])
-  const [inventoryAllData, setInventoryAllData] = useState<Inventory[]>([]) 
+  const [inventoryAllData, setInventoryAllData] = useState<Inventory[]>([])
   const [reloadList, setReloadList] = useState(false)
   const [search, setSearch] = useState('')
-  const [addData, setAddData] = useState<any>([])
-
+  const [customerOrder, setCustomerOrder] = useState<any>([])
   const handleSearch = async (e: any) => {
-    const result = inventoryAllData.filter(data => {
-      if(!e.target.value) {
-
-        return   inventoryAllData
-         
+    const result = inventoryAllData.filter((data) => {
+      if (!e.target.value) {
+        return inventoryAllData
       }
-      return data.product_name.toLocaleLowerCase().includes(e.target.value.toLowerCase())
+      return data.products.name.toLocaleLowerCase().includes(e.target.value.toLowerCase())
     })
 
     setSearch(e.target.value)
     setInventoryData(result)
-
   }
   const getInventory = async () => {
-    const { data, error }: any = await supabase.from('inventory').select(     `
+    const { data, error }: any = await supabase
+      .from('inventory')
+      .select(
+        `
     *,
     products (
       name,
-      category
+      category,
+      generic_name
     )
   `
-     ).order('product_id', { ascending: true })
+      )
+      .order('product_id', { ascending: true })
     setInventoryAllData(data)
     setInventoryData(data)
   }
 
   useEffect(() => {
-    
-    if(reloadList) {
+    if (reloadList) {
       getInventory()
     }
   }, [reloadList])
@@ -68,24 +69,33 @@ const Order = () => {
   }, [])
 
   const handleAddOrder = (data: object) => {
-  setAddData((oldArray: []) => [...oldArray, data])
-
+    setCustomerOrder((oldArray: []) => [...oldArray, data])
   }
+
+  const handleRemoveOrder = (product_order: number) => {
+    setCustomerOrder(customerOrder.filter((item: any) => item.product_order !== product_order))
+ }
   return (
     <div>
-      <Card>
-        <Flex>
-          <Box p='4'>
-            <Input placeholder='Search Product' onKeyUp={handleSearch} />
-            <OrderList reloadList={reloadList} inventoryData={inventoryData} getInventory={getInventory}  handleAddOrder={handleAddOrder}/>
+        <Card m='4'>
+          <Box p='8'>
+            <Input placeholder='Search Product' onKeyUp={handleSearch}  size='lg'/>
+            <OrderList
+              reloadList={reloadList}
+              inventoryData={inventoryData}
+              getInventory={getInventory}
+              handleAddOrder={handleAddOrder}
+            />
           </Box>
-          <Spacer />
-          <Box p='4'>
+        </Card>
+        <Spacer />
+        
+      <Card m='8'>
+          <Box>
             <Input placeholder='Search Product' onKeyUp={handleSearch} />
-            <OrderList reloadList={reloadList} inventoryData={inventoryData} getInventory={getInventory} handleAddOrder={handleAddOrder}/>
+            <CustomerOrder customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} />
           </Box>
-        </Flex>
-      </Card>
+        </Card>
     </div>
   )
 }
