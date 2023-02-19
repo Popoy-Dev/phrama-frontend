@@ -1,7 +1,7 @@
 const validate = (values : any)  => {
     const errors: any = {}
-    if (!values.product_name) {
-      errors.product_name = 'Please select product name!'
+    if (!values.product_id) {
+      errors.product_id = 'Please select product name!'
     }
     if (!values.batch_number) {
       errors.batch_number = 'Please input batch number!'

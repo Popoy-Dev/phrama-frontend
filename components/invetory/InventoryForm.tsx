@@ -29,7 +29,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
   const [productData, setProductData] = useState([{ id: 0, name: '' }])
   const formik = useFormik({
     initialValues: {
-      product_name: updateData?.product_name || '',
+      product_id: updateData?.product_id || '',
       batch_number: updateData?.batch_number || '',
       srp_price: updateData?.srp_price || '',
       manufacture_price: updateData?.manufacture_price || '',
@@ -42,7 +42,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
         const { data, error } = await supabase
           .from('inventory')
           .update({
-            product_name: values.product_name,
+            product_id: values.product_id,
             batch_number: values.batch_number,
             manufacture_price: values.manufacture_price,
             srp_price: values.srp_price,
@@ -61,7 +61,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
         const { data, error } = await supabase
           .from('inventory')
           .insert({
-            product_name: values.product_name,
+            product_id: values.product_id,
             batch_number: values.batch_number,
             manufacture_price: values.manufacture_price,
             srp_price: values.srp_price,
@@ -106,23 +106,24 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
               <FormLabel>Name of Product</FormLabel>
 
               <Select
+                value={formik.values.product_id}
+                name='product_id'
+                id="product_id"
                 as={Select}
                 placeholder='Select Product Name'
                 onChange={formik.handleChange}
-                value={formik.values.product_name}
-                name='product_name'
               >
                 {productData.map((data): any => {
                   return (
-                    <option value={data?.name} key={data.id}>
+                    <option value={data?.id} key={data.id}>
                       {data.name}
                     </option>
                   )
                 })}
               </Select>
-              {formik.errors.product_name ? <Text color='tomato'> Please select product name!</Text> : null}
+              {formik.errors.product_id ? <Text color='tomato'> Please select product name!</Text> : null}
             </FormControl>
-
+         
             <FormControl>
               <FormLabel>Batch Number</FormLabel>
 

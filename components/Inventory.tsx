@@ -33,26 +33,51 @@ const Inventory = () => {
   const onOpen = () => {
     setIsOpen(true)
   }
-  const onClose = (data:[])  => {
-    if(data) {
+  const onClose = (data: []) => {
+    if (data) {
       setReloadList(true)
     }
     setIsOpen(false)
   }
-  const getProducts = async () => {
-    const { data, error }: any = await supabase.from('inventory').select().order('product_name', { ascending: true })
-    setInventoryData(data)
+  const getInventory = async () => {
+    const { data, error }: any = await supabase
+      .from('inventory')
+      .select(
+        `
+    *,
+    products (
+      name
+    )
+  `
+      )
+      .order('product_id', { ascending: true })
+
+      const newData: any = data.map((d: any) =>  {
+        return (
+          {
+            id: d?.id,
+            product_id:  d?.products?.name,
+            batch_number: d?.batch_number,
+            srp_price: d?.srp_price,
+            manufacture_price: d?.manufacture_price,
+            quantity: d?.quantity,
+            expiry_date: d?.expiry_date,
+    
+          }
+          )
+      })
+   
+    setInventoryData(newData)
   }
 
   useEffect(() => {
-    
-    if(reloadList) {
-      getProducts()
+    if (reloadList) {
+      getInventory()
     }
   }, [reloadList])
 
   useEffect(() => {
-    getProducts()
+    getInventory()
   }, [])
 
   return (
@@ -77,7 +102,11 @@ const Inventory = () => {
           </Box>
         </Flex>
         <Box p='4'>
-        <InventoryList reloadList={reloadList} inventoryData={inventoryData} getProducts={getProducts}/>
+          <InventoryList
+            reloadList={reloadList}
+            inventoryData={inventoryData}
+            getInventory={getInventory}
+          />
         </Box>
       </Card>
     </div>

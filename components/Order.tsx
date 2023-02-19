@@ -10,9 +10,8 @@ import {
   Input,
 } from '@chakra-ui/react'
 
-import InventoryModal from './invetory/InventoryModal'
-import InventoryList from './invetory/InventoryList'
 import { supabase } from '../supabaseClient'
+import OrderList from './order/OrderList'
 
 interface Inventory {
   id: number
@@ -25,11 +24,10 @@ interface Inventory {
 }
 const Order = () => {
   const [inventoryData, setInventoryData] = useState<Inventory[]>([])
-  const [inventoryAllData, setInventoryAllData] = useState<Inventory[]>([])
-
-  
+  const [inventoryAllData, setInventoryAllData] = useState<Inventory[]>([]) 
   const [reloadList, setReloadList] = useState(false)
   const [search, setSearch] = useState('')
+  const [addData, setAddData] = useState<any>([])
 
   const handleSearch = async (e: any) => {
     const result = inventoryAllData.filter(data => {
@@ -45,8 +43,15 @@ const Order = () => {
     setInventoryData(result)
 
   }
-  const getProducts = async () => {
-    const { data, error }: any = await supabase.from('inventory').select().order('product_name', { ascending: true })
+  const getInventory = async () => {
+    const { data, error }: any = await supabase.from('inventory').select(     `
+    *,
+    products (
+      name,
+      category
+    )
+  `
+     ).order('product_id', { ascending: true })
     setInventoryAllData(data)
     setInventoryData(data)
   }
@@ -54,27 +59,30 @@ const Order = () => {
   useEffect(() => {
     
     if(reloadList) {
-      getProducts()
+      getInventory()
     }
   }, [reloadList])
 
   useEffect(() => {
-    getProducts()
+    getInventory()
   }, [])
 
+  const handleAddOrder = (data: object) => {
+  setAddData((oldArray: []) => [...oldArray, data])
+
+  }
   return (
     <div>
       <Card>
         <Flex>
           <Box p='4'>
             <Input placeholder='Search Product' onKeyUp={handleSearch} />
-            <InventoryList reloadList={reloadList} inventoryData={inventoryData} getProducts={getProducts}/>
-
+            <OrderList reloadList={reloadList} inventoryData={inventoryData} getInventory={getInventory}  handleAddOrder={handleAddOrder}/>
           </Box>
           <Spacer />
           <Box p='4'>
             <Input placeholder='Search Product' onKeyUp={handleSearch} />
-            <InventoryList reloadList={reloadList} inventoryData={inventoryData} getProducts={getProducts}/>
+            <OrderList reloadList={reloadList} inventoryData={inventoryData} getInventory={getInventory} handleAddOrder={handleAddOrder}/>
           </Box>
         </Flex>
       </Card>
