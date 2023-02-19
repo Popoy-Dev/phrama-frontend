@@ -93,7 +93,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
     <>
       <form onSubmit={formik.handleSubmit}>
         <ModalContent>
-          <ModalHeader>Create Inventory</ModalHeader>
+          <ModalHeader> {updateData?.length === 0 ? 'Create Inventory' : 'Update Inventory'}</ModalHeader>
           {errorMessage && (
             <Alert status='error'>
               <AlertIcon />
@@ -196,6 +196,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
                 size='md'
                 type='date'
                 name='expiry_date'
+                value={formik.values.expiry_date}
               />
               {formik.errors.expiry_date ? <Text color='tomato'> Please select expiry date!</Text> : null}
 

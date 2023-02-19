@@ -67,7 +67,7 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
     <>
       <form onSubmit={formik.handleSubmit}>
         <ModalContent>
-          <ModalHeader>Create Products</ModalHeader>
+          <ModalHeader>   {updateData?.length === 0 ? 'Create Product' : 'Update Product'}</ModalHeader>
           {errorMessage && (
             <Alert status='error'>
               <AlertIcon />
