@@ -90,9 +90,8 @@ const Order = () => {
         </Card>
         <Spacer />
         
-      <Card m='8'>
-          <Box>
-            <Input placeholder='Search Product' onKeyUp={handleSearch} />
+      <Card m='4' mt='12'>
+          <Box m='2'>
             <CustomerOrder customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} />
           </Box>
         </Card>

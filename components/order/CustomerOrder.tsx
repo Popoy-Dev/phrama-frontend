@@ -36,7 +36,7 @@ const CustomerOrder = ({ customerOrder, handleRemoveOrder }: any) => {
 
   return (
     <TableContainer>
-      <Table variant='striped' colorScheme='blue'>
+      <Table variant='striped' colorScheme='purple'>
         <TableCaption>Fayne Pharmacy 2023</TableCaption>
         <Thead>
           <Tr>
