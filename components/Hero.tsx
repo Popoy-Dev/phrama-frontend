@@ -32,12 +32,11 @@ export default function Hero() {
               Fayne Pharmacy
             </Text>
           </Heading>
-          <Text color={'gray.500'}>
-            Monetize your content by charging your most loyal readers and reward
-            them loyalty points. Give back to your loyal readers by granting
-            them access to your pre-releases and sneak-peaks.
+          <Text color={'gray.500'} fontSize={{ base: 'sm', sm: 'lg', md: 'xl' }}>
+          Your health is our priority - trust Fayne Pharmacy for all your wellness needs.
+          <br /> --- Caring for you, one prescription at a time. ---
           </Text>
-          <Stack
+          {/* <Stack
             direction={'column'}
             spacing={3}
             align={'center'}
@@ -75,7 +74,7 @@ export default function Hero() {
                 Starting at $15/mo
               </Text>
             </Box>
-          </Stack>
+          </Stack> */}
         </Stack>
       </Container>
     </>
