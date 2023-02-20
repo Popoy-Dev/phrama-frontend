@@ -16,6 +16,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Text,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -30,14 +31,22 @@ interface Inventory {
   expiry_date: Date
 }
 const OrderList = ({ inventoryData, handleAddOrder }: any) => {
-  const handleAdd = (data: any, id: any, order_quantity: number) => {
-    const newData = {
-      ...data,
-      discounted: id,
-      order_quantity: order_quantity,
-      product_order: Math.floor(Math.random() * 100)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [errorIndex, setErrorIndex] = useState(0)
+  const handleAdd = (data: any, id: any, order_quantity: number, i : number) => {
+    if(!order_quantity ||order_quantity <= 0) {
+      setErrorIndex(i)
+      setErrorMessage('Please input quantity')
+    }else {
+      const newData = {
+        ...data,
+        discounted: id,
+        order_quantity: order_quantity,
+        product_order: Math.floor(Math.random() * 100)
+      }
+      handleAddOrder(newData)
     }
-    handleAddOrder(newData)
+    
   }
   const [checkedItems, setCheckedItems] = useState<any>([])
   function handleCheck(item: any) {
@@ -56,6 +65,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
       return updatedInputValues;
     });
   }
+
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='blue'>
@@ -96,6 +106,9 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                         <NumberDecrementStepper />
                       </NumberInputStepper>
                     </NumberInput>
+
+                    {errorMessage && errorIndex === i ? <Text color='tomato'> {errorMessage}!</Text> : null}
+
                   </Td>
 
                   <Td>
@@ -113,7 +126,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                     <Button
                       colorScheme='blue'
                       onClick={() =>
-                        handleAdd(data, checkedItems.includes(data.id), inputValues[i])
+                        handleAdd(data, checkedItems.includes(data.id), inputValues[i], i)
                       }
                     >
                       Add
