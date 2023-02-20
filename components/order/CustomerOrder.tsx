@@ -32,8 +32,24 @@ interface Inventory {
   discounted: string
   product_order: number
 }
-const CustomerOrder = ({ customerOrder, handleRemoveOrder }: any) => {
+const CustomerOrder = ({
+  customerOrder,
+  handleRemoveOrder,
+  isRemoveItem,
+}: any) => {
+  const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
 
+  const getTotal = () => {
+    setRemoveTotalQuantity(
+      customerOrder.reduce(
+        (acc: any, obj: any) => acc + parseInt(obj.order_quantity),
+        0
+      )
+    )
+  }
+  useEffect(() => {
+    getTotal()
+  }, [customerOrder, isRemoveItem])
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='purple'>
@@ -59,22 +75,49 @@ const CustomerOrder = ({ customerOrder, handleRemoveOrder }: any) => {
                   <Td>{`₱ ${data.srp_price}`}</Td>
 
                   <Td>{data.order_quantity} pcs</Td>
-                  <Td>{data.discounted ? (data.srp_price * (20 / 100) * parseInt(data?.order_quantity)).toFixed(2): 'No Discount'} </Td>
-                  <Td>{data.discounted ?   (parseInt(data?.order_quantity) * data.srp_price) -(data.srp_price * (20 / 100) * parseInt(data?.order_quantity))  :(parseInt(data?.order_quantity) * data.srp_price).toFixed(2)} </Td>
-                  <Td> <Button colorScheme='red' variant='outline' onClick={() =>handleRemoveOrder(data.product_order)}>
-    Remove
-  </Button> </Td>
+                  <Td>
+                    {data.discounted
+                      ? (
+                          data.srp_price *
+                          (20 / 100) *
+                          parseInt(data?.order_quantity)
+                        ).toFixed(2)
+                      : 'No Discount'}{' '}
+                  </Td>
+                  <Td>
+                    {data.discounted
+                      ? parseInt(data?.order_quantity) * data.srp_price -
+                        data.srp_price *
+                          (20 / 100) *
+                          parseInt(data?.order_quantity)
+                      : (
+                          parseInt(data?.order_quantity) * data.srp_price
+                        ).toFixed(2)}{' '}
+                  </Td>
+                  <Td>
+                    {' '}
+                    <Button
+                      colorScheme='red'
+                      variant='outline'
+                      onClick={() => handleRemoveOrder(data.product_order)}
+                    >
+                      Remove
+                    </Button>{' '}
+                  </Td>
                 </Tr>
               )
             })}
         </Tbody>
-        {/* <Tfoot>
-      <Tr>
-        <Th>To convert</Th>
-        <Th>into</Th>
-        <Th isNumeric>multiply by</Th>
-      </Tr>
-    </Tfoot> */}
+        <Tfoot className='text-right'>
+          <Tr>
+            <Th></Th>
+            <Th></Th>
+            <Th></Th>
+            <Th>Total quantity - {removetotalQuantity} pieces</Th>
+            <Th>Total Discount</Th>
+            <Th isNumeric>Total Amount</Th>
+          </Tr>
+        </Tfoot>
       </Table>
     </TableContainer>
   )
