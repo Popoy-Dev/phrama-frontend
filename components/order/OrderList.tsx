@@ -28,7 +28,8 @@ interface Inventory {
   manufacture_price: number
   srp_price: number
   quantity: number
-  expiry_date: Date
+  expiry_date: Date,
+  vat: boolean
 }
 const OrderList = ({ inventoryData, handleAddOrder }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
@@ -80,6 +81,8 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
             <Th>Available Stocks</Th>
             <Th>Quantity</Th>
             <Th>Discount</Th>
+            <Th>VAT</Th>
+            <Th>Action</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -121,6 +124,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                       {(data.srp_price * (20 / 100)).toFixed(2)}
                     </Checkbox>
                   </Td>
+                  <Td>{data.vat}</Td>
 
                   <Td>
                     <Button
