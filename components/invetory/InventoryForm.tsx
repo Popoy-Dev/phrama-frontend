@@ -35,6 +35,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
       manufacture_price: updateData?.manufacture_price || '',
       quantity: updateData?.quantity || '',
       expiry_date: updateData?.expiry_date || '',
+      vat: updateData?.vat || '',
     },
     validate,
     onSubmit: async (values) => {
@@ -200,6 +201,19 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
               />
               {formik.errors.expiry_date ? <Text color='tomato'> Please select expiry date!</Text> : null}
 
+            </FormControl>
+            <FormControl>
+              <FormLabel>VAT Type</FormLabel>
+              <Select as={Select}
+                placeholder='Select VAT Type'
+                onChange={formik.handleChange}
+                value={formik.values.vat}
+
+                name='category'
+              >
+                <option value='branded'>With VAT</option>
+                <option value='generic'>Non VAT</option>
+              </Select>
             </FormControl>
           </ModalBody>
 
