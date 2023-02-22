@@ -69,7 +69,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
             srp_price: values.srp_price,
             quantity: values.quantity,
             expiry_date: values.expiry_date,
-            vat: values.is_vatable,
+            is_vatable: values.is_vatable,
           })
           .select()
 

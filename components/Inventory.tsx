@@ -62,7 +62,7 @@ const Inventory = () => {
             manufacture_price: d?.manufacture_price,
             quantity: d?.quantity,
             expiry_date: d?.expiry_date,
-    
+            is_vatable: d?.is_vatable,
           }
           )
       })

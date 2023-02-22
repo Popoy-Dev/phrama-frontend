@@ -10,6 +10,7 @@ import {
   TableCaption,
   TableContainer,
   Button,
+  Badge,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -22,6 +23,7 @@ interface Inventory {
   manufacture_price: number
   srp_price: number
   quantity: number
+  is_vatable: boolean
   expiry_date: Date
 }
 const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
@@ -63,6 +65,7 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
             <Th>Manufacture Price</Th>
             <Th>Store Price</Th>
             <Th>Quantity</Th>
+            <Th>Is Vatable</Th>
             <Th>Expiry Date</Th>
   
           </Tr>
@@ -70,7 +73,7 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
         <Tbody>
           {inventoryData &&
             inventoryData?.map((data: Inventory, i: number) => {
-              
+            
               return (
                 <Tr key={i}>
                   <Td>{data.product_id}</Td>
@@ -78,6 +81,7 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
                   <Td>{`₱ ${data.manufacture_price}`}</Td>
                   <Td>{`₱ ${data.srp_price}`}</Td>
                   <Td>{data.quantity}</Td>
+                  <Td>{data.is_vatable ?   <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>
                   <Td>{data.expiry_date.toString()}</Td>
                   <Td>
                     <Button colorScheme='yellow' onClick={() =>handleEditInventory(data.id)}>Edit</Button>
