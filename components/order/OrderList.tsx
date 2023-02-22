@@ -17,6 +17,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Text,
+  Badge,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -124,7 +125,8 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                       {(data.srp_price * (20 / 100)).toFixed(2)}
                     </Checkbox>
                   </Td>
-                  <Td>{data.is_vatable}</Td>
+                  <Td>{data.is_vatable ?   <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>
+
 
                   <Td>
                     <Button
