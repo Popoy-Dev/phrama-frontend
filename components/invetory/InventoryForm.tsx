@@ -35,7 +35,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
       manufacture_price: updateData?.manufacture_price || '',
       quantity: updateData?.quantity || '',
       expiry_date: updateData?.expiry_date || '',
-      vat: updateData?.vat || '',
+      is_vatable: updateData?.is_vatable || '',
     },
     validate,
     onSubmit: async (values) => {
@@ -49,7 +49,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
             srp_price: values.srp_price,
             quantity: values.quantity,
             expiry_date: values.expiry_date,
-            vat: values.vat,
+            is_vatable: values.is_vatable,
           })
           .eq('id', updateData?.id)
           .select()
@@ -69,7 +69,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
             srp_price: values.srp_price,
             quantity: values.quantity,
             expiry_date: values.expiry_date,
-            vat: values.vat,
+            vat: values.is_vatable,
           })
           .select()
 
@@ -209,12 +209,12 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
               <Select as={Select}
                 placeholder='Select VAT Type'
                 onChange={formik.handleChange}
-                value={formik.values.vat}
+                value={formik.values.is_vatable}
 
-                name='category'
+                name='is_vatable'
               >
-                <option value='branded'>With VAT</option>
-                <option value='generic'>Non VAT</option>
+                <option value='true'>With VAT</option>
+                <option value='false'>Non VAT</option>
               </Select>
             </FormControl>
           </ModalBody>
