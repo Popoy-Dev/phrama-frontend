@@ -39,9 +39,10 @@ const CustomerOrder = ({
 }: any) => {
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
+  const [totalAmount, setTotalAmount] = useState(0)
 
   const getTotal = () => {
-    if(customerOrder.length === 0) {
+    if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
       setRemoveTotalQuantity(0)
     }
@@ -52,22 +53,27 @@ const CustomerOrder = ({
       )
     )
 
-      customerOrder.map((data: any) => {
-          if(data.discounted) {
-            setRemoveTotalDiscount(
-              customerOrder.reduce(
-                (acc: any, obj: any) => acc + (data.srp_price * (20 / 100) *parseInt(data?.order_quantity)),
-                0
-              )
+    setRemoveTotalDiscount(
+      customerOrder.reduce((acc: any, obj: any) => {
+        const discounted = () => {
+          if (obj.discounted) {
+            return (
+              acc + obj.srp_price * (20 / 100) * parseInt(obj?.order_quantity)
             )
+          } else {
+            return acc + 0
           }
-      })
+        }
+
+        return discounted()
+      }, 0)
+    )
   }
 
   useEffect(() => {
     getTotal()
   }, [customerOrder, isRemoveItem])
-  
+
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='purple'>
@@ -104,7 +110,10 @@ const CustomerOrder = ({
                   </Td>
                   <Td>
                     {data.discounted
-                      ? (parseInt(data?.order_quantity) * data.srp_price) - ((data.srp_price *(20 / 100)) * parseInt(data?.order_quantity))
+                      ? parseInt(data?.order_quantity) * data.srp_price -
+                        data.srp_price *
+                          (20 / 100) *
+                          parseInt(data?.order_quantity)
                       : (
                           parseInt(data?.order_quantity) * data.srp_price
                         ).toFixed(2)}{' '}
