@@ -40,7 +40,6 @@ const CustomerOrder = ({
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
   const [totalAmount, setTotalAmount] = useState(0)
-
   const getTotal = () => {
     if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
@@ -66,6 +65,19 @@ const CustomerOrder = ({
         }
 
         return discounted()
+      }, 0)
+    )
+    setTotalAmount(
+      customerOrder.reduce((acc: any, obj: any) => {
+        const total = () => {
+          if (obj.discounted) {
+           return (acc + parseInt(obj?.order_quantity) * obj.srp_price -
+           obj.srp_price * (20 / 100) * parseInt(obj?.order_quantity))
+          } else {
+           return (  acc + parseInt(obj?.order_quantity) * obj.srp_price)
+          }
+        }
+        return total()
       }, 0)
     )
   }
@@ -139,7 +151,7 @@ const CustomerOrder = ({
             <Th></Th>
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
-            <Th isNumeric>Total Amount</Th>
+            <Th isNumeric>{totalAmount.toFixed(2)}PHP</Th>
           </Tr>
         </Tfoot>
       </Table>
