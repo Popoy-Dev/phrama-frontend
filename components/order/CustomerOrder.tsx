@@ -31,6 +31,7 @@ interface Inventory {
   order_quantity: string
   discounted: string
   product_order: number
+  is_vatable: boolean
 }
 const CustomerOrder = ({
   customerOrder,
@@ -70,13 +71,21 @@ const CustomerOrder = ({
     setTotalAmount(
       customerOrder.reduce((acc: any, obj: any) => {
         const total = () => {
+          let vatValue = 0
+          if(obj.is_vatable === true) {
+            vatValue = 28/25
+          }else {
+            vatValue= 1
+          }
           if (obj.discounted) {
-           return (acc + parseInt(obj?.order_quantity) * obj.srp_price -
-           obj.srp_price * (20 / 100) * parseInt(obj?.order_quantity) - 6/5)
+            const vatComputation = ((parseInt(obj?.order_quantity) * obj.srp_price) / vatValue )
+            const seniorDiscount = vatComputation * (20 / 100)
+           return (acc + vatComputation -seniorDiscount )
           } else {
            return (  acc + parseInt(obj?.order_quantity) * obj.srp_price)
           }
         }
+
         return total()
       }, 0)
     )
@@ -104,6 +113,28 @@ const CustomerOrder = ({
         <Tbody>
           {customerOrder &&
             customerOrder?.map((data: Inventory, i: number) => {
+              let total = 0
+              if(data.discounted && data.is_vatable === true) {
+                let vatValue = 28/25 
+                const vatComputation = ((parseInt(data?.order_quantity) * data.srp_price) / vatValue )
+                const seniorDiscount = vatComputation * (20 / 100)
+                total = vatComputation -seniorDiscount
+              }
+              if(!data.discounted && data.is_vatable ) {
+    
+                total = ((parseInt(data?.order_quantity) * data.srp_price) )
+              }
+              if(data.discounted && data.is_vatable === false ) {
+                const vatComputation = ((parseInt(data?.order_quantity) * data.srp_price) )
+                const seniorDiscount = vatComputation * (20 / 100)
+                total = vatComputation -seniorDiscount
+              }
+              if(!data.discounted && !data.is_vatable ) {
+                const vatComputation = ((parseInt(data?.order_quantity) * data.srp_price) )
+                total = parseInt(data?.order_quantity) * data.srp_price
+              }
+        
+
               return (
                 <Tr key={i}>
                   <Td>{data.products.name}</Td>
@@ -121,14 +152,7 @@ const CustomerOrder = ({
                       : 'No Discount'}{' '}
                   </Td>
                   <Td>
-                    {data.discounted
-                      ? (parseInt(data?.order_quantity) * data.srp_price -
-                        data.srp_price *
-                          (20 / 100) *
-                          parseInt(data?.order_quantity) - 6/5).toFixed(2)
-                      : (
-                          parseInt(data?.order_quantity) * data.srp_price
-                        ).toFixed(2)}{' '}
+                    {total.toFixed(3)}{' '}
                   </Td>
                   <Td>
                     {' '}
@@ -151,7 +175,7 @@ const CustomerOrder = ({
             <Th></Th>
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
-            <Th isNumeric>{totalAmount.toFixed(2)}PHP</Th>
+            <Th isNumeric>{totalAmount.toFixed(3)}PHP</Th>
           </Tr>
         </Tfoot>
       </Table>
