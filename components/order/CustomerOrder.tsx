@@ -72,7 +72,7 @@ const CustomerOrder = ({
         const total = () => {
           if (obj.discounted) {
            return (acc + parseInt(obj?.order_quantity) * obj.srp_price -
-           obj.srp_price * (20 / 100) * parseInt(obj?.order_quantity))
+           obj.srp_price * (20 / 100) * parseInt(obj?.order_quantity) - 6/5)
           } else {
            return (  acc + parseInt(obj?.order_quantity) * obj.srp_price)
           }
@@ -122,10 +122,10 @@ const CustomerOrder = ({
                   </Td>
                   <Td>
                     {data.discounted
-                      ? parseInt(data?.order_quantity) * data.srp_price -
+                      ? (parseInt(data?.order_quantity) * data.srp_price -
                         data.srp_price *
                           (20 / 100) *
-                          parseInt(data?.order_quantity)
+                          parseInt(data?.order_quantity) - 6/5).toFixed(2)
                       : (
                           parseInt(data?.order_quantity) * data.srp_price
                         ).toFixed(2)}{' '}
