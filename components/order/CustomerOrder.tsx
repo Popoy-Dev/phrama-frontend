@@ -10,12 +10,8 @@ import {
   TableCaption,
   TableContainer,
   Button,
-  Checkbox,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -37,11 +33,13 @@ const CustomerOrder = ({
   customerOrder,
   handleRemoveOrder,
   isRemoveItem,
+  handleRemoveAllOrder
 }: any) => {
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
   const [totalAmount, setTotalAmount] = useState(0)
-  const [errorMessage, setErrorMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState(false)
   const getTotal = () => {
     if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
@@ -98,24 +96,45 @@ const CustomerOrder = ({
   }, [customerOrder, isRemoveItem])
 
   const handlePrintSave = async () => {
-    const { error, data } = await supabase.from('orders').insert({
-      order: customerOrder,
-      order_totals_details: {
-        removetotalQuantity,
-       removetotalDiscount,
-        totalAmount,
-      },
-    }).select()
+    const { error, data } = await supabase
+      .from('orders')
+      .insert({
+        order: customerOrder,
+        order_totals_details: {
+          removetotalQuantity,
+          removetotalDiscount,
+          totalAmount,
+        },
+      })
+      .select()
 
-    if(!error) {
-      alert('Happy Customer!')
-    }else {
-      setErrorMessage("There something wrong!")
+    if (!error) {
+      customerOrder.forEach(async (order: any) => {
+        const { data, error } = await supabase
+          .from('inventory')
+          .update({ quantity: order.quantity - parseInt(order.order_quantity) })
+          .eq('id', order.id)
+      })
+
+      if (!error) {
+        setSuccessMessage(true)
+        handleRemoveAllOrder(true)
+      } else {
+        alert('SOmething wrong in edit')
+      }
+    } else {
+      setErrorMessage('There something wrong!')
     }
   }
-
   return (
     <TableContainer>
+      {successMessage ? (
+        <Alert status='success'>
+          <AlertIcon />
+          Customer order saved!
+        </Alert>
+      ): 'he;l'}
+
       <Table variant='striped' colorScheme='purple'>
         <TableCaption>Fayne Pharmacy 2023</TableCaption>
         <Thead>

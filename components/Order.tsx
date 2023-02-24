@@ -77,6 +77,13 @@ const Order = () => {
     setCustomerOrder(customerOrder.filter((item: any) => item.product_order !== product_order))
     setIsremoveItem(true)
  }
+
+  const handleRemoveAllOrder = (info: boolean) => {
+    if(info) {
+      setCustomerOrder([])
+    }
+  
+  }
   return (
     <div>
         <Card m='4'>
@@ -94,7 +101,7 @@ const Order = () => {
         
       <Card m='4' mt='12'>
           <Box m='2'>
-            <CustomerOrder customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} isRemoveItem={isRemoveItem} />
+            <CustomerOrder customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} isRemoveItem={isRemoveItem} handleRemoveAllOrder={handleRemoveAllOrder} />
           </Box>
         </Card>
     </div>
