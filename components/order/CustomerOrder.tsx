@@ -41,6 +41,7 @@ const CustomerOrder = ({
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
   const [totalAmount, setTotalAmount] = useState(0)
+  const [errorMessage, setErrorMessage] = useState("")
   const getTotal = () => {
     if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
@@ -72,17 +73,18 @@ const CustomerOrder = ({
       customerOrder.reduce((acc: any, obj: any) => {
         const total = () => {
           let vatValue = 0
-          if(obj.is_vatable === true) {
-            vatValue = 28/25
-          }else {
-            vatValue= 1
+          if (obj.is_vatable === true) {
+            vatValue = 28 / 25
+          } else {
+            vatValue = 1
           }
           if (obj.discounted) {
-            const vatComputation = ((parseInt(obj?.order_quantity) * obj.srp_price) / vatValue )
+            const vatComputation =
+              (parseInt(obj?.order_quantity) * obj.srp_price) / vatValue
             const seniorDiscount = vatComputation * (20 / 100)
-           return (acc + vatComputation -seniorDiscount )
+            return acc + vatComputation - seniorDiscount
           } else {
-           return (  acc + parseInt(obj?.order_quantity) * obj.srp_price)
+            return acc + parseInt(obj?.order_quantity) * obj.srp_price
           }
         }
 
@@ -94,6 +96,23 @@ const CustomerOrder = ({
   useEffect(() => {
     getTotal()
   }, [customerOrder, isRemoveItem])
+
+  const handlePrintSave = async () => {
+    const { error, data } = await supabase.from('orders').insert({
+      order: customerOrder,
+      order_totals_details: {
+        removetotalQuantity,
+       removetotalDiscount,
+        totalAmount,
+      },
+    }).select()
+
+    if(!error) {
+      alert('Happy Customer!')
+    }else {
+      setErrorMessage("There something wrong!")
+    }
+  }
 
   return (
     <TableContainer>
@@ -114,26 +133,27 @@ const CustomerOrder = ({
           {customerOrder &&
             customerOrder?.map((data: Inventory, i: number) => {
               let total = 0
-              if(data.discounted && data.is_vatable === true) {
-                let vatValue = 28/25 
-                const vatComputation = ((parseInt(data?.order_quantity) * data.srp_price) / vatValue )
+              if (data.discounted && data.is_vatable === true) {
+                let vatValue = 28 / 25
+                const vatComputation =
+                  (parseInt(data?.order_quantity) * data.srp_price) / vatValue
                 const seniorDiscount = vatComputation * (20 / 100)
-                total = vatComputation -seniorDiscount
+                total = vatComputation - seniorDiscount
               }
-              if(!data.discounted && data.is_vatable ) {
-    
-                total = ((parseInt(data?.order_quantity) * data.srp_price) )
-              }
-              if(data.discounted && data.is_vatable === false ) {
-                const vatComputation = ((parseInt(data?.order_quantity) * data.srp_price) )
-                const seniorDiscount = vatComputation * (20 / 100)
-                total = vatComputation -seniorDiscount
-              }
-              if(!data.discounted && !data.is_vatable ) {
-                const vatComputation = ((parseInt(data?.order_quantity) * data.srp_price) )
+              if (!data.discounted && data.is_vatable) {
                 total = parseInt(data?.order_quantity) * data.srp_price
               }
-        
+              if (data.discounted && data.is_vatable === false) {
+                const vatComputation =
+                  parseInt(data?.order_quantity) * data.srp_price
+                const seniorDiscount = vatComputation * (20 / 100)
+                total = vatComputation - seniorDiscount
+              }
+              if (!data.discounted && !data.is_vatable) {
+                const vatComputation =
+                  parseInt(data?.order_quantity) * data.srp_price
+                total = parseInt(data?.order_quantity) * data.srp_price
+              }
 
               return (
                 <Tr key={i}>
@@ -151,9 +171,7 @@ const CustomerOrder = ({
                         ).toFixed(2)
                       : 'No Discount'}{' '}
                   </Td>
-                  <Td>
-                    {total.toFixed(3)}{' '}
-                  </Td>
+                  <Td>{total.toFixed(3)} </Td>
                   <Td>
                     {' '}
                     <Button
@@ -176,6 +194,16 @@ const CustomerOrder = ({
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
             <Th isNumeric>{totalAmount.toFixed(3)}PHP</Th>
+            <Th>
+              {' '}
+              <Button
+                colorScheme='whatsapp'
+                variant='solid'
+                onClick={handlePrintSave}
+              >
+                Print Order
+              </Button>
+            </Th>
           </Tr>
         </Tfoot>
       </Table>
