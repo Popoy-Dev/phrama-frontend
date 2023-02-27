@@ -45,6 +45,7 @@ interface LinkItemProps {
   icon: IconType
 }
 const LinkItems: Array<LinkItemProps> = [
+  { name: 'Reports', icon: FiHome },
   { name: 'Products', icon: FiHome },
   { name: 'Inventory', icon: FiTrendingUp },
   { name: 'Order', icon: FiCompass },
@@ -57,46 +58,48 @@ const SidebarWithHeader = () => {
   const [userInfo, setUserInfo]: any = useState([])
   const [content, setContent]: any = useState('')
   const getInfo = async () => {
-    const { data, error } : any = await supabase.auth.getSession()
+    const { data, error }: any = await supabase.auth.getSession()
 
-    if(data) {
-      const  result:  any = await supabase.from("user").select().eq("uid", data?.session?.user?.user_metadata?.user_id);
-       setUserInfo(result?.data)    
+    if (data) {
+      const result: any = await supabase
+        .from('user')
+        .select()
+        .eq('uid', data?.session?.user?.user_metadata?.user_id)
+      setUserInfo(result?.data)
     }
   }
 
-useEffect(() => {
-  getInfo()
+  useEffect(() => {
+    getInfo()
+  }, [])
 
-}, [])
+  useEffect(() => {
+    ContentDashboard()
 
-useEffect(() => {
- 
-  ContentDashboard()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content])
 
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [content])
+  const ContentDashboard = (): any => {
+    switch (content) {
+      case 'Products':
+        return <Products />
 
-const ContentDashboard = () : any => {
-  switch (content) {
-    case 'Products':
-    return  <Products/>
+      case 'Inventory':
+        return <Inventory />
 
-    case 'Inventory':
-      return  <Inventory/>
-    
       case 'Order':
-        return  <Order/>
+        return <Order />
+      case 'Reports':
+        return <Order />
 
-    default:
-      break;
+      default:
+        break
+    }
   }
-
-}
-const handleDashboardContent = (name: string): any => {
-  setContent(name)
-  onClose()
-}
+  const handleDashboardContent = (name: string): any => {
+    setContent(name)
+    onClose()
+  }
 
   return (
     <Box minH='100vh' bg={'gray.100'}>
@@ -115,19 +118,21 @@ const handleDashboardContent = (name: string): any => {
         size='full'
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} handleDashboardContent={handleDashboardContent} />
+          <SidebarContent
+            onClose={onClose}
+            handleDashboardContent={handleDashboardContent}
+          />
         </DrawerContent>
       </Drawer>
       <MobileNav onOpen={onOpen} userInfo={userInfo} />
       <Box ml={{ base: 0, md: 60 }} p='4'>
-        <ContentDashboard/>
+        <ContentDashboard />
       </Box>
     </Box>
   )
 }
 
 const SidebarContent = ({ onClose, handleDashboardContent, ...rest }: any) => {
-  
   return (
     <Box
       transition='3s ease'
@@ -145,7 +150,11 @@ const SidebarContent = ({ onClose, handleDashboardContent, ...rest }: any) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} onClick={() =>handleDashboardContent(link.name)}>
+        <NavItem
+          key={link.name}
+          icon={link.icon}
+          onClick={() => handleDashboardContent(link.name)}
+        >
           {link.name}
         </NavItem>
       ))}
@@ -194,16 +203,14 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 }
 
 interface MobileProps extends FlexProps {
-  onOpen: () => void,
+  onOpen: () => void
   userInfo: any
 }
-const MobileNav  =  ({ onOpen,  userInfo , ...rest }: MobileProps)  => {
-
+const MobileNav = ({ onOpen, userInfo, ...rest }: MobileProps) => {
   const router = useRouter()
   const handleSignout = async () => {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut()
     router.push('/')
-
   }
   return (
     <Flex
@@ -261,7 +268,7 @@ const MobileNav  =  ({ onOpen,  userInfo , ...rest }: MobileProps)  => {
                   spacing='1px'
                   ml='2'
                 >
-                  <Text fontSize='sm'>{`${userInfo[0]?.firstname} ${userInfo[0]?.lastname}` }</Text>
+                  <Text fontSize='sm'>{`${userInfo[0]?.firstname} ${userInfo[0]?.lastname}`}</Text>
                   <Text fontSize='xs' color='gray.600'>
                     Admin
                   </Text>
@@ -287,6 +294,5 @@ const MobileNav  =  ({ onOpen,  userInfo , ...rest }: MobileProps)  => {
     </Flex>
   )
 }
-
 
 export default SidebarWithHeader

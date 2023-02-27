@@ -133,7 +133,7 @@ const CustomerOrder = ({
           <AlertIcon />
           Customer order saved!
         </Alert>
-      ): 'he;l'}
+      ): ''}
 
       <Table variant='striped' colorScheme='purple'>
         <TableCaption>Fayne Pharmacy 2023</TableCaption>
@@ -215,13 +215,13 @@ const CustomerOrder = ({
             <Th isNumeric>{totalAmount.toFixed(3)}PHP</Th>
             <Th>
               {' '}
-              {customerOrder.length !== 0 ?? (    <Button
+              {customerOrder.length !== 0 ? (    <Button
                 colorScheme='whatsapp'
                 variant='solid'
                 onClick={handlePrintSave}
               >
                 Print Order
-              </Button>) }
+              </Button>) : '' }
           
             </Th>
           </Tr>
