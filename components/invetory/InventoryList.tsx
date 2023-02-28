@@ -73,16 +73,15 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
         <Tbody>
           {inventoryData &&
             inventoryData?.map((data: Inventory, i: number) => {
-            
               return (
                 <Tr key={i}>
                   <Td>{data.product_id}</Td>
                   <Td>{data.batch_number}</Td>
-                  <Td>{`₱ ${data.manufacture_price}`}</Td>
-                  <Td>{`₱ ${data.srp_price}`}</Td>
+                  <Td>{`₱ ${data.manufacture_price.toFixed(2)}`}</Td>
+                  <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
                   <Td>{data.quantity}</Td>
                   <Td>{data.is_vatable ?   <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>
-                  <Td>{data.expiry_date.toString()}</Td>
+                  <Td>{new Date(`${data.expiry_date}`).toUTCString()}</Td>
                   <Td>
                     <Button colorScheme='yellow' onClick={() =>handleEditInventory(data.id)}>Edit</Button>
                   </Td>

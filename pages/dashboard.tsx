@@ -40,6 +40,7 @@ import { supabase } from './../supabaseClient'
 import Products from '../components/Products'
 import Inventory from '@/components/Inventory'
 import Order from '@/components/Order'
+import Reports from '@/components/Reports'
 interface LinkItemProps {
   name: string
   icon: IconType
@@ -90,7 +91,7 @@ const SidebarWithHeader = () => {
       case 'Order':
         return <Order />
       case 'Reports':
-        return <Order />
+        return <Reports />
 
       default:
         break
