@@ -35,7 +35,7 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
       manufacture_price: updateData?.manufacture_price || '',
       quantity: updateData?.quantity || '',
       expiry_date: updateData?.expiry_date || '',
-      is_vatable: updateData?.is_vatable || '',
+      is_vatable: updateData?.is_vatable || false,
     },
     validate,
     onSubmit: async (values) => {
