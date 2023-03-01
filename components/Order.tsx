@@ -86,7 +86,7 @@ const Order = () => {
   
   }
   const handleReloadInventory = (value: boolean) => {
-    setReloadInventory(value)
+    setReloadInventory(prevState => !prevState)
   }
   useEffect(() => {
     getInventory()
