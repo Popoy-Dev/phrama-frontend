@@ -111,8 +111,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                         <NumberDecrementStepper />
                       </NumberInputStepper>
                     </NumberInput>
-
-                    {errorMessage && errorIndex === i ? <Text color='tomato'> {errorMessage}!</Text> : null}
+                    {(data.quantity === 0 && errorIndex) === i ? <Text color='tomato'> No stocks!</Text> : (errorMessage && errorIndex) === i ?? <Text color='tomato'> {errorMessage}!</Text>} 
 
                   </Td>
 
