@@ -30,7 +30,8 @@ interface Inventory {
   srp_price: number
   quantity: number
   expiry_date: Date,
-  is_vatable: boolean
+  is_vatable: boolean,
+  ordered_quantity: number
 }
 const OrderList = ({ inventoryData, handleAddOrder }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
@@ -96,7 +97,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                   <Td>{data.products.generic_name}</Td>
                   <Td>{`₱ ${data.manufacture_price}`}</Td>
                   <Td>{`₱ ${data.srp_price}`}</Td>
-                  <Td>{data.quantity}</Td>
+                  <Td>{data.quantity - data.ordered_quantity}</Td>
                   <Td>
                     <NumberInput
                     key={data.id}
