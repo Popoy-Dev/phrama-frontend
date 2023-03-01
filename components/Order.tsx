@@ -30,6 +30,7 @@ const Order = () => {
   const [isRemoveItem, setIsremoveItem] = useState(false)
   const [search, setSearch] = useState('')
   const [customerOrder, setCustomerOrder] = useState<any>([])
+  const [reloadInventory, setReloadInventory] = useState(false)
   const handleSearch = async (e: any) => {
     const result = inventoryAllData.filter((data) => {
       if (!e.target.value) {
@@ -84,6 +85,12 @@ const Order = () => {
     }
   
   }
+  const handleReloadInventory = (value: boolean) => {
+    setReloadInventory(value)
+  }
+  useEffect(() => {
+    getInventory()
+  }, [reloadInventory])
   return (
     <div>
         <Card m='4'>
@@ -101,7 +108,7 @@ const Order = () => {
         
       <Card m='4' mt='12'>
           <Box m='2'>
-            <CustomerOrder customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} isRemoveItem={isRemoveItem} handleRemoveAllOrder={handleRemoveAllOrder} />
+            <CustomerOrder handleReloadInventory={handleReloadInventory} customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} isRemoveItem={isRemoveItem} handleRemoveAllOrder={handleRemoveAllOrder} />
           </Box>
         </Card>
     </div>

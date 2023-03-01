@@ -33,7 +33,9 @@ const CustomerOrder = ({
   customerOrder,
   handleRemoveOrder,
   isRemoveItem,
-  handleRemoveAllOrder
+  handleRemoveAllOrder,
+  handleReloadInventory
+  
 }: any) => {
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
@@ -94,7 +96,6 @@ const CustomerOrder = ({
   useEffect(() => {
     getTotal()
   }, [customerOrder, isRemoveItem])
-
   const handlePrintSave = async () => {
     const { error, data } = await supabase
       .from('orders')
@@ -112,12 +113,13 @@ const CustomerOrder = ({
       customerOrder.forEach(async (order: any) => {
         const { data, error } = await supabase
           .from('inventory')
-          .update({ quantity: order.quantity - parseInt(order.order_quantity) })
+          .update({ ordered_quantity: order.ordered_quantity + parseInt(order.order_quantity) })
           .eq('id', order.id)
       })
 
       if (!error) {
         setSuccessMessage(true)
+        handleReloadInventory(true)
         handleRemoveAllOrder(true)
       } else {
         alert('SOmething wrong in edit')
