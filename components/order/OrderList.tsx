@@ -97,13 +97,13 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                   <Td>{data.products.generic_name}</Td>
                   <Td>{`₱ ${data.manufacture_price}`}</Td>
                   <Td>{`₱ ${data.srp_price}`}</Td>
-                  <Td>{data.quantity - data.ordered_quantity}</Td>
+                  <Td>{data.quantity -data.ordered_quantity}</Td>
                   <Td>
                     <NumberInput
                     key={data.id}
                     onChange={event => handleInputChange(event, i)}
                     value={inputValues[i]}
-                    max={data.quantity}
+                    max={data.quantity-data.ordered_quantity}
                     >
                       <NumberInputField />
                       <NumberInputStepper>
@@ -111,7 +111,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                         <NumberDecrementStepper />
                       </NumberInputStepper>
                     </NumberInput>
-                    {(data.quantity === 0 && errorIndex) === i ? <Text color='tomato'> No stocks!</Text> : (errorMessage && errorIndex) === i ?? <Text color='tomato'> {errorMessage}!</Text>} 
+                    {(data.quantity-data.ordered_quantity === 0 && errorIndex === i ) ? <Text color='tomato'> No stocks!</Text> : (errorMessage && errorIndex) === i ?? <Text color='tomato'> {errorMessage}!</Text>} 
 
                   </Td>
 
