@@ -51,7 +51,6 @@ const Inventory = () => {
   `
       )
       .order('product_id', { ascending: true })
-
       const newData: any = data.map((d: any) =>  {
         return (
           {
@@ -63,6 +62,7 @@ const Inventory = () => {
             quantity: d?.quantity,
             expiry_date: d?.expiry_date,
             is_vatable: d?.is_vatable,
+            ordered_quantity: d?.ordered_quantity 
           }
           )
       })

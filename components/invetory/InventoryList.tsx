@@ -24,7 +24,8 @@ interface Inventory {
   srp_price: number
   quantity: number
   is_vatable: boolean
-  expiry_date: Date
+  expiry_date: Date,
+  ordered_quantity: number
 }
 const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
   const [selectedInventory, setSelectedInventory] = useState<Inventory[]>([])
@@ -79,7 +80,7 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
                   <Td>{data.batch_number}</Td>
                   <Td>{`₱ ${data.manufacture_price.toFixed(2)}`}</Td>
                   <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
-                  <Td>{data.quantity}</Td>
+                  <Td>{data.quantity-data.ordered_quantity}</Td>
                   <Td>{data.is_vatable ?   <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>
                   <Td>{new Date(`${data.expiry_date}`).toUTCString()}</Td>
                   <Td>
