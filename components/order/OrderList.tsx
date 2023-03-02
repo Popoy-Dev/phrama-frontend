@@ -37,7 +37,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
   const [errorIndex, setErrorIndex] = useState(0)
   const handleAdd = (data: any, id: any, order_quantity: number, i : number) => {
-    if(!order_quantity ||order_quantity <= 0) {
+    if(!order_quantity ||order_quantity <= 0 || data.quantity-data.ordered_quantity === 0) {
       setErrorIndex(i)
       setErrorMessage('Please input quantity')
     }else {

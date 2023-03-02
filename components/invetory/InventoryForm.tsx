@@ -178,7 +178,6 @@ const InventoryForm = ({ onClose, updateData = [] }: any) => {
             <FormControl>
               <FormLabel>Quantity</FormLabel>
               <NumberInput
-                
                 value={formik.values.quantity}
                 name='quantity'
               >
