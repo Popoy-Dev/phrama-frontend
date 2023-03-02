@@ -11,6 +11,7 @@ import {
   TableContainer,
   Button,
   Badge,
+  Text,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -66,6 +67,7 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
             <Th>Manufacture Price</Th>
             <Th>Store Price</Th>
             <Th>Quantity</Th>
+            <Th>SOH</Th>
             <Th>Is Vatable</Th>
             <Th>Expiry Date</Th>
   
@@ -80,8 +82,9 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
                   <Td>{data.batch_number}</Td>
                   <Td>{`₱ ${data.manufacture_price.toFixed(2)}`}</Td>
                   <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
-                  <Td>{data.quantity-data.ordered_quantity}</Td>
-                  <Td>{data.is_vatable ?   <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>
+                  <Td>{data.quantity} pieces</Td>
+                  <Td>{data.quantity-data.ordered_quantity === 0 ? <Text as="mark">{data.quantity-data.ordered_quantity} pieces</Text> : <Text>{data.quantity-data.ordered_quantity} pieces</Text>}  </Td>
+                  <Td>{data.is_vatable ? <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>
                   <Td>{new Date(`${data.expiry_date}`).toUTCString()}</Td>
                   <Td>
                     <Button colorScheme='yellow' onClick={() =>handleEditInventory(data.id)}>Edit</Button>
@@ -90,13 +93,7 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
               )
             })}
         </Tbody>
-        {/* <Tfoot>
-      <Tr>
-        <Th>To convert</Th>
-        <Th>into</Th>
-        <Th isNumeric>multiply by</Th>
-      </Tr>
-    </Tfoot> */}
+  
       </Table>
       <InventoryModal
               initialFocusRef={initialRef}
