@@ -108,14 +108,29 @@ const CustomerOrder = ({
         },
       })
       .select()
-
+   
     if (!error) {
-      customerOrder.forEach(async (order: any) => {
-        const { data, error } = await supabase
+      const idMap: any = {};
+      for (let index = 0; index < customerOrder.length; index++) {
+        const item = customerOrder[index];
+        if (idMap[item.id]) {
+          idMap[item.id].order_quantity += item.order_quantity;
+        } else {
+          idMap[item.id] = { id: item.id, order_quantity: item.order_quantity, ordered_quantity: item.ordered_quantity };
+        }
+
+        
+      }
+      const resultArr = Object.values(idMap);
+      resultArr.map(async (order: any) => {
+        const updatedOrder = order.ordered_quantity + order.order_quantity
+        const { data, error }= await supabase
           .from('inventory')
-          .update({ ordered_quantity: order.ordered_quantity + parseInt(order.order_quantity) })
+          .update({ ordered_quantity: updatedOrder })
           .eq('id', order.id)
+
       })
+  
 
       if (!error) {
         setSuccessMessage(true)

@@ -132,7 +132,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                     <Button
                       colorScheme='blue'
                       onClick={() =>
-                        handleAdd(data, checkedItems.includes(data.id), inputValues[i], i)
+                        handleAdd(data, checkedItems.includes(data.id), parseInt(inputValues[i]), i)
                       }
                     >
                       Add
