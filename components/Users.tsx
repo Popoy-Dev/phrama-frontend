@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Card,
   CardHeader,
@@ -7,110 +7,74 @@ import {
   Box,
   Spacer,
   Button,
-  Input,
 } from '@chakra-ui/react'
 
+import ProductList from './products/ProductList'
+import ProductModal from './products/ProductModal'
 import { supabase } from '../supabaseClient'
-import OrderList from './order/OrderList'
-import CustomerOrder from './order/CustomerOrder'
-
-interface Inventory {
+interface Product {
   id: number
-  products: {name: string}
-  batch_number: number
-  manufacture_price: number
-  srp_price: number
-  quantity: number
-  expiry_date: Date
+  name: string
+  indication: string
+  category: string
+  code: string
+  precaution: number
 }
-const Users = () => {
-  const [inventoryData, setInventoryData] = useState<Inventory[]>([])
-  const [inventoryAllData, setInventoryAllData] = useState<Inventory[]>([])
+
+function Users() {
+  const [productData, setProductData] = useState<Product[]>([])
+  const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
-  const [isRemoveItem, setIsremoveItem] = useState(false)
-  const [search, setSearch] = useState('')
-  const [customerOrder, setCustomerOrder] = useState<any>([])
-  const [reloadInventory, setReloadInventory] = useState(false)
-  const handleSearch = async (e: any) => {
-    const result = inventoryAllData.filter((data) => {
-      if (!e.target.value) {
-        return inventoryAllData
-      }
-      return data.products.name.toLocaleLowerCase().includes(e.target.value.toLowerCase())
-    })
+  const initialRef = React.useRef(null)
+  const finalRef = React.useRef(null)
 
-    setSearch(e.target.value)
-    setInventoryData(result)
+  const onOpen = () => {
+    setIsOpen(true)
   }
-  const getInventory = async () => {
-    const { data, error }: any = await supabase
-      .from('inventory')
-      .select(
-        `
-    *,
-    products (
-      name,
-      category,
-      generic_name
-    )
-  `
-      )
-      .order('product_id', { ascending: true })
-    setInventoryAllData(data)
-    setInventoryData(data)
+  const onClose = (data:[])  => {
+    if(data) {
+      setReloadList(true)
+    }
+    setIsOpen(false)
   }
-
+  const getProducts = async () => {
+    const { data, error }: any = await supabase.from('products').select().order('name', { ascending: true })
+    setProductData(data)
+  }
   useEffect(() => {
-    if (reloadList) {
-      getInventory()
+    getProducts()
+  }, [])
+  useEffect(() => {
+    
+    if(reloadList) {
+      getProducts()
     }
   }, [reloadList])
-
-  useEffect(() => {
-    getInventory()
-  }, [])
-
-  const handleAddOrder = (data: object) => {
-    setCustomerOrder((oldArray: []) => [...oldArray, data])
-  }
-
-  const handleRemoveOrder = (product_order: number) => {
-    setCustomerOrder(customerOrder.filter((item: any) => item.product_order !== product_order))
-    setIsremoveItem(true)
- }
-
-  const handleRemoveAllOrder = (info: boolean) => {
-    if(info) {
-      setCustomerOrder([])
-    }
-  
-  }
-  const handleReloadInventory = (value: boolean) => {
-    setReloadInventory(prevState => !prevState)
-  }
-  useEffect(() => {
-    getInventory()
-  }, [reloadInventory])
   return (
     <div>
-        <Card m='4'>
-          <Box p='8'>
-            <Input placeholder='Search User' onKeyUp={handleSearch}  size='lg'/>
-            <OrderList
-              reloadList={reloadList}
-              inventoryData={inventoryData}
-              getInventory={getInventory}
-              handleAddOrder={handleAddOrder}
+      <Card>
+        <Flex>
+          <CardHeader className='flex justify-between'>
+            <Heading size='md'>Products</Heading>
+          </CardHeader>
+
+          <Spacer />
+          <Box p='4'>
+            <Button colorScheme='teal' size='md' onClick={onOpen}>
+              Create User
+            </Button>
+            <ProductModal
+              initialFocusRef={initialRef}
+              finalFocusRef={finalRef}
+              isOpen={isOpen}
+              onClose={onClose}
             />
           </Box>
-        </Card>
-        <Spacer />
-        
-      <Card m='4' mt='12'>
-          <Box m='2'>
-            <CustomerOrder handleReloadInventory={handleReloadInventory} customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} isRemoveItem={isRemoveItem} handleRemoveAllOrder={handleRemoveAllOrder} />
-          </Box>
-        </Card>
+        </Flex>
+        <Box p='4'>
+          <ProductList reloadList={reloadList} productData={productData} getProducts={getProducts} />
+        </Box>
+      </Card>
     </div>
   )
 }
