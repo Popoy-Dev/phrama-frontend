@@ -10,8 +10,8 @@ import {
 } from '@chakra-ui/react'
 
 import ProductList from './products/ProductList'
-import ProductModal from './products/ProductModal'
 import { supabase } from '../supabaseClient'
+import UserModal from './users/UserModal'
 interface Product {
   id: number
   name: string
@@ -63,7 +63,7 @@ function Users() {
             <Button colorScheme='teal' size='md' onClick={onOpen}>
               Create User
             </Button>
-            <ProductModal
+            <UserModal
               initialFocusRef={initialRef}
               finalFocusRef={finalRef}
               isOpen={isOpen}
