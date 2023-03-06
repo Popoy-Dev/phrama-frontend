@@ -41,6 +41,7 @@ import Products from '../components/Products'
 import Inventory from '@/components/Inventory'
 import Order from '@/components/Order'
 import Reports from '@/components/Reports'
+import Users from '@/components/Users'
 interface LinkItemProps {
   name: string
   icon: IconType
@@ -50,6 +51,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Products', icon: FiHome },
   { name: 'Inventory', icon: FiTrendingUp },
   { name: 'Order', icon: FiCompass },
+  { name: 'Users', icon: FiStar },
   { name: 'Favourites', icon: FiStar },
   { name: 'Settings', icon: FiSettings },
 ]
@@ -92,6 +94,8 @@ const SidebarWithHeader = () => {
         return <Order />
       case 'Reports':
         return <Reports />
+      case 'Users':
+        return <Users />
 
       default:
         break
