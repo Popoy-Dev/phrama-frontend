@@ -15,34 +15,55 @@ import {
   AlertIcon,
   AlertTitle,
   Textarea,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Text,
 } from '@chakra-ui/react'
 import { supabase } from '../../supabaseClient'
 
+interface User {
+  surname: string
+  middle_name: string
+  first_name: string
+  osca_id: number
+  birthday: Date
+  contact_number: number
+  address: string
+  designated: string
+  id_register: number
+}
 
 const UserForm = ({ onClose, updateData=[] }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
-  const formik = useFormik({
+  const formik= useFormik({
     initialValues: {
-      name: updateData?.name || '',
-      indication: updateData?.indication || '',
-      code: updateData?.code || '',
-      category: updateData?.category || '',
-      description: updateData?.description || '',
-      generic_name: updateData?.generic_name || '',
-      precaution: updateData?.precaution || '',
+      surname: updateData?.surname || '',
+      middle_name: updateData?.middle_name || '',
+      first_name: updateData?.first_name || '',
+      osca_id: updateData?.osca_id || '',
+      birthday: updateData?.birthday || '',
+      contact_number: updateData?.contact_number || '',
+      address: updateData?.address || '',
+      designated: updateData?.designated || '',
+      id_register: updateData?.id_register || '',
     },
     onSubmit: async (values) => {
       if (updateData?.length !== 0) {
         const {data, error } = await supabase
           .from('products')
           .update({
-            name: values.name.toUpperCase(),
-            indication: values.indication,
-            code: values.code,
-            category: values.category,
-            precaution: values.precaution,
-            description: values.description,
-            generic_name: values.generic_name,
+            surname: values.surname,
+            middle_name: values.middle_name,
+            first_name: values.first_name,
+            osca_id: values.osca_id,
+            birthday: values.birthday,
+            contact_number: values.contact_number,
+            address: values.address,
+            designated: values.designated,
+            id_register: values.id_register,
           })
           .eq('id', updateData?.id)
           .select()
@@ -54,13 +75,15 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
         }
       } else {
         const {data, error } = await supabase.from('products').insert({
-          name: values.name.toUpperCase(),
-          indication: values.indication,
-          code: values.code,
-          category: values.category,
-          precaution: values.precaution,
-          description: values.description,
-          generic_name: values.generic_name,
+            surname: values.surname,
+            middle_name: values.middle_name,
+            first_name: values.first_name,
+            osca_id: values.osca_id,
+            birthday: values.birthday,
+            contact_number: values.contact_number,
+            address: values.address,
+            designated: values.designated,
+            id_register: values.id_register,
         }).select()
         if (!error) {
           onClose(data)
@@ -84,79 +107,111 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Surname</FormLabel>
               <Input
                 onChange={formik.handleChange}
-                value={formik.values.name}
-                id='name'
-                name='name'
+                value={formik.values.surname}
+                id='surname'
+                name='surname'
                 type='text'
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Indication</FormLabel>
+              <FormLabel>Middle Name</FormLabel>
               <Input
                 onChange={formik.handleChange}
-                value={formik.values.indication}
-                id='indication'
-                name='indication'
+                value={formik.values.middle_name}
+                id='middle_name'
+                name='middle_name'
                 type='text'
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Code</FormLabel>
+              <FormLabel>First Name</FormLabel>
               <Input
                 onChange={formik.handleChange}
-                value={formik.values.code}
-                id='code'
-                name='code'
-                type='text'
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Pre Caution</FormLabel>
-              <Input
-                onChange={formik.handleChange}
-                value={formik.values.precaution}
-                id='precaution'
-                name='precaution'
+                value={formik.values.first_name}
+                id='first_name'
+                name='first_name'
                 type='text'
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Description</FormLabel>
-              <Textarea
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                placeholder='Add product description...'
-                size='sm'
-                name='description'
-
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Generic Name</FormLabel>
-              <Textarea
-                value={formik.values.generic_name}
-                onChange={formik.handleChange}
-                placeholder='Add product description...'
-                size='sm'
-                name='generic_name'
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Medicine Type</FormLabel>
-              <Select as={Select}
-                placeholder='Select Medicine Type'
-                onChange={formik.handleChange}
-                value={formik.values.category}
-
-                name='category'
+              <FormLabel>OSCA ID</FormLabel>
+              <NumberInput
+                value={formik.values.osca_id}
+                name='osca_id'
               >
-                <option value='branded'>Branded</option>
-                <option value='generic'>Generic</option>
-              </Select>
+                <NumberInputField onChange={formik.handleChange} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              {formik.errors.osca_id ? <Text color='tomato'> Please input quantity!</Text> : null}
+
+            </FormControl>
+            <FormControl>
+              <FormLabel>Designated</FormLabel>
+              <Input
+                onChange={formik.handleChange}
+                value={formik.values.designated}
+                id='first_name'
+                name='designated'
+                type='text'
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Birth Day</FormLabel>
+              <Input
+                onChange={formik.handleChange}
+                placeholder='Select Birthday'
+                size='md'
+                type='date'
+                name='birthday'
+                value={formik.values.birthday}
+              />
+              {formik.errors.birthday ? <Text color='tomato'> Please select expiry date!</Text> : null}
+
+            </FormControl>
+            <FormControl>
+              <FormLabel>Address</FormLabel>
+              <Textarea
+                value={formik.values.address}
+                onChange={formik.handleChange}
+                placeholder='Fortune Marikina City'
+                size='sm'
+                name='address'
+
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Contact Number</FormLabel>
+              <NumberInput
+                // value={formik.values.quantity}
+                name='contact_number'
+              >
+                <NumberInputField onChange={formik.handleChange} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              {formik.errors.contact_number ? <Text color='tomato'> Please input quantity!</Text> : null}
+
+            </FormControl>
+            <FormControl>
+              <FormLabel>Date ID Register</FormLabel>
+              <Input
+                onChange={formik.handleChange}
+                placeholder='Select Date and Time'
+                size='md'
+                type='date'
+                name='id_register'
+                value={formik.values.id_register}
+              />
+              {formik.errors.id_register ? <Text color='tomato'> Please select expiry date!</Text> : null}
+
             </FormControl>
           </ModalBody>
 
