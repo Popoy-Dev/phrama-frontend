@@ -138,25 +138,20 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
             </FormControl>
             <FormControl>
               <FormLabel>OSCA ID</FormLabel>
-              <NumberInput
+              <Input
+                onChange={formik.handleChange}
                 value={formik.values.osca_id}
+                id='osca_id'
                 name='osca_id'
-              >
-                <NumberInputField onChange={formik.handleChange} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-              {formik.errors.osca_id ? <Text color='tomato'> Please input quantity!</Text> : null}
-
+                type='text'
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Designated</FormLabel>
               <Input
                 onChange={formik.handleChange}
                 value={formik.values.designated}
-                id='first_name'
+                id='designated'
                 name='designated'
                 type='text'
               />
