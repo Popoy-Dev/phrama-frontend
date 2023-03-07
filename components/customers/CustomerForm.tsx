@@ -33,7 +33,7 @@ interface User {
   contact_number: number
   address: string
   designated: string
-  id_register: number
+  id_register_date: number
 }
 
 const UserForm = ({ onClose, updateData=[] }: any) => {
@@ -48,7 +48,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
       contact_number: updateData?.contact_number || '',
       address: updateData?.address || '',
       designated: updateData?.designated || '',
-      id_register: updateData?.id_register || '',
+      id_register_date: updateData?.id_register_date || '',
     },
     onSubmit: async (values) => {
       if (updateData?.length !== 0) {
@@ -63,7 +63,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
             contact_number: values.contact_number,
             address: values.address,
             designated: values.designated,
-            id_register: values.id_register,
+            id_register_date: values.id_register_date,
           })
           .eq('id', updateData?.id)
           .select()
@@ -202,10 +202,10 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
                 placeholder='Select Date and Time'
                 size='md'
                 type='date'
-                name='id_register'
-                value={formik.values.id_register}
+                name='id_register_date'
+                value={formik.values.id_register_date}
               />
-              {formik.errors.id_register ? <Text color='tomato'> Please select expiry date!</Text> : null}
+              {formik.errors.id_register_date ? <Text color='tomato'> Please select expiry date!</Text> : null}
 
             </FormControl>
           </ModalBody>

@@ -41,7 +41,7 @@ import Products from '../components/Products'
 import Inventory from '@/components/Inventory'
 import Order from '@/components/Order'
 import Reports from '@/components/Reports'
-import Users from '@/components/Users'
+import Customers from '@/components/Customers'
 interface LinkItemProps {
   name: string
   icon: IconType
@@ -95,7 +95,7 @@ const SidebarWithHeader = () => {
       case 'Reports':
         return <Reports />
       case 'Users':
-        return <Users />
+        return <Customers />
 
       default:
         break

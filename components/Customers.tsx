@@ -11,7 +11,7 @@ import {
 
 import ProductList from './products/ProductList'
 import { supabase } from '../supabaseClient'
-import UserModal from './users/UserModal'
+import CustomerModal from './customers/CustomerModal'
 interface Product {
   id: number
   name: string
@@ -63,7 +63,7 @@ function Users() {
             <Button colorScheme='teal' size='md' onClick={onOpen}>
               Create User
             </Button>
-            <UserModal
+            <CustomerModal
               initialFocusRef={initialRef}
               finalFocusRef={finalRef}
               isOpen={isOpen}
