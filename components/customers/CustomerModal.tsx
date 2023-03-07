@@ -4,7 +4,7 @@ import {
   ModalOverlay,
 
 } from '@chakra-ui/react'
-import UserForm from './UserForm'
+import UserForm from './CustomerForm'
 
 const UserModal =({initialFocusRef, finalFocusRef, isOpen, onClose, updateData} : any) => {
   return (
