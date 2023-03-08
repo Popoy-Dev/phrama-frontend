@@ -9,9 +9,9 @@ import {
   Button,
 } from '@chakra-ui/react'
 
-import ProductList from './products/ProductList'
 import { supabase } from '../supabaseClient'
 import CustomerModal from './customers/CustomerModal'
+import CustomerList from './customers/CustomerList'
 interface Product {
   id: number
   name: string
@@ -22,7 +22,7 @@ interface Product {
 }
 
 function Users() {
-  const [productData, setProductData] = useState<Product[]>([])
+  const [customerData, setCustomerData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
   const initialRef = React.useRef(null)
@@ -37,17 +37,17 @@ function Users() {
     }
     setIsOpen(false)
   }
-  const getProducts = async () => {
-    const { data, error }: any = await supabase.from('products').select().order('name', { ascending: true })
-    setProductData(data)
+  const getCustomers = async () => {
+    const { data, error }: any = await supabase.from('customers').select().order('id', { ascending: true })
+    setCustomerData(data)
   }
   useEffect(() => {
-    getProducts()
+    getCustomers()
   }, [])
   useEffect(() => {
     
     if(reloadList) {
-      getProducts()
+      getCustomers()
     }
   }, [reloadList])
   return (
@@ -72,7 +72,7 @@ function Users() {
           </Box>
         </Flex>
         <Box p='4'>
-          <ProductList reloadList={reloadList} productData={productData} getProducts={getProducts} />
+          <CustomerList reloadList={reloadList} customerData={customerData} getCustomers={getCustomers} />
         </Box>
       </Card>
     </div>
