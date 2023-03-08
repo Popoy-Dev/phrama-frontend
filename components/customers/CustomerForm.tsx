@@ -183,7 +183,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
             <FormControl>
               <FormLabel>Contact Number</FormLabel>
               <NumberInput
-                // value={formik.values.quantity}
+                value={formik.values.contact_number}
                 name='contact_number'
               >
                 <NumberInputField onChange={formik.handleChange} />
