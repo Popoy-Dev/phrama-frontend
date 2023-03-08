@@ -55,7 +55,7 @@ function Users() {
       <Card>
         <Flex>
           <CardHeader className='flex justify-between'>
-            <Heading size='md'>Products</Heading>
+            <Heading size='md'>Customers</Heading>
           </CardHeader>
 
           <Spacer />

@@ -53,7 +53,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
     onSubmit: async (values) => {
       if (updateData?.length !== 0) {
         const {data, error } = await supabase
-          .from('products')
+          .from('customers')
           .update({
             surname: values.surname,
             middle_name: values.middle_name,
@@ -74,7 +74,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
           setErrorMessage('Duplicate Name or Code!')
         }
       } else {
-        const {data, error } = await supabase.from('products').insert({
+        const {data, error } = await supabase.from('customers').insert({
             surname: values.surname,
             middle_name: values.middle_name,
             first_name: values.first_name,
@@ -83,7 +83,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
             contact_number: values.contact_number,
             address: values.address,
             designated: values.designated,
-            id_register: values.id_register,
+            id_register_date: values.id_register_date,
         }).select()
         if (!error) {
           onClose(data)

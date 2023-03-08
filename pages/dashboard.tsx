@@ -51,7 +51,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Products', icon: FiHome },
   { name: 'Inventory', icon: FiTrendingUp },
   { name: 'Order', icon: FiCompass },
-  { name: 'Users', icon: FiStar },
+  { name: 'Customers', icon: FiStar },
   { name: 'Favourites', icon: FiStar },
   { name: 'Settings', icon: FiSettings },
 ]
@@ -94,7 +94,7 @@ const SidebarWithHeader = () => {
         return <Order />
       case 'Reports':
         return <Reports />
-      case 'Users':
+      case 'Customers':
         return <Customers />
 
       default:
