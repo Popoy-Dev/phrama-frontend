@@ -68,6 +68,7 @@ const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
             <Th>Address</Th>
             <Th>Designated</Th>
             <Th>ID Register date</Th>
+            <Th>Action</Th>
           </Tr>
         </Thead>
         <Tbody>
