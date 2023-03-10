@@ -64,6 +64,7 @@ const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
             <Th>First Name</Th>
             <Th>OSCA ID</Th>
             <Th>Birthday</Th>
+            <Th>Age</Th>
             <Th>Contact Number</Th>
             <Th>Address</Th>
             <Th>Designated</Th>
@@ -74,8 +75,10 @@ const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
         <Tbody>
           {customerData &&
             customerData?.map((data: CustomerList, i: number) => {
-                const birthday = new Date(data.birthday)
-                const oscaRegisteredDate = new Date(data.id_register_date)
+              const birthday = new Date(data.birthday);
+              const ageInMilliseconds = Date.now() - birthday.getTime();
+              const oscaRegisteredDate = new Date(data.id_register_date)
+              const ageInYears = Math.floor(ageInMilliseconds / 31557600000); 
               return (
                 <Tr key={i}>
                   <Td>{data.surname}</Td>
@@ -83,6 +86,7 @@ const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
                   <Td>{data.first_name }</Td>
                   <Td>{data.osca_id}</Td>
                   <Td>{birthday.toDateString()}</Td>
+                  <Td>{ageInYears}</Td>
                   <Td>{data.contact_number}</Td>
                   <Td>{data.address}</Td>
                   <Td>{data.designated}</Td>
