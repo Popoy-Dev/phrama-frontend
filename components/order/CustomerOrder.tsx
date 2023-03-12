@@ -42,6 +42,8 @@ const CustomerOrder = ({
   const [totalAmount, setTotalAmount] = useState(0)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState(false)
+  const [customerList, setCustomerList] = useState<any>([])
+
   const getTotal = () => {
     if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
@@ -93,6 +95,19 @@ const CustomerOrder = ({
     )
   }
 
+  const getCustomersList = async () => {
+    const { data, error } = await supabase
+  .from('customers')
+  .select()
+  if(data) {
+    setCustomerList(data)
+  }
+  }
+  useEffect(() => {
+    getCustomersList()
+  }, [])
+
+  console.log('customerList', customerList)
   useEffect(() => {
     getTotal()
   }, [customerOrder, isRemoveItem])
@@ -244,11 +259,17 @@ const CustomerOrder = ({
                   >
                     Print Order
                   </Button>{' '}
-                  <Select display='inline' placeholder='Select option' width='full'>
-                    <option value='option1'>Option 1</option>
-                    <option value='option2'>Sption 2</option>
-                    <option value='option3'>Option 3</option>
-                  </Select>
+            
+                      <Select display='inline' placeholder='Select Customer' width='full'>
+                      {customerList.map((customer: any, i: number) =>  (
+                      <option value='option1' key={i}>{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},` }</option>
+                      
+                      )
+                    )}
+                    </Select>
+                  
+      
+              
                 </>
               ) : (
                 ''
