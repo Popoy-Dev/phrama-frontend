@@ -12,6 +12,7 @@ import {
   Button,
   Alert,
   AlertIcon,
+  Select,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -34,8 +35,7 @@ const CustomerOrder = ({
   handleRemoveOrder,
   isRemoveItem,
   handleRemoveAllOrder,
-  handleReloadInventory
-  
+  handleReloadInventory,
 }: any) => {
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
@@ -108,29 +108,29 @@ const CustomerOrder = ({
         },
       })
       .select()
-   
-    if (!error) {
-      const idMap: any = {};
-      for (let index = 0; index < customerOrder.length; index++) {
-        const item = customerOrder[index];
-        if (idMap[item.id]) {
-          idMap[item.id].order_quantity += item.order_quantity;
-        } else {
-          idMap[item.id] = { id: item.id, order_quantity: item.order_quantity, ordered_quantity: item.ordered_quantity };
-        }
 
-        
+    if (!error) {
+      const idMap: any = {}
+      for (let index = 0; index < customerOrder.length; index++) {
+        const item = customerOrder[index]
+        if (idMap[item.id]) {
+          idMap[item.id].order_quantity += item.order_quantity
+        } else {
+          idMap[item.id] = {
+            id: item.id,
+            order_quantity: item.order_quantity,
+            ordered_quantity: item.ordered_quantity,
+          }
+        }
       }
-      const resultArr = Object.values(idMap);
+      const resultArr = Object.values(idMap)
       resultArr.map(async (order: any) => {
         const updatedOrder = order.ordered_quantity + order.order_quantity
-        const { data, error }= await supabase
+        const { data, error } = await supabase
           .from('inventory')
           .update({ ordered_quantity: updatedOrder })
           .eq('id', order.id)
-
       })
-  
 
       if (!error) {
         setSuccessMessage(true)
@@ -150,7 +150,9 @@ const CustomerOrder = ({
           <AlertIcon />
           Customer order saved!
         </Alert>
-      ): ''}
+      ) : (
+        ''
+      )}
 
       <Table variant='striped' colorScheme='purple'>
         <TableCaption>Fayne Pharmacy 2023</TableCaption>
@@ -226,20 +228,31 @@ const CustomerOrder = ({
           <Tr>
             <Th></Th>
             <Th></Th>
-            <Th></Th>
+      
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
             <Th isNumeric>{totalAmount.toFixed(3)}PHP</Th>
             <Th>
               {' '}
-              {customerOrder.length !== 0 ? (    <Button
-                colorScheme='whatsapp'
-                variant='solid'
-                onClick={handlePrintSave}
-              >
-                Print Order
-              </Button>) : '' }
-          
+              {customerOrder.length !== 0 ? (
+                <>
+                  <Button
+                  display='inline'
+                    colorScheme='whatsapp'
+                    variant='solid'
+                    onClick={handlePrintSave}
+                  >
+                    Print Order
+                  </Button>{' '}
+                  <Select display='inline' placeholder='Select option' width='full'>
+                    <option value='option1'>Option 1</option>
+                    <option value='option2'>Sption 2</option>
+                    <option value='option3'>Option 3</option>
+                  </Select>
+                </>
+              ) : (
+                ''
+              )}
             </Th>
           </Tr>
         </Tfoot>
