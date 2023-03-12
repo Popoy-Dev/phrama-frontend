@@ -99,6 +99,7 @@ const CustomerOrder = ({
     const { data, error } = await supabase
   .from('customers')
   .select()
+  .order('surname', { ascending: true })
   if(data) {
     setCustomerList(data)
   }
