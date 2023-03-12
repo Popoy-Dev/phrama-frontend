@@ -37,6 +37,7 @@ interface User {
 }
 
 const UserForm = ({ onClose, updateData=[] }: any) => {
+  const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const formik= useFormik({
     initialValues: {
@@ -51,6 +52,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
       id_register_date: updateData?.id_register_date || '',
     },
     onSubmit: async (values) => {
+      setIsLoading(true)
       if (updateData?.length !== 0) {
         const {data, error } = await supabase
           .from('customers')
@@ -69,8 +71,10 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
           .select()
 
         if (!error) {
+          setIsLoading(false)
           onClose(data)
         } else {
+          setIsLoading(false)
           setErrorMessage('Duplicate Name or Code!')
         }
       } else {
@@ -86,8 +90,10 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
             id_register_date: values.id_register_date,
         }).select()
         if (!error) {
+          setIsLoading(false)
           onClose(data)
         } else {
+          setIsLoading(false)
           setErrorMessage('Duplicate Name or Code!')
         }
       }
@@ -211,7 +217,7 @@ const UserForm = ({ onClose, updateData=[] }: any) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button type='submit' colorScheme='blue' mr={3}>
+            <Button isLoading={isLoading} type='submit' colorScheme='blue' mr={3}>
               {updateData?.length === 0 ? 'Save' : 'Update'}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
