@@ -27,7 +27,7 @@ interface CustomerList {
   designated: string
   id_register_date: number
 }
-const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
+const CustomerOrders = ({reloadList, customerData, getCustomers}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<CustomerList[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
@@ -107,4 +107,4 @@ const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
   )
 }
 
-export default CustomerList
+export default CustomerOrders

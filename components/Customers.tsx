@@ -7,6 +7,7 @@ import {
   Box,
   Spacer,
   Button,
+  SimpleGrid,
 } from '@chakra-ui/react'
 
 import { supabase } from '../supabaseClient'
@@ -31,22 +32,24 @@ function Users() {
   const onOpen = () => {
     setIsOpen(true)
   }
-  const onClose = (data:[])  => {
-    if(data) {
+  const onClose = (data: []) => {
+    if (data) {
       setReloadList(true)
     }
     setIsOpen(false)
   }
   const getCustomers = async () => {
-    const { data, error }: any = await supabase.from('customers').select().order('id', { ascending: true })
+    const { data, error }: any = await supabase
+      .from('customers')
+      .select()
+      .order('id', { ascending: true })
     setCustomerData(data)
   }
   useEffect(() => {
     getCustomers()
   }, [])
   useEffect(() => {
-    
-    if(reloadList) {
+    if (reloadList) {
       getCustomers()
     }
   }, [reloadList])
@@ -72,7 +75,18 @@ function Users() {
           </Box>
         </Flex>
         <Box p='4'>
-          <CustomerList reloadList={reloadList} customerData={customerData} getCustomers={getCustomers} />
+          <SimpleGrid columns={2} spacing={10}>
+            <CustomerList
+              reloadList={reloadList}
+              customerData={customerData}
+              getCustomers={getCustomers}
+            />
+            <CustomerList
+              reloadList={reloadList}
+              customerData={customerData}
+              getCustomers={getCustomers}
+            />
+          </SimpleGrid>
         </Box>
       </Card>
     </div>
