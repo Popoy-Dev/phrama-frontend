@@ -39,10 +39,11 @@ const CustomerOrder = ({
 }: any) => {
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
-  const [totalAmount, setTotalAmount] = useState(0)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState(false)
-  const [customerList, setCustomerList] = useState<any>([])
+  const [totalAmount, setTotalAmount] = useState<number>(0)
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [successMessage, setSuccessMessage] = useState<boolean>(false)
+  const [customerList, setCustomerList] = useState<Array<any>>([])
+  const [customerId, setCustomerId] = useState<number>(0)
 
   const getTotal = () => {
     if (customerOrder.length === 0) {
@@ -97,18 +98,17 @@ const CustomerOrder = ({
 
   const getCustomersList = async () => {
     const { data, error } = await supabase
-  .from('customers')
-  .select()
-  .order('surname', { ascending: true })
-  if(data) {
-    setCustomerList(data)
-  }
+      .from('customers')
+      .select()
+      .order('surname', { ascending: true })
+    if (data) {
+      setCustomerList(data)
+    }
   }
   useEffect(() => {
     getCustomersList()
   }, [])
 
-  console.log('customerList', customerList)
   useEffect(() => {
     getTotal()
   }, [customerOrder, isRemoveItem])
@@ -122,6 +122,7 @@ const CustomerOrder = ({
           removetotalDiscount,
           totalAmount,
         },
+        customer_id: customerId
       })
       .select()
 
@@ -158,6 +159,11 @@ const CustomerOrder = ({
     } else {
       setErrorMessage('There something wrong!')
     }
+  }
+
+  const handleCustomer = (event: any) => {
+    const customerID = event.target.value
+    setCustomerId(customerID)
   }
   return (
     <TableContainer>
@@ -244,7 +250,7 @@ const CustomerOrder = ({
           <Tr>
             <Th></Th>
             <Th></Th>
-      
+
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
             <Th isNumeric>{totalAmount.toFixed(3)}PHP</Th>
@@ -253,24 +259,26 @@ const CustomerOrder = ({
               {customerOrder.length !== 0 ? (
                 <>
                   <Button
-                  display='inline'
+                    display='inline'
                     colorScheme='whatsapp'
                     variant='solid'
                     onClick={handlePrintSave}
                   >
                     Print Order
                   </Button>{' '}
-            
-                      <Select display='inline' placeholder='Select Customer' width='full'>
-                      {customerList.map((customer: any, i: number) =>  (
-                      <option value='option1' key={i}>{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},` }</option>
-                      
-                      )
-                    )}
-                    </Select>
-                  
-      
-              
+                  <Select
+                    display='inline'
+                    placeholder='Select Customer'
+                    width='full'
+                    onChange={handleCustomer}
+                  >
+                    {customerList.map((customer: any, i: number) => (
+                      <option
+                       value={customer.id}
+                        key={i}
+                      >{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},`}</option>
+                    ))}
+                  </Select>
                 </>
               ) : (
                 ''
