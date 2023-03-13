@@ -27,7 +27,7 @@ interface CustomerList {
   designated: string
   id_register_date: number
 }
-const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
+const CustomerList = ({reloadList, customerData, getCustomers, setCustomerTransaction}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<CustomerList[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
@@ -52,6 +52,16 @@ const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
     setIsOpen(true)
     setSelectedProduct(data[0])
   }
+  }
+
+  const handleCustomerTransac = async (id: number) => {
+    const { data, error } = await supabase
+  .from('orders')
+  .select()
+  .eq('customer_id', id)
+  setCustomerTransaction(data)
+  console.log('data', data)
+
   }
   return (
     <TableContainer>
@@ -82,14 +92,13 @@ const CustomerList = ({reloadList, customerData, getCustomers}: any) => {
                   <Td>{ageInYears}</Td>
                   <Td>
                     <Button colorScheme='yellow' display='inline' mr={2} onClick={() =>handleEditProduct(data.id)}>Edit</Button>
-                    <Button colorScheme='blue' display='inline' onClick={() =>handleEditProduct(data.id)}>View Transcations</Button>
+                    <Button colorScheme='blue' display='inline' onClick={() =>handleCustomerTransac(data.id)}>View Transcations</Button>
                   </Td>
                   {/* <Td>{birthday.toDateString()}</Td>
                   <Td>{data.contact_number}</Td>
                   <Td>{data.address}</Td>
                   <Td>{data.designated}</Td>
                   <Td>{oscaRegisteredDate.toDateString()}</Td> */}
-             
                 </Tr>
               )
             })}

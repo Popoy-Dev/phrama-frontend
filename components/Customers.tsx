@@ -13,6 +13,7 @@ import {
 import { supabase } from '../supabaseClient'
 import CustomerModal from './customers/CustomerModal'
 import CustomerList from './customers/CustomerList'
+import CustomerOrdersList from './customers/CustomerOrdersList'
 interface Product {
   id: number
   name: string
@@ -26,6 +27,7 @@ function Users() {
   const [customerData, setCustomerData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
+  const [customerOrderData, setCustomerOrderData] = useState(false)
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
 
@@ -44,6 +46,10 @@ function Users() {
       .select()
       .order('id', { ascending: true })
     setCustomerData(data)
+  }
+
+  const setCustomerTransaction = (data: any) => {
+    setCustomerOrderData(data)
   }
   useEffect(() => {
     getCustomers()
@@ -80,11 +86,14 @@ function Users() {
               reloadList={reloadList}
               customerData={customerData}
               getCustomers={getCustomers}
+              setCustomerTransaction={setCustomerTransaction}
             />
-            <CustomerList
+            <CustomerOrdersList
               reloadList={reloadList}
               customerData={customerData}
               getCustomers={getCustomers}
+              customerOrderData={customerOrderData}
+
             />
           </SimpleGrid>
         </Box>
