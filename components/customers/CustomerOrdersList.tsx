@@ -100,8 +100,7 @@ const CustomerOrdersList = ({ customerOrderData }: any) => {
               })
               const birthday = new Date(data.birthday)
               const ageInMilliseconds = Date.now() - birthday.getTime()
-              const oscaRegisteredDate = new Date(data.id_register_date)
-              const ageInYears = Math.floor(ageInMilliseconds / 31557600000)
+       
               return (
                 <Tr key={i}>
                   <Td>

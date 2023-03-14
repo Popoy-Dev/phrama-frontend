@@ -29,6 +29,7 @@ interface CustomerList {
 }
 const CustomerList = ({reloadList, customerData, getCustomers, setCustomerTransaction}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<CustomerList[]>([])
+  const [buttonDisabledId, setButtonDisabledId] = useState<number>(0)
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
@@ -60,7 +61,7 @@ const CustomerList = ({reloadList, customerData, getCustomers, setCustomerTransa
   .select()
   .eq('customer_id', id)
   setCustomerTransaction(data)
-  console.log('data', data)
+  setButtonDisabledId(id)
 
   }
   return (
@@ -91,14 +92,10 @@ const CustomerList = ({reloadList, customerData, getCustomers, setCustomerTransa
                   <Td>{data.osca_id}</Td>
                   <Td>{ageInYears}</Td>
                   <Td>
+                 
                     <Button colorScheme='yellow' display='inline' mr={2} onClick={() =>handleEditProduct(data.id)}>Edit</Button>
-                    <Button colorScheme='blue' display='inline' onClick={() =>handleCustomerTransac(data.id)}>View Transcations</Button>
+                    <Button colorScheme='blue' isDisabled={buttonDisabledId === data.id}   display='inline' onClick={() =>handleCustomerTransac(data.id)}>View Transcations</Button>
                   </Td>
-                  {/* <Td>{birthday.toDateString()}</Td>
-                  <Td>{data.contact_number}</Td>
-                  <Td>{data.address}</Td>
-                  <Td>{data.designated}</Td>
-                  <Td>{oscaRegisteredDate.toDateString()}</Td> */}
                 </Tr>
               )
             })}
