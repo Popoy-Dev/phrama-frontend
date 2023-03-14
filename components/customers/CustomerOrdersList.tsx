@@ -21,38 +21,56 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 
-const CustomerOrdersList = ({
-  customerOrderData,
-}: any) => {
+const CustomerOrdersList = ({ customerOrderData }: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-const [orderItems, setOrderItems] = useState([])
-const [orderQuantity, setOrderQuantity] = useState<string[]>()
-  const OrderModal = () =>    (
+  const [orderItems, setOrderItems] = useState([])
+
+  const OrderModal = () => (
     <>
-  <Modal isOpen={isOpen} onClose={onClose}>
-  <ModalOverlay />
-  <ModalContent>
-    <ModalHeader>Customer order details</ModalHeader>
-    <ModalCloseButton />
-    <ModalBody>
-    </ModalBody>
- <p>{orderItems}</p>
- <p>{orderQuantity}</p>
-    <ModalFooter>
-      <Button colorScheme='blue' mr={3} onClick={onClose}>
-        Close
-      </Button>
-      <Button variant='ghost'>Secondary Action</Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
-  </>
-    )
-    const handleOrderDetail = (items: any, quantity: string[]) => {
-      onOpen()
-      setOrderItems(items)
-      setOrderQuantity(quantity)
-    }
+      <Modal isOpen={isOpen} onClose={onClose} size='xl'>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Customer order details</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody></ModalBody>
+
+          <TableContainer m='2'>
+            <Table variant='striped' colorScheme='teal'>
+              <TableCaption>Fayne Pharmacy 2023</TableCaption>
+              <Thead>
+                <Tr>
+                  <Th>Product Name</Th>
+                  <Th>Quantity</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {orderItems.map((data: any, i: number) => {
+                  return (
+                    <>
+                      <Tr key={i}>
+                        <Td>{data.products.name}</Td>
+                        <Td>{data.order_quantity}</Td>
+                      </Tr>
+                    </>
+                  )
+                })}
+              </Tbody>
+            </Table>
+          </TableContainer>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+  const handleOrderDetail = (data: any) => {
+    onOpen()
+    setOrderItems(data)
+  }
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='teal'>
@@ -76,7 +94,6 @@ const [orderQuantity, setOrderQuantity] = useState<string[]>()
                 hour12: true,
               }
               const formattedDate = date.toLocaleString('en-US', options)
-              console.log(formattedDate) // Output: March 13, 2023, 03:40 AM
               data.order?.forEach((order: any) => {
                 items.push(order.products.name + ',')
                 quantity.push(order.order_quantity + ',')
@@ -87,21 +104,15 @@ const [orderQuantity, setOrderQuantity] = useState<string[]>()
               const ageInYears = Math.floor(ageInMilliseconds / 31557600000)
               return (
                 <Tr key={i}>
-                                    {/* <Td>{items}</Td>
-                  <Td>{quantity}</Td> */}
                   <Td>
                     {' '}
-        
-                                       <Link color='teal.500' onClick={() => handleOrderDetail(items, quantity) }>
+                    <Link
+                      color='teal.500'
+                      onClick={() => handleOrderDetail(data.order)}
+                    >
                       {formattedDate}
                     </Link>{' '}
                   </Td>
-
-                  {/* <Td>{birthday.toDateString()}</Td>
-                  <Td>{data.contact_number}</Td>
-                  <Td>{data.address}</Td>
-                  <Td>{data.designated}</Td>
-                  <Td>{oscaRegisteredDate.toDateString()}</Td> */}
                 </Tr>
               )
             })}
