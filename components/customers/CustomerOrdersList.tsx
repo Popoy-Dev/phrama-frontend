@@ -10,6 +10,7 @@ import {
   TableCaption,
   TableContainer,
   Button,
+  Link,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -73,17 +74,17 @@ const CustomerOrdersList = ({
             customerOrderData?.map((data: any, i: number) => {
               let items: string[] = []
               let quantity: string[] = []
-              const date = new Date("2023-03-13T03:40:34.778167+00:00");
-              const options: Intl.DateTimeFormatOptions = { 
-                month: 'long', 
-                day: 'numeric', 
-                year: 'numeric', 
-                hour: 'numeric', 
-                minute: 'numeric', 
-                hour12: true 
-              };
-              const formattedDate = date.toLocaleString('en-US', options);
-              console.log(formattedDate); // Output: March 13, 2023, 03:40 AM            
+              const date = new Date('2023-03-13T03:40:34.778167+00:00')
+              const options: Intl.DateTimeFormatOptions = {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true,
+              }
+              const formattedDate = date.toLocaleString('en-US', options)
+              console.log(formattedDate) // Output: March 13, 2023, 03:40 AM
               data.order?.forEach((order: any) => {
                 items.push(order.products.name + ',')
                 quantity.push(order.order_quantity + ',')
@@ -96,7 +97,12 @@ const CustomerOrdersList = ({
                 <Tr key={i}>
                   <Td>{items}</Td>
                   <Td>{quantity}</Td>
-                  <Td>{formattedDate}</Td>
+                  <Td>
+                    {' '}
+                    <Link color='teal.500' href='#'>
+                      {formattedDate}
+                    </Link>{' '}
+                  </Td>
 
                   {/* <Td>{birthday.toDateString()}</Td>
                   <Td>{data.contact_number}</Td>
