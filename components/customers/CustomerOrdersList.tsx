@@ -11,30 +11,48 @@ import {
   TableContainer,
   Button,
   Link,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from '@chakra-ui/react'
 
-import { supabase } from '../../supabaseClient'
-import CustomerModal from './CustomerModal'
-
-interface CustomerList {
-  id: number
-  surname: string
-  middle_name: string
-  first_name: string
-  osca_id: number
-  birthday: Date
-  contact_number: number
-  address: string
-  designated: string
-  id_register_date: number
-}
 const CustomerOrdersList = ({
   customerOrderData,
 }: any) => {
-
-  const handleOrdersDetail = (quantity : string[] , items : string[] )=> {
-    
-  }
+  const { isOpen, onOpen, onClose } = useDisclosure()
+const [orderItems, setOrderItems] = useState([])
+const [orderQuantity, setOrderQuantity] = useState<string[]>()
+  const OrderModal = () =>    (
+    <>
+  <Modal isOpen={isOpen} onClose={onClose}>
+  <ModalOverlay />
+  <ModalContent>
+    <ModalHeader>Customer order details</ModalHeader>
+    <ModalCloseButton />
+    <ModalBody>
+    </ModalBody>
+ <p>{orderItems}</p>
+ <p>{orderQuantity}</p>
+    <ModalFooter>
+      <Button colorScheme='blue' mr={3} onClick={onClose}>
+        Close
+      </Button>
+      <Button variant='ghost'>Secondary Action</Button>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
+  </>
+    )
+    const handleOrderDetail = (items: any, quantity: string[]) => {
+      onOpen()
+      setOrderItems(items)
+      setOrderQuantity(quantity)
+    }
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='teal'>
@@ -73,7 +91,8 @@ const CustomerOrdersList = ({
                   <Td>{quantity}</Td> */}
                   <Td>
                     {' '}
-                    <Link color='teal.500' onClick={() => handleOrdersDetail(quantity, items)}>
+        
+                                       <Link color='teal.500' onClick={() => handleOrderDetail(items, quantity) }>
                       {formattedDate}
                     </Link>{' '}
                   </Td>
@@ -88,6 +107,7 @@ const CustomerOrdersList = ({
             })}
         </Tbody>
       </Table>
+      <OrderModal />
     </TableContainer>
   )
 }
