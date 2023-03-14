@@ -89,9 +89,6 @@ function Users() {
               setCustomerTransaction={setCustomerTransaction}
             />
             <CustomerOrdersList
-              reloadList={reloadList}
-              customerData={customerData}
-              getCustomers={getCustomers}
               customerOrderData={customerOrderData}
 
             />

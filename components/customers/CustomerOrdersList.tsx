@@ -29,43 +29,17 @@ interface CustomerList {
   id_register_date: number
 }
 const CustomerOrdersList = ({
-  reloadList,
-  customerData,
-  getCustomers,
   customerOrderData,
 }: any) => {
-  const [selectedProduct, setSelectedProduct] = useState<CustomerList[]>([])
-  const [isOpen, setIsOpen] = useState(false)
-  const initialRef = React.useRef(null)
-  const finalRef = React.useRef(null)
 
-  const onOpen = () => {
-    setIsOpen(true)
-  }
-  const onClose = (data: []) => {
-    if (data) {
-      getCustomers()
-    }
-    setIsOpen(false)
-  }
-
-  const handleEditProduct = async (id: number) => {
-    const { data, error } = await supabase
-      .from('customers')
-      .select()
-      .eq('id', id)
-    if (data) {
-      setIsOpen(true)
-      setSelectedProduct(data[0])
-    }
+  const handleOrdersDetail = (quantity : string[] , items : string[] )=> {
+    
   }
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='teal'>
         <Thead>
           <Tr>
-            <Th>Name of Product</Th>
-            <Th>Quantity</Th>
             <Th>Date</Th>
           </Tr>
         </Thead>
@@ -95,11 +69,11 @@ const CustomerOrdersList = ({
               const ageInYears = Math.floor(ageInMilliseconds / 31557600000)
               return (
                 <Tr key={i}>
-                  <Td>{items}</Td>
-                  <Td>{quantity}</Td>
+                                    {/* <Td>{items}</Td>
+                  <Td>{quantity}</Td> */}
                   <Td>
                     {' '}
-                    <Link color='teal.500' href='#'>
+                    <Link color='teal.500' onClick={() => handleOrdersDetail(quantity, items)}>
                       {formattedDate}
                     </Link>{' '}
                   </Td>
@@ -114,13 +88,6 @@ const CustomerOrdersList = ({
             })}
         </Tbody>
       </Table>
-      <CustomerModal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-        updateData={selectedProduct}
-      />
     </TableContainer>
   )
 }
