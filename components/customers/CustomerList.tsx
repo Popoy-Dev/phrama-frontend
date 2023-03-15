@@ -10,6 +10,9 @@ import {
   TableCaption,
   TableContainer,
   Button,
+  Spinner,
+  AbsoluteCenter,
+  Box,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -27,7 +30,12 @@ interface CustomerList {
   designated: string
   id_register_date: number
 }
-const CustomerList = ({reloadList, customerData, getCustomers, setCustomerTransaction}: any) => {
+const CustomerList = ({
+  reloadList,
+  customerData,
+  getCustomers,
+  setCustomerTransaction,
+}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<CustomerList[]>([])
   const [buttonDisabledId, setButtonDisabledId] = useState<number>(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -37,32 +45,31 @@ const CustomerList = ({reloadList, customerData, getCustomers, setCustomerTransa
   const onOpen = () => {
     setIsOpen(true)
   }
-  const onClose = (data:[])  => {
-    if(data) {
-        getCustomers()
+  const onClose = (data: []) => {
+    if (data) {
+      getCustomers()
     }
     setIsOpen(false)
   }
 
   const handleEditProduct = async (id: number) => {
-    const {data, error } = await supabase
-  .from('customers')
-  .select()
-  .eq('id', id)
-  if(data) {
-    setIsOpen(true)
-    setSelectedProduct(data[0])
-  }
+    const { data, error } = await supabase
+      .from('customers')
+      .select()
+      .eq('id', id)
+    if (data) {
+      setIsOpen(true)
+      setSelectedProduct(data[0])
+    }
   }
 
   const handleCustomerTransac = async (id: number) => {
     const { data, error } = await supabase
-  .from('orders')
-  .select()
-  .eq('customer_id', id)
-  setCustomerTransaction(data)
-  setButtonDisabledId(id)
-
+      .from('orders')
+      .select()
+      .eq('customer_id', id)
+    setCustomerTransaction(data)
+    setButtonDisabledId(id)
   }
   return (
     <TableContainer>
@@ -74,41 +81,66 @@ const CustomerList = ({reloadList, customerData, getCustomers, setCustomerTransa
             <Th>First Name</Th>
             <Th>OSCA ID</Th>
             <Th>Action</Th>
-
           </Tr>
         </Thead>
         <Tbody>
-          {customerData &&
+          {customerData.length !== 0 ? (
             customerData?.map((data: CustomerList, i: number) => {
-              const birthday = new Date(data.birthday);
-              const ageInMilliseconds = Date.now() - birthday.getTime();
+              const birthday = new Date(data.birthday)
+              const ageInMilliseconds = Date.now() - birthday.getTime()
               const oscaRegisteredDate = new Date(data.id_register_date)
-              const ageInYears = Math.floor(ageInMilliseconds / 31557600000); 
+              const ageInYears = Math.floor(ageInMilliseconds / 31557600000)
               return (
                 <Tr key={i}>
                   <Td>{data.surname}</Td>
-                  <Td>{data.middle_name }</Td>
-                  <Td>{data.first_name }</Td>
+                  <Td>{data.middle_name}</Td>
+                  <Td>{data.first_name}</Td>
                   <Td>{data.osca_id}</Td>
                   <Td>{ageInYears}</Td>
                   <Td>
-                 
-                    <Button colorScheme='yellow' display='inline' mr={2} onClick={() =>handleEditProduct(data.id)}>Edit</Button>
-                    <Button colorScheme='blue' isDisabled={buttonDisabledId === data.id}   display='inline' onClick={() =>handleCustomerTransac(data.id)}>View Transcations</Button>
+                    <Button
+                      colorScheme='yellow'
+                      display='inline'
+                      mr={2}
+                      onClick={() => handleEditProduct(data.id)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      colorScheme='blue'
+                      isDisabled={buttonDisabledId === data.id}
+                      display='inline'
+                      onClick={() => handleCustomerTransac(data.id)}
+                    >
+                      View Transcations
+                    </Button>
                   </Td>
                 </Tr>
               )
-            })}
+            })
+          ) : (
+            <Box>
+              <AbsoluteCenter>
+                <Spinner
+                  className='items-center'
+                  thickness='4px'
+                  speed='0.65s'
+                  emptyColor='gray.200'
+                  color='blue.500'
+                  size='xl'
+                />
+              </AbsoluteCenter>
+            </Box>
+          )}
         </Tbody>
-
       </Table>
       <CustomerModal
-              initialFocusRef={initialRef}
-              finalFocusRef={finalRef}
-              isOpen={isOpen}
-              onClose={onClose}
-              updateData={selectedProduct}
-            />
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+        updateData={selectedProduct}
+      />
     </TableContainer>
   )
 }
