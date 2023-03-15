@@ -19,6 +19,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Center,
 } from '@chakra-ui/react'
 
 const CustomerOrdersList = ({ customerOrderData }: any) => {
@@ -80,7 +81,8 @@ const CustomerOrdersList = ({ customerOrderData }: any) => {
           </Tr>
         </Thead>
         <Tbody>
-          {customerOrderData &&
+          {customerOrderData.length ? (
+            customerOrderData &&
             customerOrderData?.map((data: any, i: number) => {
               let items: string[] = []
               let quantity: string[] = []
@@ -100,7 +102,7 @@ const CustomerOrdersList = ({ customerOrderData }: any) => {
               })
               const birthday = new Date(data.birthday)
               const ageInMilliseconds = Date.now() - birthday.getTime()
-       
+
               return (
                 <Tr key={i}>
                   <Td>
@@ -114,7 +116,12 @@ const CustomerOrdersList = ({ customerOrderData }: any) => {
                   </Td>
                 </Tr>
               )
-            })}
+            })
+          ) : (
+            <Center bg={'pink.300'} h='100px' color='white'>
+              No data
+            </Center>
+          )}
         </Tbody>
       </Table>
       <OrderModal />
