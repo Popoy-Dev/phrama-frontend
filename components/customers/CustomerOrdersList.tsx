@@ -84,7 +84,7 @@ const CustomerOrdersList = ({ customerOrderData }: any) => {
             customerOrderData?.map((data: any, i: number) => {
               let items: string[] = []
               let quantity: string[] = []
-              const date = new Date('2023-03-13T03:40:34.778167+00:00')
+              const date = new Date(data.created_at)
               const options: Intl.DateTimeFormatOptions = {
                 month: 'long',
                 day: 'numeric',
