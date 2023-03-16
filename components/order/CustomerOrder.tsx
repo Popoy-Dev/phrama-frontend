@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useEffect, useState } from 'react'
 import {
   Table,
@@ -14,6 +15,15 @@ import {
   AlertIcon,
   Select,
 } from '@chakra-ui/react'
+import {
+  Br,
+  Cut,
+  Line,
+  Printer,
+  Text,
+  Row,
+  render,
+} from 'react-thermal-printer'
 
 import { supabase } from '../../supabaseClient'
 
@@ -43,7 +53,8 @@ const CustomerOrder = ({
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
   const [customerList, setCustomerList] = useState<Array<any>>([])
-  const [customerId, setCustomerId] = useState<number>(0)
+  const [customerId, setCustomerId] = useState<number | null>(null)
+  const [port, setPort] = useState()
 
   const getTotal = () => {
     if (customerOrder.length === 0) {
@@ -112,6 +123,7 @@ const CustomerOrder = ({
   useEffect(() => {
     getTotal()
   }, [customerOrder, isRemoveItem])
+  console.log('customerOrder', customerOrder)
   const handlePrintSave = async () => {
     const { error, data } = await supabase
       .from('orders')
@@ -122,7 +134,7 @@ const CustomerOrder = ({
           removetotalDiscount,
           totalAmount,
         },
-        customer_id: customerId
+        customer_id: customerId,
       })
       .select()
 
@@ -153,6 +165,60 @@ const CustomerOrder = ({
         setSuccessMessage(true)
         handleReloadInventory(true)
         handleRemoveAllOrder(true)
+        try {
+          let _port: any = port
+          if (_port == null) {
+            _port = await navigator.serial.requestPort()
+            await _port.open({ baudRate: 9600 })
+            setPort(_port)
+          }
+          const dateToday = new Date()
+          const options: Intl.DateTimeFormatOptions = {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          }
+          const formattedDate = dateToday.toLocaleString('en-US', options)
+
+          const receipt = (
+            <Printer type='epson' width={30} characterSet='korea' debug={true}>
+              <Text bold={true} align='center'>
+                Fayne Pharmacy
+              </Text>
+              <Br />
+              <Text bold={true}>Cashier Name: Joyce Kua</Text>
+              <Text bold={true}>{`${formattedDate}`}</Text>
+              <Br />
+              <Line />
+              {customerOrder.map((item: any, i: number) => {
+                return (
+                  <Row
+                    key={i}
+                    left={`${item?.products?.name} x ${item?.order_quantity}`}
+                    right={`PHP${item?.srp_price}`}
+                  />
+                )
+              })}
+totalAmount
+              <Line />
+              <Row left={<Text bold={true}>Total</Text>} right={<Text bold={true}>{`${totalAmount}`}</Text>} />
+              <Cut />
+            </Printer>
+          )
+
+          const writer = _port.writable?.getWriter()
+          if (writer != null) {
+            const data = await render(receipt)
+
+            await writer.write(data)
+            writer.releaseLock()
+          }
+        } catch (error) {
+          console.error(error)
+        }
       } else {
         alert('SOmething wrong in edit')
       }
@@ -274,7 +340,7 @@ const CustomerOrder = ({
                   >
                     {customerList.map((customer: any, i: number) => (
                       <option
-                       value={customer.id}
+                        value={customer.id}
                         key={i}
                       >{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},`}</option>
                     ))}
