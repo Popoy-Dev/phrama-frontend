@@ -80,7 +80,7 @@ import {
               >
               Sign In
             </Button>
-            <Button
+            {/* <Button
               display={{ base: 'none', md: 'inline-flex' }}
               fontSize={'sm'}
               fontWeight={600}
@@ -91,7 +91,7 @@ import {
                 bg: 'pink.300',
               }}>
               Sign Up
-            </Button>
+            </Button> */}
           </Stack>
         </Flex>
   
