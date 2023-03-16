@@ -40,6 +40,11 @@ interface Inventory {
   product_order: number
   is_vatable: boolean
 }
+interface Navigator {
+  serial: any;
+}
+
+
 const CustomerOrder = ({
   customerOrder,
   handleRemoveOrder,
@@ -168,7 +173,7 @@ const CustomerOrder = ({
         try {
           let _port: any = port
           if (_port == null) {
-            _port = await navigator.serial.requestPort()
+            _port = await (navigator as any).serial.requestPort()
             await _port.open({ baudRate: 9600 })
             setPort(_port)
           }
@@ -202,9 +207,14 @@ const CustomerOrder = ({
                   />
                 )
               })}
-totalAmount
+
               <Line />
               <Row left={<Text bold={true}>Total</Text>} right={<Text bold={true}>{`${totalAmount}`}</Text>} />
+
+              <Text align="center">For order online or reservation: 09954508380</Text>
+              <Text align="center">Thank you, please come again</Text>
+              <Text align="center">Acknowledge Receipt</Text>
+              <Text align="center">Jeremiah 29:11</Text>
               <Cut />
             </Printer>
           )
