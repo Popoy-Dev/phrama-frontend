@@ -40,11 +40,6 @@ interface Inventory {
   product_order: number
   is_vatable: boolean
 }
-interface Navigator {
-  serial: any;
-}
-
-
 const CustomerOrder = ({
   customerOrder,
   handleRemoveOrder,
@@ -199,22 +194,51 @@ const CustomerOrder = ({
               <Br />
               <Line />
               {customerOrder.map((item: any, i: number) => {
+                let total = 0
+                if (item.discounted && item.is_vatable === true) {
+                  let vatValue = 28 / 25
+                  const vatComputation =
+                    (parseInt(item?.order_quantity) * item.srp_price) / vatValue
+                  const seniorDiscount = vatComputation * (20 / 100)
+                  total = vatComputation - seniorDiscount
+                }
+                if (!item.discounted && item.is_vatable) {
+                  total = parseInt(item?.order_quantity) * item.srp_price
+                }
+                if (item.discounted && item.is_vatable === false) {
+                  const vatComputation =
+                    parseInt(item?.order_quantity) * item.srp_price
+                  const seniorDiscount = vatComputation * (20 / 100)
+                  total = vatComputation - seniorDiscount
+                }
+                if (!item.discounted && !item.is_vatable) {
+                  parseInt(item?.order_quantity) * item.srp_price
+                  total = parseInt(item?.order_quantity) * item.srp_price
+                }
+
                 return (
-                  <Row
-                    key={i}
-                    left={`${item?.products?.name} x ${item?.order_quantity}`}
-                    right={`PHP${item?.srp_price}`}
-                  />
+                  <div key={i}>
+                    <Row
+                      left={`${item?.products?.name}`}
+                      right={`PHP${total}`}
+                    />
+                    <Text>{`${item?.order_quantity} x PHP${item?.srp_price}`}</Text>
+                  </div>
                 )
               })}
 
               <Line />
-              <Row left={<Text bold={true}>Total</Text>} right={<Text bold={true}>{`${totalAmount}`}</Text>} />
-
-              <Text align="center">For order online or reservation: 09954508380</Text>
-              <Text align="center">Thank you, please come again</Text>
-              <Text align="center">Acknowledge Receipt</Text>
-              <Text align="center">Jeremiah 29:11</Text>
+              <Row
+                left={<Text bold={true}>Total</Text>}
+                right={<Text bold={true}>{`${totalAmount}`}</Text>}
+              />
+              <Br />
+              <Text align='center'>
+                For order online or reservation: 09954508380
+              </Text>
+              <Text align='center'>Thank you, please come again</Text>
+              <Text align='center'>Acknowledge Receipt</Text>
+              <Text align='center'>Jeremiah 29:11</Text>
               <Cut />
             </Printer>
           )
