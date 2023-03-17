@@ -220,9 +220,9 @@ const CustomerOrder = ({
                   <div key={i}>
                     <Row
                       left={`${item?.products?.name}`}
-                      right={`PHP${total}`}
+                      right={`PHP${total.toFixed(2)}`}
                     />
-                    <Text>{`${item?.order_quantity} x PHP${item?.srp_price}`}</Text>
+                    <Text>{`${item?.order_quantity} x PHP${item?.srp_price.toFixed(2)}`}</Text>
                   </div>
                 )
               })}
@@ -230,7 +230,7 @@ const CustomerOrder = ({
               <Line />
               <Row
                 left={<Text bold={true}>Total</Text>}
-                right={<Text bold={true}>{`${totalAmount}`}</Text>}
+                right={<Text bold={true}>{`${totalAmount.toFixed(2)}`}</Text>}
               />
               <Br />
               <Text align='center'>
@@ -331,7 +331,7 @@ const CustomerOrder = ({
                         ).toFixed(2)
                       : 'No Discount'}{' '}
                   </Td>
-                  <Td>{total.toFixed(3)} </Td>
+                  <Td>{total.toFixed(2)} </Td>
                   <Td>
                     {' '}
                     <Button
@@ -353,7 +353,7 @@ const CustomerOrder = ({
 
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
-            <Th isNumeric>{totalAmount.toFixed(3)}PHP</Th>
+            <Th isNumeric>{totalAmount.toFixed(2)}PHP</Th>
             <Th>
               {' '}
               {customerOrder.length !== 0 ? (

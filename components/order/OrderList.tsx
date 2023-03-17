@@ -96,7 +96,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                   <Td>{data.products.category}</Td>
                   <Td>{data.products.generic_name}</Td>
                   <Td>{`₱ ${data.manufacture_price}`}</Td>
-                  <Td>{`₱ ${data.srp_price}`}</Td>
+                  <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
                   <Td>{data.quantity -data.ordered_quantity}</Td>
                   <Td>
                     <NumberInput
