@@ -167,7 +167,9 @@ const CustomerOrder = ({
         handleRemoveAllOrder(true)
         try {
           let _port: any = port
+          
           if (_port == null) {
+            // Request permission to access the serial port
             _port = await (navigator as any).serial.requestPort()
             await _port.open({ baudRate: 9600 })
             setPort(_port)
@@ -182,7 +184,7 @@ const CustomerOrder = ({
             hour12: true,
           }
           const formattedDate = dateToday.toLocaleString('en-US', options)
-
+        
           const receipt = (
             <Printer type='epson' width={30} characterSet='korea' debug={true}>
               <Text bold={true} align='center'>
@@ -215,7 +217,7 @@ const CustomerOrder = ({
                   parseInt(item?.order_quantity) * item.srp_price
                   total = parseInt(item?.order_quantity) * item.srp_price
                 }
-
+        
                 return (
                   <div key={i}>
                     <Row
@@ -226,7 +228,7 @@ const CustomerOrder = ({
                   </div>
                 )
               })}
-
+        
               <Line />
               <Row
                 left={<Text bold={true}>Total</Text>}
@@ -242,17 +244,18 @@ const CustomerOrder = ({
               <Cut />
             </Printer>
           )
-
+        
           const writer = _port.writable?.getWriter()
           if (writer != null) {
             const data = await render(receipt)
-
+        
             await writer.write(data)
             writer.releaseLock()
           }
         } catch (error) {
           console.error(error)
         }
+        
       } else {
         alert('SOmething wrong in edit')
       }
