@@ -111,7 +111,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                         <NumberDecrementStepper />
                       </NumberInputStepper>
                     </NumberInput>
-                    {(data.quantity-data.ordered_quantity === 0 && errorIndex === i ) ? <Text color='tomato'> No stocks!</Text> : (errorMessage && errorIndex) === i ?? <Text color='tomato'> {errorMessage}!</Text>} 
+                    {(data.quantity-data.ordered_quantity === 0 && errorIndex === i || data.quantity-data.ordered_quantity < inputValues[i] ) ? <Text color='tomato'> No stocks!</Text> : (errorMessage && errorIndex) === i ?? <Text color='tomato'> {errorMessage}!</Text>} 
 
                   </Td>
 
@@ -131,6 +131,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                   <Td>
                     <Button
                       colorScheme='blue'
+                      isDisabled={data.quantity-data.ordered_quantity < inputValues[i]}
                       onClick={() =>
                         handleAdd(data, checkedItems.includes(data.id), parseInt(inputValues[i]), i)
                       }
