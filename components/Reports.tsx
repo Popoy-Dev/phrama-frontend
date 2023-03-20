@@ -21,7 +21,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Bar Chart',
+      text: 'Fayne Pharma Sell Chart',
     },
   },
 }
@@ -47,7 +47,7 @@ export const data = {
     {
       label: 'Dataset 1',
       data: labels.map(() => Math.floor(Math.random() * 100)),
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      backgroundColor: 'rgba(61, 50, 52, 0.5)',
     },
   ],
 }

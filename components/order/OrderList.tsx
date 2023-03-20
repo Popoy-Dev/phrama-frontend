@@ -103,7 +103,6 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                     key={data.id}
                     onChange={event => handleInputChange(event, i)}
                     value={inputValues[i]}
-                    max={data.quantity-data.ordered_quantity}
                     >
                       <NumberInputField />
                       <NumberInputStepper>
