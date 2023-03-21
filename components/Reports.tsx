@@ -9,7 +9,8 @@ import {
   Legend,
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
-import { Box } from '@chakra-ui/react'
+import { Box, SimpleGrid } from '@chakra-ui/react'
+import CustomerOrderReport from './reports/CustomerOrderReport'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -54,9 +55,13 @@ export const data = {
 
 const Reports = () => {
   return (
-    <Box bg='white' w='100%' p={4} color='white' borderRadius='md'>
+    <SimpleGrid columns={2} spacing={10}>
+  <Box bg='tomato' height='80px'> <CustomerOrderReport /> </Box>
+  <Box bg='white' w='100%' p={4} color='white' borderRadius='md'>
       <Bar options={options} data={data} />
     </Box>
+</SimpleGrid>
+  
   )
 }
 
