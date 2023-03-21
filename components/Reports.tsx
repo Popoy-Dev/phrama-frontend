@@ -56,12 +56,14 @@ export const data = {
 const Reports = () => {
   return (
     <SimpleGrid columns={2} spacing={10}>
-  <Box bg='tomato' height='80px'> <CustomerOrderReport /> </Box>
-  <Box bg='white' w='100%' p={4} color='white' borderRadius='md'>
-      <Bar options={options} data={data} />
-    </Box>
-</SimpleGrid>
-  
+      <Box bg='white' height='80px'>
+        {' '}
+        <CustomerOrderReport />{' '}
+      </Box>
+      <Box bg='white' w='100%' p={4} color='white' borderRadius='md'>
+        <Bar options={options} data={data} />
+      </Box>
+    </SimpleGrid>
   )
 }
 
