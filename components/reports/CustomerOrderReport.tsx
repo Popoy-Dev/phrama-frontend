@@ -1,4 +1,5 @@
 import {
+  Center,
   Input,
   Table,
   TableCaption,
@@ -77,7 +78,6 @@ function CustomerOrderReport() {
     <div>
       <TableContainer>
         <Table variant='striped' colorScheme='teal'>
-          <TableCaption>Report</TableCaption>
           <Thead>
             <Tr>
               <Th>Date</Th>
@@ -93,7 +93,7 @@ function CustomerOrderReport() {
             </Tr>
           </Thead>
           <Tbody>
-            {ordersData.length > 0 &&
+            {ordersData.length > 0 ?
               ordersData.map((data: OrderData, i: number) => {
                 console.log('data', data)
                 return (
@@ -103,15 +103,16 @@ function CustomerOrderReport() {
                     <Td isNumeric>25.4</Td>
                   </Tr>
                 )
-              })}
+              }): (
+               
+               <Center bg='red.400' h='100px' color='white'>
+                No Data Found!
+              </Center>
+         
+          
+              )}
           </Tbody>
-          <Tfoot>
-            <Tr>
-              <Th>To convert</Th>
-              <Th>into</Th>
-              <Th isNumeric>multiply by</Th>
-            </Tr>
-          </Tfoot>
+
         </Table>
       </TableContainer>
     </div>
