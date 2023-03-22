@@ -1,4 +1,5 @@
 import {
+  Input,
   Table,
   TableCaption,
   TableContainer,
@@ -41,23 +42,32 @@ interface OrderTotalDetails {
 interface OrderData {
   id: number
   created_at: Date
-  order: CustomerOrder
+  order: any
   order_totals_details: OrderTotalDetails
 }
 
 function CustomerOrderReport() {
+  let today = new Date().toISOString().slice(0, 10)
   const [ordersData, setOrdersData] = useState<Array<OrderData>>([])
+  const [orderDate, setOrderDate] = useState<string>(today)
 
   const fetchReport = async () => {
-    let today = new Date().toISOString().slice(0, 10)
     const { data, error } = await supabase
       .from('orders')
       .select()
-      .eq('created_at', today) // Correct
+      .eq('created_at', orderDate) // Correct
     if (data) {
       setOrdersData(data)
     }
   }
+
+  const handleDate = (event : any) => {
+    setOrderDate(event?.target.value)
+  }
+
+  useEffect(() => {
+    fetchReport()
+  }, [orderDate])
 
   useEffect(() => {
     fetchReport()
@@ -71,16 +81,24 @@ function CustomerOrderReport() {
           <Thead>
             <Tr>
               <Th>Date</Th>
-              <Th>into</Th>
+              <Th>
+                <Input
+                  placeholder='Select Date and Time'
+                  size='md'
+                  type='date'
+                  onChange={handleDate}
+                />
+              </Th>
               <Th isNumeric>multiply by</Th>
             </Tr>
           </Thead>
           <Tbody>
             {ordersData.length > 0 &&
               ordersData.map((data: OrderData, i: number) => {
+                console.log('data', data)
                 return (
                   <Tr key={i}>
-                    <Td>{data.created_at.toString()}</Td>
+                    <Td>{data.order[0].created_at.toString()}</Td>
                     <Td>millimetres (mm)</Td>
                     <Td isNumeric>25.4</Td>
                   </Tr>
