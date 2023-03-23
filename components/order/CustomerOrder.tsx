@@ -46,7 +46,9 @@ const CustomerOrder = ({
   isRemoveItem,
   handleRemoveAllOrder,
   handleReloadInventory,
+  customerRetrive
 }: any) => {
+  console.log('customerRetrive', customerRetrive)
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
   const [totalAmount, setTotalAmount] = useState<number>(0)
@@ -55,7 +57,6 @@ const CustomerOrder = ({
   const [customerList, setCustomerList] = useState<Array<any>>([])
   const [customerId, setCustomerId] = useState<number | null>(null)
   const [port, setPort] = useState()
-
   const getTotal = () => {
     if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
@@ -163,8 +164,11 @@ const CustomerOrder = ({
 
       if (!error) {
         setSuccessMessage(true)
-        handleReloadInventory(true)
-        handleRemoveAllOrder(true)
+        if(customerRetrive !== 'retrive') {
+          handleReloadInventory(true)
+          handleRemoveAllOrder(true)
+        }
+   
         try {
           let _port: any = port
           

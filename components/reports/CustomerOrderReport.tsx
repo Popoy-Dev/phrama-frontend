@@ -1,6 +1,14 @@
 import {
+  Button,
   Center,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Table,
   TableCaption,
   TableContainer,
@@ -10,9 +18,11 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../../supabaseClient'
+import CustomerOrder from '../order/CustomerOrder'
 
 interface CustomerOrder {
   id: number
@@ -48,9 +58,11 @@ interface OrderData {
 }
 
 function CustomerOrderReport() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   let today = new Date().toISOString().slice(0, 10)
   const [ordersData, setOrdersData] = useState<Array<OrderData>>([])
   const [orderDate, setOrderDate] = useState<string>(today)
+  const [modalData, setModalData] = useState<any>(null)
 
   const fetchReport = async () => {
     const { data, error } = await supabase
@@ -74,6 +86,10 @@ function CustomerOrderReport() {
     fetchReport()
   }, [])
 
+  const handleViewOrder = (data: any) => {
+    onOpen()
+    setModalData(data.order)
+  }
   return (
     <div>
       <TableContainer>
@@ -92,31 +108,57 @@ function CustomerOrderReport() {
             </Tr>
           </Thead>
           <Tbody>
-            {ordersData.length > 0
-              ? ordersData.map((data: OrderData, i: number) => {
-                  const date = new Date(data.order[0].created_at)
+            {ordersData.length > 0 ? (
+              ordersData.map((data: OrderData, i: number) => {
+                console.log('data', data)
+                const date = new Date(data.order[0].created_at)
 
-                  const options: Intl.DateTimeFormatOptions = {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true,
-                  }
-                  const formattedDate = date.toLocaleString('en-US', options)
-                  return (
-                    <Tr key={i}>
-                      <Td>{formattedDate}</Td>
-                      <Td>millimetres (mm)</Td>
-                      <Td isNumeric>25.4</Td>
-                    </Tr>
-                  )
-                })
-              : ''}
+                const options: Intl.DateTimeFormatOptions = {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  hour12: true,
+                }
+                const formattedDate = date.toLocaleString('en-US', options)
+                return (
+                  <Tr key={i}>
+                    <Td>{formattedDate}</Td>
+                    <Td>
+                      <Button colorScheme='teal' onClick={() => handleViewOrder(data)}>
+                        View
+                      </Button>
+                    </Td>
+                  </Tr>
+                )
+              })
+            ) : (
+              <Center bg='red.400' h='100px' color='white'>
+                No Data Found!
+              </Center>
+            )}
           </Tbody>
         </Table>
       </TableContainer>
+
+      <Modal isOpen={isOpen} onClose={onClose} size='4xl'>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+           <CustomerOrder customerOrder={modalData} customerRetrive='retrive' /> 
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            Print
+            </Button>
+            <Button variant='ghost'>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   )
 }
