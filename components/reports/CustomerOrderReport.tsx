@@ -62,7 +62,7 @@ function CustomerOrderReport() {
     }
   }
 
-  const handleDate = (event : any) => {
+  const handleDate = (event: any) => {
     setOrderDate(event?.target.value)
   }
 
@@ -89,30 +89,32 @@ function CustomerOrderReport() {
                   onChange={handleDate}
                 />
               </Th>
-              <Th isNumeric>multiply by</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {ordersData.length > 0 ?
-              ordersData.map((data: OrderData, i: number) => {
-                console.log('data', data)
-                return (
-                  <Tr key={i}>
-                    <Td>{data.order[0].created_at.toString()}</Td>
-                    <Td>millimetres (mm)</Td>
-                    <Td isNumeric>25.4</Td>
-                  </Tr>
-                )
-              }): (
-               
-               <Center bg='red.400' h='100px' color='white'>
-                No Data Found!
-              </Center>
-         
-          
-              )}
-          </Tbody>
+            {ordersData.length > 0
+              ? ordersData.map((data: OrderData, i: number) => {
+                  const date = new Date(data.order[0].created_at)
 
+                  const options: Intl.DateTimeFormatOptions = {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
+                  }
+                  const formattedDate = date.toLocaleString('en-US', options)
+                  return (
+                    <Tr key={i}>
+                      <Td>{formattedDate}</Td>
+                      <Td>millimetres (mm)</Td>
+                      <Td isNumeric>25.4</Td>
+                    </Tr>
+                  )
+                })
+              : ''}
+          </Tbody>
         </Table>
       </TableContainer>
     </div>
