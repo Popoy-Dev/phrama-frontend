@@ -124,7 +124,6 @@ const CustomerOrder = ({
   useEffect(() => {
     getTotal()
   }, [customerOrder, isRemoveItem])
-  console.log('customerOrder', customerOrder)
   const handlePrintSave = async () => {
     const { error, data } = await supabase
       .from('orders')
