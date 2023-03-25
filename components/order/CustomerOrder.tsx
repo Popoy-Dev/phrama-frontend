@@ -14,6 +14,12 @@ import {
   Alert,
   AlertIcon,
   Select,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Stack,
 } from '@chakra-ui/react'
 import {
   Br,
@@ -46,7 +52,7 @@ const CustomerOrder = ({
   isRemoveItem,
   handleRemoveAllOrder,
   handleReloadInventory,
-  customerRetrive
+  customerRetrive,
 }: any) => {
   console.log('customerOrder', customerOrder)
   const dateToday = new Date()
@@ -66,6 +72,8 @@ const CustomerOrder = ({
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
   const [customerList, setCustomerList] = useState<Array<any>>([])
   const [customerId, setCustomerId] = useState<number | null>(null)
+  const [customerMoney, setCustomerMoney] = useState<number>(0)
+  console.log('customerMoney', customerMoney)
   const [port, setPort] = useState()
   const getTotal = () => {
     if (customerOrder.length === 0) {
@@ -138,14 +146,14 @@ const CustomerOrder = ({
     const { error, data } = await supabase
       .from('orders')
       .insert({
-        order: {customerOrder, order_at: formattedDate},
+        order: { customerOrder, order_at: formattedDate },
         order_totals_details: {
           removetotalQuantity,
           removetotalDiscount,
           totalAmount,
         },
         customer_id: customerId,
-        created_at :formattedDate
+        created_at: formattedDate,
       })
       .select()
 
@@ -174,35 +182,33 @@ const CustomerOrder = ({
 
       if (!error) {
         setSuccessMessage(true)
-        if(customerRetrive !== 'retrive') {
+        if (customerRetrive !== 'retrive') {
           handleReloadInventory(true)
           handleRemoveAllOrder(true)
         }
-   
+
         try {
           let _port: any = port
-          
+
           if (_port == null) {
             // Request permission to access the serial port
             _port = await (navigator as any).serial.requestPort()
             await _port.open({ baudRate: 9600 })
             setPort(_port)
           }
-     
+
           const receipt = (
             <Printer type='epson' width={30} characterSet='korea' debug={true}>
               <Text bold={true} align='center'>
                 Fayne Pharmacy
               </Text>
-              <Text  align='center'>
+              <Text align='center'>
                 006 San Miguel Phase 3 Fortune Marikina City
               </Text>
-              <Text  align='center'>
+              <Text align='center'>
                 Email: faynepharmacy@gmail.com/09954508380
               </Text>
-              <Text  align='center'>
-                VAT Registration: ------
-              </Text>
+              <Text align='center'>VAT Registration: ------</Text>
               <Br />
               <Text bold={true}>Cashier Name: Joyce Kua</Text>
               <Text bold={true}>{`${formattedDate}`}</Text>
@@ -230,21 +236,23 @@ const CustomerOrder = ({
                   parseInt(item?.order_quantity) * item.srp_price
                   total = parseInt(item?.order_quantity) * item.srp_price
                 }
-        
+
                 return (
                   <div key={i}>
                     <Row
                       left={`${item?.products?.name}`}
                       right={`PHP${total.toFixed(2)}`}
                     />
-                    <Text>{`${item?.order_quantity} x PHP${item?.srp_price.toFixed(2)}`}</Text>
+                    <Text>{`${
+                      item?.order_quantity
+                    } x PHP${item?.srp_price.toFixed(2)}`}</Text>
                   </div>
                 )
               })}
-        
+
               <Line />
               <Row
-                left={<Text bold={true}>Total</Text>}
+                left={<Text bold={true}>AMOUNT DUE:</Text>}
                 right={<Text bold={true}>{`${totalAmount.toFixed(2)}`}</Text>}
               />
               <Br />
@@ -257,18 +265,17 @@ const CustomerOrder = ({
               <Cut />
             </Printer>
           )
-        
+
           const writer = _port.writable?.getWriter()
           if (writer != null) {
             const data = await render(receipt)
-        
+
             await writer.write(data)
             writer.releaseLock()
           }
         } catch (error) {
           console.error(error)
         }
-        
       } else {
         alert('SOmething wrong in edit')
       }
@@ -364,9 +371,7 @@ const CustomerOrder = ({
         </Tbody>
         <Tfoot className='text-right'>
           <Tr>
-            <Th></Th>
-            <Th></Th>
-
+    
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
             <Th isNumeric>{totalAmount.toFixed(2)}PHP</Th>
@@ -374,11 +379,20 @@ const CustomerOrder = ({
               {' '}
               {customerOrder.length !== 0 ? (
                 <>
+                <Stack shouldWrapChildren direction='row'>
+                <NumberInput min={1} size='md' display='inline' onChange={(value) => setCustomerMoney(parseInt(value))}>
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
                   <Button
                     display='inline'
                     colorScheme='whatsapp'
                     variant='solid'
                     onClick={handlePrintSave}
+                    isDisabled={parseInt(totalAmount.toFixed(2)) > customerMoney ? true : false}
                   >
                     Print Order
                   </Button>{' '}
@@ -395,6 +409,9 @@ const CustomerOrder = ({
                       >{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},`}</option>
                     ))}
                   </Select>
+
+                </Stack>
+               
                 </>
               ) : (
                 ''
