@@ -88,7 +88,7 @@ function CustomerOrderReport() {
 
   const handleViewOrder = (data: any) => {
     onOpen()
-    setModalData(data.order)
+    setModalData(data.order.customerOrder)
   }
   return (
     <div>
@@ -111,7 +111,7 @@ function CustomerOrderReport() {
             {ordersData.length > 0 ? (
               ordersData.map((data: OrderData, i: number) => {
                 console.log('data', data)
-                const date = new Date(data.order[0].created_at)
+                const date = new Date(data.order.order_at)
 
                 const options: Intl.DateTimeFormatOptions = {
                   month: 'long',
@@ -121,11 +121,11 @@ function CustomerOrderReport() {
                   minute: 'numeric',
                   hour12: true,
                   timeZone: 'Asia/Manila',
+                  weekday: undefined,
                 }
-                const formattedDate = date.toLocaleString('en-US', options)
                 return (
                   <Tr key={i}>
-                    <Td>{formattedDate}</Td>
+                    <Td>{data.order.order_at}</Td>
                     <Td>
                       <Button colorScheme='teal' onClick={() => handleViewOrder(data)}>
                         View

@@ -48,6 +48,7 @@ const CustomerOrder = ({
   handleReloadInventory,
   customerRetrive
 }: any) => {
+  console.log('customerOrder', customerOrder)
   const dateToday = new Date()
   const options: Intl.DateTimeFormatOptions = {
     month: 'long',
@@ -137,7 +138,7 @@ const CustomerOrder = ({
     const { error, data } = await supabase
       .from('orders')
       .insert({
-        order: [...customerOrder, {order_at: formattedDate}],
+        order: {customerOrder, order_at: formattedDate},
         order_totals_details: {
           removetotalQuantity,
           removetotalDiscount,
@@ -192,6 +193,15 @@ const CustomerOrder = ({
             <Printer type='epson' width={30} characterSet='korea' debug={true}>
               <Text bold={true} align='center'>
                 Fayne Pharmacy
+              </Text>
+              <Text  align='center'>
+                006 San Miguel Phase 3 Fortune Marikina City
+              </Text>
+              <Text  align='center'>
+                Email: faynepharmacy@gmail.com/09954508380
+              </Text>
+              <Text  align='center'>
+                VAT Registration: ------
               </Text>
               <Br />
               <Text bold={true}>Cashier Name: Joyce Kua</Text>
