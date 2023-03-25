@@ -120,6 +120,7 @@ function CustomerOrderReport() {
                   hour: 'numeric',
                   minute: 'numeric',
                   hour12: true,
+                  timeZone: 'Asia/Manila',
                 }
                 const formattedDate = date.toLocaleString('en-US', options)
                 return (

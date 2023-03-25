@@ -48,7 +48,16 @@ const CustomerOrder = ({
   handleReloadInventory,
   customerRetrive
 }: any) => {
-  console.log('customerRetrive', customerRetrive)
+  const dateToday = new Date()
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
+  const formattedDate = dateToday.toLocaleString('en-US', options)
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
   const [totalAmount, setTotalAmount] = useState<number>(0)
@@ -128,13 +137,14 @@ const CustomerOrder = ({
     const { error, data } = await supabase
       .from('orders')
       .insert({
-        order: customerOrder,
+        order: [...customerOrder, {order_at: formattedDate}],
         order_totals_details: {
           removetotalQuantity,
           removetotalDiscount,
           totalAmount,
         },
         customer_id: customerId,
+        created_at :formattedDate
       })
       .select()
 
@@ -177,17 +187,7 @@ const CustomerOrder = ({
             await _port.open({ baudRate: 9600 })
             setPort(_port)
           }
-          const dateToday = new Date()
-          const options: Intl.DateTimeFormatOptions = {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true,
-          }
-          const formattedDate = dateToday.toLocaleString('en-US', options)
-        
+     
           const receipt = (
             <Printer type='epson' width={30} characterSet='korea' debug={true}>
               <Text bold={true} align='center'>
