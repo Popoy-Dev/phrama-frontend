@@ -236,6 +236,7 @@ const CustomerOrder = ({
                   parseInt(item?.order_quantity) * item.srp_price
                   total = parseInt(item?.order_quantity) * item.srp_price
                 }
+                
 
                 return (
                   <div key={i}>
@@ -252,8 +253,16 @@ const CustomerOrder = ({
 
               <Line />
               <Row
-                left={<Text bold={true}>AMOUNT DUE:</Text>}
-                right={<Text bold={true}>{`${totalAmount.toFixed(2)}`}</Text>}
+                left={<Text >AMOUNT DUE:</Text>}
+                right={<Text >{`${totalAmount.toFixed(2)}`}</Text>}
+              />
+               <Row
+                left={<Text >CASH:</Text>}
+                right={<Text >{`${customerMoney.toFixed(2)}`}</Text>}
+              />
+                <Row
+                left={<Text bold={true}>CHANGE:</Text>}
+                right={<Text bold={true}>{`${(customerMoney -totalAmount).toFixed(2)}`}</Text>}
               />
               <Br />
               <Text align='center'>
