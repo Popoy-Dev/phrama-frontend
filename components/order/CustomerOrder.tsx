@@ -54,7 +54,6 @@ const CustomerOrder = ({
   handleReloadInventory,
   customerRetrive,
 }: any) => {
-  console.log('customerOrder', customerOrder)
   const dateToday = new Date()
   const options: Intl.DateTimeFormatOptions = {
     month: 'long',
@@ -73,7 +72,6 @@ const CustomerOrder = ({
   const [customerList, setCustomerList] = useState<Array<any>>([])
   const [customerId, setCustomerId] = useState<number | null>(null)
   const [customerMoney, setCustomerMoney] = useState<number>(0)
-  console.log('customerMoney', customerMoney)
   const [port, setPort] = useState()
   const getTotal = () => {
     if (customerOrder.length === 0) {
@@ -127,7 +125,7 @@ const CustomerOrder = ({
   }
 
   const getCustomersList = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('customers')
       .select()
       .order('surname', { ascending: true })
@@ -236,8 +234,6 @@ const CustomerOrder = ({
                   parseInt(item?.order_quantity) * item.srp_price
                   total = parseInt(item?.order_quantity) * item.srp_price
                 }
-                
-
                 return (
                   <div key={i}>
                     <Row

@@ -4,9 +4,7 @@ import {
   Heading,
   Container,
   Text,
-  Button,
   Stack,
-  Icon,
   createIcon,
 } from '@chakra-ui/react';
 

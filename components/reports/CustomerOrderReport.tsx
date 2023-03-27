@@ -10,11 +10,9 @@ import {
   ModalHeader,
   ModalOverlay,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr,
@@ -63,7 +61,6 @@ function CustomerOrderReport() {
   const [ordersData, setOrdersData] = useState<Array<OrderData>>([])
   const [orderDate, setOrderDate] = useState<string>(today)
   const [modalData, setModalData] = useState<any>(null)
-
   const fetchReport = async () => {
     const { data, error } = await supabase
       .from('orders')
@@ -110,7 +107,6 @@ function CustomerOrderReport() {
           <Tbody>
             {ordersData.length > 0 ? (
               ordersData.map((data: OrderData, i: number) => {
-                console.log('data', data)
                 const date = new Date(data.order.order_at)
 
                 const options: Intl.DateTimeFormatOptions = {
