@@ -67,12 +67,16 @@ const CustomerOrder = ({
   const [removetotalQuantity, setRemoveTotalQuantity] = useState(0)
   const [removetotalDiscount, setRemoveTotalDiscount] = useState(0)
   const [totalAmount, setTotalAmount] = useState<number>(0)
+  const [subTotalAmount, setSubTotalAmount] = useState<number>(0)
+  const [totalVatDiscount, setTotalVatDiscount] = useState<number>(0)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
   const [customerList, setCustomerList] = useState<Array<any>>([])
   const [customerId, setCustomerId] = useState<number | null>(null)
   const [customerMoney, setCustomerMoney] = useState<number>(0)
   const [port, setPort] = useState()
+
+  console.log('totalVatDiscount', totalVatDiscount)
   const getTotal = () => {
     if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
@@ -122,6 +126,31 @@ const CustomerOrder = ({
         return total()
       }, 0)
     )
+
+    setSubTotalAmount(
+      customerOrder.reduce((acc: any, obj: any) => {
+        const total = () => {
+          return acc + parseInt(obj?.order_quantity) * obj.srp_price
+        }
+
+        return total()
+      }, 0)
+    )
+    setTotalVatDiscount(
+       customerOrder?.filter((item: any) => item.discounted && item.is_vatable === true)?.reduce((acc: any, obj: any) => {
+        const vatablePrice = (parseInt(obj?.order_quantity) * obj.srp_price) / 1.12;
+        const vatValue = obj.srp_price - vatablePrice;
+        return acc + vatValue;
+      }, 0)
+      )
+
+      // setTotalVatDiscount(
+      //   customerOrder?.filter((item: any) => item.discounted && item.is_vatable === true)?.reduce((acc: any, obj: any) => {
+      //     const vatablePrice = (parseInt(obj?.order_quantity) * obj.srp_price) / 28 / 25;
+      //     const vatValue = obj.srp_price - vatablePrice;
+      //     return acc + vatValue;
+      //   }, 0) // Provide an initial value of 0 for the accumulator
+      // );
   }
 
   const getCustomersList = async () => {
@@ -214,21 +243,28 @@ const CustomerOrder = ({
               <Line />
               {customerOrder.map((item: any, i: number) => {
                 let total = 0
+                let seniorDiscount = 0
+                let vatComputation= 0
+                let withVatLabel = ''
                 if (item.discounted && item.is_vatable === true) {
-                  let vatValue = 28 / 25
-                  const vatComputation =
+                  withVatLabel = '*'
+                  let vatValue = 1.12
+                 vatComputation =
                     (parseInt(item?.order_quantity) * item.srp_price) / vatValue
-                  const seniorDiscount = vatComputation * (20 / 100)
+                    
+                  seniorDiscount = vatComputation * (20 / 100)
                   total = vatComputation - seniorDiscount
+                  console.log('vatComputation', vatComputation)
                 }
                 if (!item.discounted && item.is_vatable) {
                   total = parseInt(item?.order_quantity) * item.srp_price
                 }
                 if (item.discounted && item.is_vatable === false) {
-                  const vatComputation =
+                   vatComputation =
                     parseInt(item?.order_quantity) * item.srp_price
-                  const seniorDiscount = vatComputation * (20 / 100)
+                  seniorDiscount = vatComputation * (20 / 100)
                   total = vatComputation - seniorDiscount
+                  console.log('vatComputation', vatComputation)
                 }
                 if (!item.discounted && !item.is_vatable) {
                   parseInt(item?.order_quantity) * item.srp_price
@@ -237,28 +273,52 @@ const CustomerOrder = ({
                 return (
                   <div key={i}>
                     <Row
+                      left={`${withVatLabel} ${item?.products?.name}`}
+                      right={`PHP${item?.srp_price.toFixed(2)}`}
+                    />
+                    {/* <Row
                       left={`${item?.products?.name}`}
                       right={`PHP${total.toFixed(2)}`}
-                    />
+                    /> */}
                     <Text>{`${
                       item?.order_quantity
-                    } x PHP${item?.srp_price.toFixed(2)}`}</Text>
+                    }xPHP${item?.srp_price.toFixed(2)}`}</Text>
                   </div>
                 )
               })}
 
               <Line />
+              <Br />
               <Row
-                left={<Text >AMOUNT DUE:</Text>}
-                right={<Text >{`${totalAmount.toFixed(2)}`}</Text>}
+                left={<Text bold={true}>Sub Total:</Text>}
+                right={
+                  <Text bold={true}>{`${subTotalAmount.toFixed(2)}`}</Text>
+                }
               />
-               <Row
-                left={<Text >CASH:</Text>}
-                right={<Text >{`${customerMoney.toFixed(2)}`}</Text>}
+
+              <Row
+                left={`Sr Total Disc 20%`}
+                right={`-${removetotalDiscount}`}
               />
-                <Row
+                 <Row
+                left={`VAT Discount 12%`}
+                right={`-${totalVatDiscount.toFixed(2) }`}
+              />
+              <Row
+                left={<Text>AMOUNT DUE:</Text>}
+                right={<Text>{`${totalAmount.toFixed(2)}`}</Text>}
+              />
+              <Row
+                left={<Text>CASH:</Text>}
+                right={<Text>{`${customerMoney.toFixed(2)}`}</Text>}
+              />
+              <Row
                 left={<Text bold={true}>CHANGE:</Text>}
-                right={<Text bold={true}>{`${(customerMoney -totalAmount).toFixed(2)}`}</Text>}
+                right={
+                  <Text bold={true}>{`${(customerMoney - totalAmount).toFixed(
+                    2
+                  )}`}</Text>
+                }
               />
               <Br />
               <Text align='center'>
@@ -376,7 +436,6 @@ const CustomerOrder = ({
         </Tbody>
         <Tfoot className='text-right'>
           <Tr>
-    
             <Th>Total quantity - {removetotalQuantity} pieces</Th>
             <Th>Total Discount - {removetotalDiscount.toFixed(2)}PHP</Th>
             <Th isNumeric>{totalAmount.toFixed(2)}PHP</Th>
@@ -384,39 +443,46 @@ const CustomerOrder = ({
               {' '}
               {customerOrder.length !== 0 ? (
                 <>
-                <Stack shouldWrapChildren direction='row'>
-                <NumberInput min={1} size='md' display='inline' onChange={(value) => setCustomerMoney(parseInt(value))}>
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                  <Button
-                    display='inline'
-                    colorScheme='whatsapp'
-                    variant='solid'
-                    onClick={handlePrintSave}
-                    isDisabled={parseInt(totalAmount.toFixed(2)) > customerMoney ? true : false}
-                  >
-                    Print Order
-                  </Button>{' '}
-                  <Select
-                    display='inline'
-                    placeholder='Select Customer'
-                    width='full'
-                    onChange={handleCustomer}
-                  >
-                    {customerList.map((customer: any, i: number) => (
-                      <option
-                        value={customer.id}
-                        key={i}
-                      >{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},`}</option>
-                    ))}
-                  </Select>
-
-                </Stack>
-               
+                  <Stack shouldWrapChildren direction='row'>
+                    <NumberInput
+                      min={1}
+                      size='md'
+                      display='inline'
+                      onChange={(value) => setCustomerMoney(parseInt(value))}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                    <Button
+                      display='inline'
+                      colorScheme='whatsapp'
+                      variant='solid'
+                      onClick={handlePrintSave}
+                      isDisabled={
+                        parseInt(totalAmount.toFixed(2)) > customerMoney
+                          ? true
+                          : false
+                      }
+                    >
+                      Print Order
+                    </Button>{' '}
+                    <Select
+                      display='inline'
+                      placeholder='Select Customer'
+                      width='full'
+                      onChange={handleCustomer}
+                    >
+                      {customerList.map((customer: any, i: number) => (
+                        <option
+                          value={customer.id}
+                          key={i}
+                        >{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},`}</option>
+                      ))}
+                    </Select>
+                  </Stack>
                 </>
               ) : (
                 ''
