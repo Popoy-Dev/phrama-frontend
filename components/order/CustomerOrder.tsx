@@ -76,7 +76,6 @@ const CustomerOrder = ({
   const [customerMoney, setCustomerMoney] = useState<number>(0)
   const [port, setPort] = useState()
 
-  console.log('totalVatDiscount', totalVatDiscount)
   const getTotal = () => {
     if (customerOrder.length === 0) {
       setRemoveTotalDiscount(0)
@@ -254,7 +253,6 @@ const CustomerOrder = ({
                     
                   seniorDiscount = vatComputation * (20 / 100)
                   total = vatComputation - seniorDiscount
-                  console.log('vatComputation', vatComputation)
                 }
                 if (!item.discounted && item.is_vatable) {
                   total = parseInt(item?.order_quantity) * item.srp_price
@@ -264,7 +262,6 @@ const CustomerOrder = ({
                     parseInt(item?.order_quantity) * item.srp_price
                   seniorDiscount = vatComputation * (20 / 100)
                   total = vatComputation - seniorDiscount
-                  console.log('vatComputation', vatComputation)
                 }
                 if (!item.discounted && !item.is_vatable) {
                   parseInt(item?.order_quantity) * item.srp_price
