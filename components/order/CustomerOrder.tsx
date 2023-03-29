@@ -87,15 +87,12 @@ const CustomerOrder = ({
         0
       )
     )
-console.log('removetotalDiscount', removetotalDiscount)
     setRemoveTotalDiscount(
       customerOrder.reduce((acc: number, obj: any) => {
-        console.log('obj', obj)
         const discounted = () => {
         
     
         if (obj.discounted) {
-        console.log('true', obj.discounted)
 
           const discountPercentage = 0.2; // 20%
           const itemPrice = obj.is_vatable ? obj.srp_price / 1.12 : obj.srp_price;
@@ -103,7 +100,6 @@ console.log('removetotalDiscount', removetotalDiscount)
           const itemDiscount = itemPrice * discountPercentage * itemQuantity;
           return (acc + itemDiscount);
         } else {
-        console.log('false', obj.discounted)
 
           return acc + 0;
         }
