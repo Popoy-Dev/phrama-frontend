@@ -121,7 +121,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                       isChecked={checkedItems.includes(data.id)}
                       onChange={() => handleCheck(data.id)}
                     >
-                      {(data.srp_price * (20 / 100)).toFixed(2)}
+                      { data.is_vatable ? (data.srp_price / 1.12 * (20 / 100)).toFixed(2) : (data.srp_price  * (20 / 100)).toFixed(2)}
                     </Checkbox>
                   </Td>
                   <Td>{data.is_vatable ?   <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>

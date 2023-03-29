@@ -87,20 +87,29 @@ const CustomerOrder = ({
         0
       )
     )
-
+console.log('removetotalDiscount', removetotalDiscount)
     setRemoveTotalDiscount(
-      customerOrder.reduce((acc: any, obj: any) => {
+      customerOrder.reduce((acc: number, obj: any) => {
+        console.log('obj', obj)
         const discounted = () => {
-          if (obj.discounted) {
-            return (
-              acc + obj.srp_price * (20 / 100) * parseInt(obj?.order_quantity)
-            )
-          } else {
-            return acc + 0
-          }
-        }
+        
+    
+        if (obj.discounted) {
+        console.log('true', obj.discounted)
 
-        return discounted()
+          const discountPercentage = 0.2; // 20%
+          const itemPrice = obj.is_vatable ? obj.srp_price / 1.12 : obj.srp_price;
+          const itemQuantity = parseInt(obj?.order_quantity) || 0;
+          const itemDiscount = itemPrice * discountPercentage * itemQuantity;
+          return (acc + itemDiscount);
+        } else {
+        console.log('false', obj.discounted)
+
+          return acc + 0;
+        }
+       
+      }
+      return discounted()
       }, 0)
     )
     setTotalAmount(
@@ -136,20 +145,23 @@ const CustomerOrder = ({
       }, 0)
     )
     setTotalVatDiscount(
-       customerOrder?.filter((item: any) => item.discounted && item.is_vatable === true)?.reduce((acc: any, obj: any) => {
-        const vatablePrice = (parseInt(obj?.order_quantity) * obj.srp_price) / 1.12;
-        const vatValue = obj.srp_price - vatablePrice;
-        return acc + vatValue;
-      }, 0)
-      )
+      customerOrder
+        ?.filter((item: any) => item.discounted && item.is_vatable === true)
+        ?.reduce((acc: any, obj: any) => {
+          const vatablePrice =
+            (parseInt(obj?.order_quantity) * obj.srp_price) / 1.12
+          const vatValue = obj.srp_price - vatablePrice
+          return acc + vatValue
+        }, 0)
+    )
 
-      // setTotalVatDiscount(
-      //   customerOrder?.filter((item: any) => item.discounted && item.is_vatable === true)?.reduce((acc: any, obj: any) => {
-      //     const vatablePrice = (parseInt(obj?.order_quantity) * obj.srp_price) / 28 / 25;
-      //     const vatValue = obj.srp_price - vatablePrice;
-      //     return acc + vatValue;
-      //   }, 0) // Provide an initial value of 0 for the accumulator
-      // );
+    // setTotalVatDiscount(
+    //   customerOrder?.filter((item: any) => item.discounted && item.is_vatable === true)?.reduce((acc: any, obj: any) => {
+    //     const vatablePrice = (parseInt(obj?.order_quantity) * obj.srp_price) / 28 / 25;
+    //     const vatValue = obj.srp_price - vatablePrice;
+    //     return acc + vatValue;
+    //   }, 0) // Provide an initial value of 0 for the accumulator
+    // );
   }
 
   const getCustomersList = async () => {
@@ -243,14 +255,14 @@ const CustomerOrder = ({
               {customerOrder.map((item: any, i: number) => {
                 let total = 0
                 let seniorDiscount = 0
-                let vatComputation= 0
+                let vatComputation = 0
                 let withVatLabel = ''
                 if (item.discounted && item.is_vatable === true) {
                   withVatLabel = '*'
                   let vatValue = 1.12
-                 vatComputation =
+                  vatComputation =
                     (parseInt(item?.order_quantity) * item.srp_price) / vatValue
-                    
+
                   seniorDiscount = vatComputation * (20 / 100)
                   total = vatComputation - seniorDiscount
                 }
@@ -258,7 +270,7 @@ const CustomerOrder = ({
                   total = parseInt(item?.order_quantity) * item.srp_price
                 }
                 if (item.discounted && item.is_vatable === false) {
-                   vatComputation =
+                  vatComputation =
                     parseInt(item?.order_quantity) * item.srp_price
                   seniorDiscount = vatComputation * (20 / 100)
                   total = vatComputation - seniorDiscount
@@ -295,11 +307,11 @@ const CustomerOrder = ({
 
               <Row
                 left={`Sr Total Disc 20%`}
-                right={`-${removetotalDiscount}`}
+                right={`-${removetotalDiscount.toFixed(2)}`}
               />
-                 <Row
+              <Row
                 left={`VAT Discount 12%`}
-                right={`-${totalVatDiscount.toFixed(2) }`}
+                right={`-${totalVatDiscount.toFixed(2)}`}
               />
               <Row
                 left={<Text>AMOUNT DUE:</Text>}
@@ -378,11 +390,12 @@ const CustomerOrder = ({
           {customerOrder &&
             customerOrder?.map((data: Inventory, i: number) => {
               let total = 0
+              let seniorDiscount = 0
               if (data.discounted && data.is_vatable === true) {
                 let vatValue = 28 / 25
                 const vatComputation =
                   (parseInt(data?.order_quantity) * data.srp_price) / vatValue
-                const seniorDiscount = vatComputation * (20 / 100)
+                seniorDiscount = vatComputation * (20 / 100)
                 total = vatComputation - seniorDiscount
               }
               if (!data.discounted && data.is_vatable) {
@@ -391,7 +404,7 @@ const CustomerOrder = ({
               if (data.discounted && data.is_vatable === false) {
                 const vatComputation =
                   parseInt(data?.order_quantity) * data.srp_price
-                const seniorDiscount = vatComputation * (20 / 100)
+                seniorDiscount = vatComputation * (20 / 100)
                 total = vatComputation - seniorDiscount
               }
               if (!data.discounted && !data.is_vatable) {
@@ -409,11 +422,7 @@ const CustomerOrder = ({
                   <Td>{data.order_quantity} pcs</Td>
                   <Td>
                     {data.discounted
-                      ? (
-                          data.srp_price *
-                          (20 / 100) *
-                          parseInt(data?.order_quantity)
-                        ).toFixed(2)
+                      ? seniorDiscount.toFixed(2)
                       : 'No Discount'}{' '}
                   </Td>
                   <Td>{total.toFixed(2)} </Td>
