@@ -131,9 +131,14 @@ function CustomerOrderReport() {
                 )
               })
             ) : (
-              <Center bg='red.400' h='100px' color='white'>
+              <Tr>
+                    <Td>
+                    <Center bg='red.400' h='100px' color='white'>
                 No Data Found!
               </Center>
+                    </Td>
+                  </Tr>
+         
             )}
           </Tbody>
         </Table>
