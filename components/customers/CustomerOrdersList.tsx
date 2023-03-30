@@ -25,7 +25,6 @@ import {
 const CustomerOrdersList = ({ customerOrderData }: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [orderItems, setOrderItems] = useState([])
-
   const OrderModal = () => (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size='xl'>
@@ -96,7 +95,7 @@ const CustomerOrdersList = ({ customerOrderData }: any) => {
                 hour12: true,
               }
               const formattedDate = date.toLocaleString('en-US', options)
-              data.order?.forEach((order: any) => {
+              data?.order?.customerOrder?.forEach((order: any) => {
                 items.push(order.products.name + ',')
                 quantity.push(order.order_quantity + ',')
               })
@@ -109,7 +108,7 @@ const CustomerOrdersList = ({ customerOrderData }: any) => {
                     {' '}
                     <Link
                       color='teal.500'
-                      onClick={() => handleOrderDetail(data.order)}
+                      onClick={() => handleOrderDetail(data.order.customerOrder)}
                     >
                       {formattedDate}
                     </Link>{' '}
