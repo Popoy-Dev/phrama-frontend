@@ -358,7 +358,6 @@ const CustomerOrder = ({
 
   const handleCustomer = (event: any) => {
     const value = JSON.parse( event.target.value)
-    console.log('event', value.id)
     const customerID = value.id
     const customerName = `${value.surname}, ${value.first_name} ${value.middle_name}`
     setCustomerId(customerID)
