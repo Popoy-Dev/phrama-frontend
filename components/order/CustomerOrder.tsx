@@ -73,6 +73,7 @@ const CustomerOrder = ({
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
   const [customerList, setCustomerList] = useState<Array<any>>([])
   const [customerId, setCustomerId] = useState<number | null>(null)
+  const [customerFullName, setCustomerFullName] = useState<string | null>(null)
   const [customerMoney, setCustomerMoney] = useState<number>(0)
   const [port, setPort] = useState()
 
@@ -246,6 +247,7 @@ const CustomerOrder = ({
               <Br />
               <Text bold={true}>Cashier Name: Joyce Kua</Text>
               <Text bold={true}>{`${formattedDate}`}</Text>
+              <Text bold={true}>{`Customer Name: ${customerFullName}`}</Text>
               <Br />
               <Line />
               {customerOrder.map((item: any, i: number) => {
@@ -355,8 +357,12 @@ const CustomerOrder = ({
   }
 
   const handleCustomer = (event: any) => {
-    const customerID = event.target.value
+    const value = JSON.parse( event.target.value)
+    console.log('event', value.id)
+    const customerID = value.id
+    const customerName = `${value.surname}, ${value.first_name} ${value.middle_name}`
     setCustomerId(customerID)
+    setCustomerFullName(customerName)
   }
   return (
     <TableContainer>
@@ -479,7 +485,7 @@ const CustomerOrder = ({
                     >
                       {customerList.map((customer: any, i: number) => (
                         <option
-                          value={customer.id}
+                          value={JSON.stringify(customer)}
                           key={i}
                         >{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},`}</option>
                       ))}
