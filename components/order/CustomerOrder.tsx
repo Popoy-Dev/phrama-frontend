@@ -463,7 +463,8 @@ const CustomerOrder = ({
                         <NumberDecrementStepper />
                       </NumberInputStepper>
                     </NumberInput>
-                    <Button
+                    {customerRetrive !== 'retrive' ? (  <>
+                      <Button
                       display='inline'
                       colorScheme='whatsapp'
                       variant='solid'
@@ -475,8 +476,8 @@ const CustomerOrder = ({
                       }
                     >
                       Print Order
-                    </Button>{' '}
-                    <Select
+                    </Button>
+                      <Select
                       display='inline'
                       placeholder='Select Customer'
                       width='full'
@@ -489,6 +490,11 @@ const CustomerOrder = ({
                         >{`${customer.surname}.  ${customer.first_name} ${customer.middle_name},`}</option>
                       ))}
                     </Select>
+                    </>
+                    
+                    ) : ''}
+                {' '}
+                  
                   </Stack>
                 </>
               ) : (
