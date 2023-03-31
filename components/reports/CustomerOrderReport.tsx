@@ -155,7 +155,7 @@ function CustomerOrderReport() {
 
           <ModalFooter>
             <Button colorScheme='blue' mr={3} onClick={onClose}>
-            Print
+            Ok
             </Button>
             <Button variant='ghost'>Close</Button>
           </ModalFooter>
