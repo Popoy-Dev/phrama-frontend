@@ -55,7 +55,7 @@ interface OrderData {
   order_totals_details: OrderTotalDetails
 }
 
-function CustomerOrderReport() {
+const CustomerOrderReport = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   let today = new Date().toISOString().slice(0, 10)
   const [ordersData, setOrdersData] = useState<Array<OrderData>>([])
