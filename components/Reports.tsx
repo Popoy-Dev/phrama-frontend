@@ -46,7 +46,7 @@ export const data = {
   labels,
   datasets: [
     {
-      label: 'Dataset 1',
+      label: 'Sell Sheet',
       data: labels.map(() => Math.floor(Math.random() * 100)),
       backgroundColor: 'rgba(61, 50, 52, 0.5)',
     },
