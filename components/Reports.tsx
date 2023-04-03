@@ -58,11 +58,14 @@ const Reports = () => {
       .toISOString()
       .substr(0, 10)
 
+      const start1 = '2023-03-01T00:00:00.000Z';
+const end1 = '2023-03-31T23:59:59.999Z';
     const { data, error } = await supabase
       .from('orders')
       .select()
-      .lt('created_at', start)
-      .gt('created_at', end)
+      .gte('created_at', start)
+      .lte('created_at', end)
+      .order('created_at', { ascending: false })
   }
   const selectionRange = {
     startDate: selectedStartDate,
