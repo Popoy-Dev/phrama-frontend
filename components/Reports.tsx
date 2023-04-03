@@ -42,25 +42,34 @@ const Reports = () => {
   }
 
   const handleSelect = async (date: any) => {
-    const endDate = date.selection.endDate
-    const startDate = date.selection.startDate
+    const { startDate, endDate } = date.selection
+
     setSelectedStartDate(startDate)
     setSelectedEndDate(endDate)
+
+    const start = new Date(
+      startDate.getTime() - startDate.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .substr(0, 10)
+    const end = new Date(
+      endDate.getTime() - endDate.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .substr(0, 10)
+
     const { data, error } = await supabase
       .from('orders')
       .select()
-      .rangeLt('created_at', '[2023-04-03 , 2023-04-03)')
-
-    console.log(date.selection.startDate) // native Date object
-    console.log('data', data) // native Date object
+      .lt('created_at', start)
+      .gt('created_at', end)
   }
   const selectionRange = {
     startDate: selectedStartDate,
     endDate: selectedEndDate,
     key: 'selection',
   }
-  console.log('selectedStartDate', selectedStartDate)
-  console.log('selectedEndDate', selectedEndDate)
+
   return (
     <SimpleGrid columns={2} spacing={10}>
       <Box bg='white' height='80px'>
