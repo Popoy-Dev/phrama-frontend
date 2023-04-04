@@ -20,11 +20,6 @@ const Reports = () => {
   const [selectedStartDate, setSelectedStartDate] = useState<Date>(new Date())
   const [selectedEndDate, setSelectedEndDate] = useState<Date>(new Date())
 
-  // console.log('data fake', data)
-
-  console.log('selectedRangeData', data)
-  console.log('data', data)
-  
   const config: any = {
     data,
     padding: 'auto',
@@ -61,14 +56,12 @@ const Reports = () => {
       .gte('created_at', start)
       .lte('created_at', end)
       .order('created_at', { ascending: false })
-      console.log('data', data)
 
       let a: any= []
       data.forEach((element: any) => {
         const b =  {Date: element.created_at, scales: element.order_totals_details.totalAmount}
         a.push(b)
       });
-      console.log('a', a)
      let lineGraphData = a.reduce((acc :any, obj: any) =>  {
         let Date = obj.Date
         let scales = obj.scales 
@@ -84,10 +77,8 @@ const Reports = () => {
         return acc
       }, [])
 
-      console.log('line graph', lineGraphData)
       setTotalRangeDateAmount(lineGraphData)
       setTotalAmount(data?.reduce((acc: any, obj: any) => acc + obj.order_totals_details.totalAmount, 0))
-      // console.log('data', data)
   }
   const selectionRange = {
     startDate: selectedStartDate,
