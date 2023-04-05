@@ -12,10 +12,11 @@ const Line = dynamic(
 )
 
 const Reports = () => {
-  const [data, setTotalRangeDateAmount] = useState<any>([{Date: '2010-01', scales: 1998},
-  {Date: '2010-02', scales: 1850},
-  {Date: '2010-02', scales: 1850},
-])
+  const [data, setTotalRangeDateAmount] = useState<any>([
+    { Date: '2010-01', scales: 1998 },
+    { Date: '2010-02', scales: 1850 },
+    { Date: '2010-02', scales: 1850 },
+  ])
   const [totalAmount, setTotalAmount] = useState<any>(0)
   const [selectedStartDate, setSelectedStartDate] = useState<Date>(new Date())
   const [selectedEndDate, setSelectedEndDate] = useState<Date>(new Date())
@@ -48,37 +49,43 @@ const Reports = () => {
       .toISOString()
       .substr(0, 10)
 
-    const start1 = '2023-03-01T00:00:00.000Z'
-    const end1 = '2023-03-31T23:59:59.999Z'
-    const { data , error } :any = await supabase
+    const { data, error }: any = await supabase
       .from('orders')
       .select()
       .gte('created_at', start)
       .lte('created_at', end)
       .order('created_at', { ascending: false })
 
-      let a: any= []
-      data.forEach((element: any) => {
-        const b =  {Date: element.created_at, scales: element.order_totals_details.totalAmount}
-        a.push(b)
-      });
-     let lineGraphData = a.reduce((acc :any, obj: any) =>  {
-        let Date = obj.Date
-        let scales = obj.scales 
+    let dataArray: any = []
+    data.forEach((element: any) => {
+      const newArray = {
+        Date: element.created_at,
+        scales: element.order_totals_details.totalAmount,
+      }
+      dataArray.push(newArray)
+    })
+    let lineGraphData = dataArray.reduce((acc: any, obj: any) => {
+      let Date = obj.Date
+      let scales = obj.scales
 
-        let existingTransactionDate = acc.find((ac: any) => ac.Date === Date)
+      let existingTransactionDate = acc.find((ac: any) => ac.Date === Date)
 
-        if(existingTransactionDate) {
-          existingTransactionDate.scales += scales
-        }else {
-         acc.push({Date, scales})
-        }
+      if (existingTransactionDate) {
+        existingTransactionDate.scales += scales
+      } else {
+        acc.push({ Date, scales })
+      }
 
-        return acc
-      }, [])
+      return acc
+    }, [])
 
-      setTotalRangeDateAmount(lineGraphData)
-      setTotalAmount(data?.reduce((acc: any, obj: any) => acc + obj.order_totals_details.totalAmount, 0))
+    setTotalRangeDateAmount(lineGraphData)
+    setTotalAmount(
+      data?.reduce(
+        (acc: any, obj: any) => acc + obj.order_totals_details.totalAmount,
+        0
+      )
+    )
   }
   const selectionRange = {
     startDate: selectedStartDate,
