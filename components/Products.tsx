@@ -7,6 +7,7 @@ import {
   Box,
   Spacer,
   Button,
+  Input,
 } from '@chakra-ui/react'
 
 import ProductList from './products/ProductList'
@@ -27,6 +28,8 @@ function Products() {
   const [reloadList, setReloadList] = useState(false)
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
+  const [searchData, setSearchData] = useState<Product[]>([])
+
 
   const onOpen = () => {
     setIsOpen(true)
@@ -40,6 +43,7 @@ function Products() {
   const getProducts = async () => {
     const { data, error }: any = await supabase.from('products').select().order('name', { ascending: true })
     setProductData(data)
+    setSearchData(data)
   }
   useEffect(() => {
     getProducts()
@@ -50,6 +54,20 @@ function Products() {
       getProducts()
     }
   }, [reloadList])
+
+  const handleSearch = async (e: any) => {
+    console.log('productData', productData)
+    const result = productData.filter((data) => {
+      if (!e.target.value) {
+        return productData
+      }
+      return data.name
+        .toLocaleLowerCase()
+        .includes(e.target.value.toLowerCase())
+    })
+
+    setSearchData(result)
+  }
   return (
     <div>
       <Card>
@@ -72,7 +90,12 @@ function Products() {
           </Box>
         </Flex>
         <Box p='4'>
-          <ProductList reloadList={reloadList} productData={productData} getProducts={getProducts} />
+        <Input
+            placeholder='Search Product'
+            onKeyUp={handleSearch}
+            size='lg'
+          />
+          <ProductList reloadList={reloadList} productData={searchData} getProducts={getProducts} />
         </Box>
       </Card>
     </div>

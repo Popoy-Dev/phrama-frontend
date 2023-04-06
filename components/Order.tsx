@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Card,
-  Box,
-  Spacer,
-  Input,
-} from '@chakra-ui/react'
+import { Card, Box, Spacer, Input, Heading, CardHeader } from '@chakra-ui/react'
 
 import { supabase } from '../supabaseClient'
 import OrderList from './order/OrderList'
@@ -12,7 +7,7 @@ import CustomerOrder from './order/CustomerOrder'
 
 interface Inventory {
   id: number
-  products: {name: string}
+  products: { name: string }
   batch_number: number
   manufacture_price: number
   srp_price: number
@@ -32,7 +27,9 @@ const Order = () => {
       if (!e.target.value) {
         return inventoryAllData
       }
-      return data.products.name.toLocaleLowerCase().includes(e.target.value.toLowerCase())
+      return data.products.name
+        .toLocaleLowerCase()
+        .includes(e.target.value.toLowerCase())
     })
 
     setSearch(e.target.value)
@@ -71,42 +68,56 @@ const Order = () => {
   }
 
   const handleRemoveOrder = (product_order: number) => {
-    setCustomerOrder(customerOrder.filter((item: any) => item.product_order !== product_order))
+    setCustomerOrder(
+      customerOrder.filter((item: any) => item.product_order !== product_order)
+    )
     setIsremoveItem(true)
- }
+  }
 
   const handleRemoveAllOrder = (info: boolean) => {
-    if(info) {
+    if (info) {
       setCustomerOrder([])
     }
-  
   }
   const handleReloadInventory = (value: boolean) => {
-    setReloadInventory(prevState => !prevState)
+    setReloadInventory((prevState) => !prevState)
   }
   useEffect(() => {
     getInventory()
   }, [reloadInventory])
   return (
     <div>
-        <Card m='4'>
-          <Box p='8'>
-            <Input placeholder='Search Product' onKeyUp={handleSearch}  size='lg'/>
-            <OrderList
-              reloadList={reloadList}
-              inventoryData={inventoryData}
-              getInventory={getInventory}
-              handleAddOrder={handleAddOrder}
-            />
-          </Box>
-        </Card>
-        <Spacer />
-        
+      <Card m='4'>
+        <Box p='4'>
+        <CardHeader className='flex justify-between'>
+            <Heading size='md'>Order Page</Heading>
+          </CardHeader>
+          <Input
+            placeholder='Search Product'
+            onKeyUp={handleSearch}
+            size='lg'
+          />
+          <OrderList
+            reloadList={reloadList}
+            inventoryData={inventoryData}
+            getInventory={getInventory}
+            handleAddOrder={handleAddOrder}
+          />
+        </Box>
+      </Card>
+      <Spacer />
+
       <Card m='4' mt='12'>
-          <Box m='2'>
-            <CustomerOrder handleReloadInventory={handleReloadInventory} customerOrder={customerOrder} handleRemoveOrder={handleRemoveOrder} isRemoveItem={isRemoveItem} handleRemoveAllOrder={handleRemoveAllOrder} />
-          </Box>
-        </Card>
+        <Box m='2'>
+          <CustomerOrder
+            handleReloadInventory={handleReloadInventory}
+            customerOrder={customerOrder}
+            handleRemoveOrder={handleRemoveOrder}
+            isRemoveItem={isRemoveItem}
+            handleRemoveAllOrder={handleRemoveAllOrder}
+          />
+        </Box>
+      </Card>
     </div>
   )
 }
