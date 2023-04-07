@@ -84,7 +84,6 @@ const Inventory = () => {
   }, [])
 
   const handleSearch = async (e: any) => {
-    console.log('productData', searchData)
     const result = inventoryData.filter((data) => {
       if (!e.target.value) {
         return inventoryData
