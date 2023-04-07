@@ -85,9 +85,9 @@ const Inventory = () => {
 
   const handleSearch = async (e: any) => {
     console.log('productData', searchData)
-    const result = searchData.filter((data) => {
+    const result = inventoryData.filter((data) => {
       if (!e.target.value) {
-        return searchData
+        return inventoryData
       }
       return data.product_name
         .toLocaleLowerCase()
