@@ -19,7 +19,7 @@ import InventoryModal from './InventoryModal'
 
 interface Inventory {
   id: number
-  product_id: string,
+  product_name: string,
   batch_number: number
   manufacture_price: number
   srp_price: number
@@ -78,7 +78,7 @@ const InventoryList = ({reloadList, inventoryData, getInventory}: any) => {
             inventoryData?.map((data: Inventory, i: number) => {
               return (
                 <Tr key={i}>
-                  <Td>{data.product_id}</Td>
+                  <Td>{data.product_name}</Td>
                   <Td>{data.batch_number}</Td>
                   <Td>{`₱ ${data.manufacture_price.toFixed(2)}`}</Td>
                   <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>

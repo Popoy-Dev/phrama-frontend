@@ -7,6 +7,7 @@ import {
   Box,
   Spacer,
   Button,
+  Input,
 } from '@chakra-ui/react'
 
 import InventoryModal from './invetory/InventoryModal'
@@ -25,6 +26,7 @@ interface Inventory {
 
 const Inventory = () => {
   const [inventoryData, setInventoryData] = useState<Inventory[]>([])
+  const [searchData, setSearchData] = useState<Inventory[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
   const initialRef = React.useRef(null)
@@ -55,7 +57,7 @@ const Inventory = () => {
         return (
           {
             id: d?.id,
-            product_id:  d?.products?.name,
+            product_name:  d?.products?.name,
             batch_number: d?.batch_number,
             srp_price: d?.srp_price,
             manufacture_price: d?.manufacture_price,
@@ -68,6 +70,7 @@ const Inventory = () => {
       })
    
     setInventoryData(newData)
+    setSearchData(newData)
   }
 
   useEffect(() => {
@@ -80,6 +83,19 @@ const Inventory = () => {
     getInventory()
   }, [])
 
+  const handleSearch = async (e: any) => {
+    console.log('productData', searchData)
+    const result = searchData.filter((data) => {
+      if (!e.target.value) {
+        return searchData
+      }
+      return data.product_name
+        .toLocaleLowerCase()
+        .includes(e.target.value.toLowerCase())
+    })
+
+    setSearchData(result)
+  }
   return (
     <div>
       <Card>
@@ -102,9 +118,14 @@ const Inventory = () => {
           </Box>
         </Flex>
         <Box p='4'>
+        <Input
+            placeholder='Search Product'
+            onKeyUp={handleSearch}
+            size='lg'
+          />
           <InventoryList
             reloadList={reloadList}
-            inventoryData={inventoryData}
+            inventoryData={searchData}
             getInventory={getInventory}
           />
         </Box>
