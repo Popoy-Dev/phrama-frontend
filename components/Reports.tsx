@@ -26,6 +26,7 @@ const Reports = () => {
     padding: 'auto',
     xField: 'Date',
     yField: 'scales',
+    smooth: true,
     xAxis: {
       type: 'timeCat',
       tickCount: 30,
@@ -94,6 +95,7 @@ const Reports = () => {
   }
 
   return (
+  <>
     <SimpleGrid columns={2} spacing={10}>
       <Box bg='white' height='80px'>
         {' '}
@@ -105,8 +107,12 @@ const Reports = () => {
         rangeColors={['red']}
         showDateDisplay
       />
-      <Line {...config} />
     </SimpleGrid>
+      <SimpleGrid columns={1} spacing={10} p={20}> 
+      <Line {...config} />
+
+    </SimpleGrid>
+  </>
   )
 }
 

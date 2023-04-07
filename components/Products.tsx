@@ -56,7 +56,6 @@ function Products() {
   }, [reloadList])
 
   const handleSearch = async (e: any) => {
-    console.log('productData', productData)
     const result = productData.filter((data) => {
       if (!e.target.value) {
         return productData
