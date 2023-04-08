@@ -12,11 +12,15 @@ const Line = dynamic(
 )
 
 const Reports = () => {
+  const today = new Date();
+  const formattedNextMonth = `${today.getFullYear()}-${(today.getMonth() + 2).toString().padStart(2, '0')}`;
+  
   const [data, setTotalRangeDateAmount] = useState<any>([
-    { Date: '2010-01', scales: 1998 },
-    { Date: '2010-02', scales: 1850 },
-    { Date: '2010-02', scales: 1850 },
-  ])
+    { Date: formattedNextMonth + '-01', scales: 1998 },
+    { Date: formattedNextMonth + '-02', scales: 1850 },
+    { Date: formattedNextMonth + '-03', scales: 1850 },
+  ]);
+  
   const [totalAmount, setTotalAmount] = useState<any>(0)
   const [selectedStartDate, setSelectedStartDate] = useState<Date>(new Date())
   const [selectedEndDate, setSelectedEndDate] = useState<Date>(new Date())
