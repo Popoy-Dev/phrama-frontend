@@ -140,7 +140,7 @@ const CustomerList = ({
           )}
         </Tbody>
         {!loading && isMoreData && (
-        <button onClick={handleLoadMore}>Load More</button>
+        <Button  variant='outline' onClick={handleLoadMore}>Load More</Button >
       )}
       </Table>
       <CustomerModal
