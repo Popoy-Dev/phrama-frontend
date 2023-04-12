@@ -27,7 +27,8 @@ function Users() {
   const [customerData, setCustomerData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
-  const [customerOrderData, setCustomerOrderData] = useState(false)
+  const [customerOrderData, setCustomerOrderData] = useState([])
+  const [loading, setLoading] = useState(false);
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
 
@@ -41,6 +42,7 @@ function Users() {
     setIsOpen(false)
   }
   const getCustomers = async () => {
+    setLoading(true)
     const { data, error }: any = await supabase
       .from('customers')
       .select()
@@ -87,11 +89,9 @@ function Users() {
               customerData={customerData}
               getCustomers={getCustomers}
               setCustomerTransaction={setCustomerTransaction}
+              loading={loading}
             />
-            <CustomerOrdersList
-              customerOrderData={customerOrderData}
-
-            />
+            <CustomerOrdersList customerOrderData={customerOrderData}  />
           </SimpleGrid>
         </Box>
       </Card>
