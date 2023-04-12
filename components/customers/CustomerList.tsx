@@ -31,7 +31,7 @@ interface CustomerList {
   id_register_date: number
 }
 const CustomerList = ({
-  reloadList,
+  loading,
   customerData,
   getCustomers,
   setCustomerTransaction,
@@ -39,6 +39,8 @@ const CustomerList = ({
   const [selectedProduct, setSelectedProduct] = useState<CustomerList[]>([])
   const [buttonDisabledId, setButtonDisabledId] = useState<number>(0)
   const [isOpen, setIsOpen] = useState(false)
+  const [page, setPage] = useState(0);
+
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
 
@@ -71,6 +73,10 @@ const CustomerList = ({
     setCustomerTransaction(data)
     setButtonDisabledId(id)
   }
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  }
+  const isMoreData = (page + 1) * 2 < customerData.length;
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='teal'>
@@ -85,7 +91,7 @@ const CustomerList = ({
         </Thead>
         <Tbody>
           {customerData.length !== 0 ? (
-            customerData?.map((data: CustomerList, i: number) => {
+             customerData?.slice(0, (page + 1) * 2).map((data: CustomerList, i: number) => {
               const birthday = new Date(data.birthday)
               const ageInMilliseconds = Date.now() - birthday.getTime()
               const oscaRegisteredDate = new Date(data.id_register_date)
@@ -133,6 +139,9 @@ const CustomerList = ({
             </Box>
           )}
         </Tbody>
+        {!loading && isMoreData && (
+        <button onClick={handleLoadMore}>Load More</button>
+      )}
       </Table>
       <CustomerModal
         initialFocusRef={initialRef}

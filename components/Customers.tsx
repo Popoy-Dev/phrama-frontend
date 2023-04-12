@@ -48,6 +48,7 @@ function Users() {
       .select()
       .order('id', { ascending: true })
     setCustomerData(data)
+    setLoading(false)
   }
 
   const setCustomerTransaction = (data: any) => {
