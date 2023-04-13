@@ -15,22 +15,27 @@ import { supabase } from '../supabaseClient'
 import CustomerModal from './customers/CustomerModal'
 import CustomerList from './customers/CustomerList'
 import CustomerOrdersList from './customers/CustomerOrdersList'
-interface Product {
+interface Customer {
   id: number
   first_name: string
-  indication: string
-  category: string
-  code: string
-  precaution: number
+  middle_name: string
+  surname: string
+  contact_number: number
+  birthday: string
+  address: string
+  designated: string
+  osca_id: number
+  id_register_date: string
+
 }
 
 function Users() {
-  const [customerData, setCustomerData] = useState<Product[]>([])
+  const [customerData, setCustomerData] = useState<Customer[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
   const [customerOrderData, setCustomerOrderData] = useState([])
   const [loading, setLoading] = useState(false);
-  const [searchData, setSearchData] = useState<Product[]>([])
+  const [searchData, setSearchData] = useState<Customer[]>([])
 
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
