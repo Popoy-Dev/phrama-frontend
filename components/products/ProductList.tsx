@@ -25,7 +25,7 @@ interface Product {
   generic_name: string
   description: string
 }
-const ProductList = ({reloadList, productData, getProducts}: any) => {
+const ProductList = ({ productData, getProducts}: any) => {
   const [selectedProduct, setSelectedProduct] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const initialRef = React.useRef(null)
