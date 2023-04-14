@@ -26,6 +26,7 @@ function Products() {
   const [productData, setProductData] = useState<Product[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [reloadList, setReloadList] = useState(false)
+  const [loading, setLoading] = useState(false);
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
   const [searchData, setSearchData] = useState<Product[]>([])
@@ -41,9 +42,12 @@ function Products() {
     setIsOpen(false)
   }
   const getProducts = async () => {
+    setLoading(true)
     const { data, error }: any = await supabase.from('products').select().order('name', { ascending: true })
     setProductData(data)
     setSearchData(data)
+    setLoading(false)
+
   }
   useEffect(() => {
     getProducts()
@@ -94,7 +98,7 @@ function Products() {
             onKeyUp={handleSearch}
             size='lg'
           />
-          <ProductList reloadList={reloadList} productData={searchData} getProducts={getProducts} />
+          <ProductList reloadList={reloadList} productData={searchData} getProducts={getProducts}  loading={loading}/>
         </Box>
       </Card>
     </div>

@@ -71,7 +71,6 @@ function Users() {
       getCustomers()
     }
   }, [reloadList])
-  console.log('customerData', customerData)
     const handleSearch = async (e: any) => {
     const result = customerData.filter((data) => {
       if (!e.target.value) {
