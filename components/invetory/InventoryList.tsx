@@ -56,7 +56,7 @@ const InventoryList = ({ reloadList, inventoryData, getInventory }: any) => {
   function paginate(array: [], page_size: any, page_number: any) {
     return array.slice((page_number - 1) * page_size, page_number * page_size)
   }
-  const paginatedData = paginate(inventoryData, 2, currentPage)
+  const paginatedData = paginate(inventoryData, 10, currentPage)
 
   const handleEditInventory = async (id: number) => {
     const { data, error } = await supabase
