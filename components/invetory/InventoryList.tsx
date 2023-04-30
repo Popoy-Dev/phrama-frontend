@@ -127,16 +127,21 @@ const InventoryList = ({ reloadList, inventoryData, getInventory }: any) => {
         </Tbody>
         <div>
           <Flex>
-            <button disabled={currentPage === 1} onClick={handlePrevPage}>
+            <Button
+              colorScheme='gray'
+              disabled={currentPage === 1}
+              onClick={handlePrevPage}
+            >
               Prev
-            </button>
+            </Button>
             <Spacer />
-            <button
+            <Button
               disabled={currentPage === Math.ceil(inventoryData.length / 2)}
               onClick={handleNextPage}
+              colorScheme='green'
             >
               Next
-            </button>
+            </Button>
           </Flex>
         </div>
       </Table>
