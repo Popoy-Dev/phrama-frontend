@@ -18,6 +18,8 @@ import {
   NumberDecrementStepper,
   Text,
   Badge,
+  Spacer,
+  Flex,
 } from '@chakra-ui/react'
 
 import { supabase } from '../../supabaseClient'
@@ -36,6 +38,16 @@ interface Inventory {
 const OrderList = ({ inventoryData, handleAddOrder }: any) => {
   const [errorMessage, setErrorMessage] = useState('')
   const [errorIndex, setErrorIndex] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  function handlePrevPage() {
+    setCurrentPage((prevPage) => prevPage - 1)
+  }
+
+  function handleNextPage() {
+    setCurrentPage((prevPage) => prevPage + 1)
+  }
+
   const handleAdd = (data: any, id: any, order_quantity: number, i : number) => {
     if(!order_quantity ||order_quantity <= 0 || data.quantity-data.ordered_quantity === 0) {
       setErrorIndex(i)
@@ -68,6 +80,10 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
       return updatedInputValues;
     });
   }
+  function paginate(array: [], page_size: any, page_number: any) {
+    return array.slice((page_number - 1) * page_size, page_number * page_size)
+  }
+  const paginatedData = paginate(inventoryData, 10, currentPage)
 
   return (
     <TableContainer>
@@ -89,7 +105,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
         </Thead>
         <Tbody>
           {inventoryData &&
-            inventoryData?.map((data: Inventory, i: number) => {
+            paginatedData?.map((data: Inventory, i: number) => {
               return (
                 <Tr key={i}>
                   <Td>{data.products.name}</Td>
@@ -142,7 +158,25 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
               )
             })}
         </Tbody>
-
+        <div>
+          <Flex>
+            <Button
+              colorScheme='gray'
+              disabled={currentPage === 1}
+              onClick={handlePrevPage}
+            >
+              Prev
+            </Button>
+            <Spacer />
+            <Button
+              disabled={currentPage === Math.ceil(inventoryData.length / 2)}
+              onClick={handleNextPage}
+              colorScheme='green'
+            >
+              Next
+            </Button>
+          </Flex>
+        </div>
       </Table>
     </TableContainer>
   )
