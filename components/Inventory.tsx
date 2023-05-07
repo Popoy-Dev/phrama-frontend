@@ -52,7 +52,7 @@ const Inventory = () => {
     )
   `
       )
-      .order('product_id', { ascending: true })
+      .order('id', { ascending: false })
       const newData: any = data.map((d: any) =>  {
         return (
           {
