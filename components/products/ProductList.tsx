@@ -55,7 +55,7 @@ const ProductList = ({ productData, getProducts, loading }: any) => {
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1)
   }
-  const isMoreData = (page + 1) * 2 < productData.length
+  const isMoreData = (page + 1) * 10 < productData.length
 
   return (
     <TableContainer>
@@ -76,7 +76,7 @@ const ProductList = ({ productData, getProducts, loading }: any) => {
         <Tbody>
           {productData &&
             productData
-              ?.slice(0, (page + 1) * 2)
+              ?.slice(0, (page + 1) * 10 )
               .map((data: Product, i: number) => {
                 return (
                   <Tr key={i}>

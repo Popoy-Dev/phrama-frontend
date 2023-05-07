@@ -37,7 +37,7 @@ function Products() {
   }
   const onClose = (data:[])  => {
     if(data) {
-      setReloadList(true)
+      setReloadList(!reloadList)
     }
     setIsOpen(false)
   }
@@ -54,9 +54,7 @@ function Products() {
   }, [])
   useEffect(() => {
     
-    if(reloadList) {
       getProducts()
-    }
   }, [reloadList])
 
   const handleSearch = async (e: any) => {

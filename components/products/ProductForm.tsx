@@ -20,6 +20,8 @@ import { supabase } from '../../supabaseClient'
 
 
 const ProductForm = ({ onClose, updateData=[] }: any) => {
+  const [isLoading, setLoading] = useState(false)
+  const randNumberCode = Math.floor(Math.random() * 100001)
   const [errorMessage, setErrorMessage] = useState('')
   const formik = useFormik({
     initialValues: {
@@ -32,13 +34,14 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
       precaution: updateData?.precaution || '',
     },
     onSubmit: async (values) => {
+    setLoading(true)
       if (updateData?.length !== 0) {
         const {data, error } = await supabase
           .from('products')
           .update({
             name: values.name.toUpperCase(),
             indication: values.indication,
-            code: values.code,
+            code: values.code || randNumberCode,
             category: values.category,
             precaution: values.precaution,
             description: values.description,
@@ -56,7 +59,7 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
         const {data, error } = await supabase.from('products').insert({
           name: values.name.toUpperCase(),
           indication: values.indication,
-          code: values.code,
+          code: values.code || randNumberCode,
           category: values.category,
           precaution: values.precaution,
           description: values.description,
@@ -68,6 +71,7 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
           setErrorMessage('Duplicate Name or Code!')
         }
       }
+      setLoading(false)
     },
   })
   return (
@@ -161,7 +165,7 @@ const ProductForm = ({ onClose, updateData=[] }: any) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button type='submit' colorScheme='blue' mr={3}>
+            <Button type='submit' colorScheme='blue' mr={3} isDisabled={isLoading}>
               {updateData?.length === 0 ? 'Save' : 'Update'}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
