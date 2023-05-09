@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { DateRangePicker } from 'react-date-range'
-import { Box, SimpleGrid } from '@chakra-ui/react'
+import { Box, Container, Flex, SimpleGrid } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
 import CustomerOrderReport from './reports/CustomerOrderReport'
 import { supabase } from '../supabaseClient'
@@ -100,22 +100,29 @@ const Reports = () => {
 
   return (
   <>
-    <SimpleGrid columns={2} spacing={10}>
+ 
+      <Flex>
+
+      <DateRangePicker
+          ranges={[selectionRange]}
+          onChange={handleSelect}
+          rangeColors={['red']}
+          showDateDisplay
+        />
+        <Line {...config} style={{  width: '100%' }} />
+      </Flex>
+
+      <div>
+   <SimpleGrid columns={1} spacing={10}>
       <Box bg='white' height='80px'>
         {' '}
         <CustomerOrderReport />{' '}
       </Box>
-      <DateRangePicker
-        ranges={[selectionRange]}
-        onChange={handleSelect}
-        rangeColors={['red']}
-        showDateDisplay
-      />
+  
     </SimpleGrid>
-      <SimpleGrid columns={1} spacing={10} p={20}> 
-      <Line {...config} />
 
-    </SimpleGrid>
+   </div>
+ 
   </>
   )
 }
