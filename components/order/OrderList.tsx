@@ -26,13 +26,13 @@ import { supabase } from '../../supabaseClient'
 
 interface Inventory {
   id: number
-  products: { name: string; category: string, generic_name: string }
+  products: { name: string; category: string; generic_name: string }
   batch_number: number
   manufacture_price: number
   srp_price: number
   quantity: number
-  expiry_date: Date,
-  is_vatable: boolean,
+  expiry_date: Date
+  is_vatable: boolean
   ordered_quantity: number
 }
 const OrderList = ({ inventoryData, handleAddOrder }: any) => {
@@ -48,20 +48,24 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
     setCurrentPage((prevPage) => prevPage + 1)
   }
 
-  const handleAdd = (data: any, id: any, order_quantity: number, i : number) => {
-    if(!order_quantity ||order_quantity <= 0 || data.quantity-data.ordered_quantity === 0) {
+  const handleAdd = (data: any, id: any, order_quantity: number, i: number) => {
+    console.log('hello')
+    if (
+      !order_quantity ||
+      order_quantity <= 0 ||
+      data.quantity - data.ordered_quantity === 0
+    ) {
       setErrorIndex(i)
       setErrorMessage('Please input quantity')
-    }else {
+    } else {
       const newData = {
         ...data,
         discounted: id,
         order_quantity: order_quantity,
-        product_order: Math.floor(Math.random() * 100)
+        product_order: Math.floor(Math.random() * 100),
       }
       handleAddOrder(newData)
     }
-    
   }
   const [checkedItems, setCheckedItems] = useState<any>([])
   function handleCheck(item: any) {
@@ -71,20 +75,24 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
       setCheckedItems([...checkedItems, item])
     }
   }
-  const [inputValues, setInputValues] = useState([]);
+  const [inputValues, setInputValues] = useState([])
+  console.log('inputValues', inputValues)
   const handleInputChange = (event: any, index: any) => {
-
-    setInputValues(prevInputValues => {
-      const updatedInputValues: any = [...prevInputValues];
-      updatedInputValues[index] = event;
-      return updatedInputValues;
-    });
+    setInputValues((prevInputValues) => {
+      const updatedInputValues: any = [...prevInputValues]
+      updatedInputValues[index] = event
+      return updatedInputValues
+    })
   }
   function paginate(array: [], page_size: any, page_number: any) {
     return array.slice((page_number - 1) * page_size, page_number * page_size)
   }
   const paginatedData = paginate(inventoryData, 10, currentPage)
-
+  function handleKeyPress(event: any, id: number) {
+    if (event.key === "Enter") {
+      handleCheck(id);
+    }
+  }
   return (
     <TableContainer>
       <Table variant='striped' colorScheme='blue'>
@@ -101,7 +109,6 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
             <Th>Manufacture Price</Th>
             <Th>Store Price</Th>
             <Th>Available Stocks</Th>
- 
           </Tr>
         </Thead>
         <Tbody>
@@ -109,12 +116,12 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
             paginatedData?.map((data: Inventory, i: number) => {
               return (
                 <Tr key={i}>
-                  <Td>{data.products.name}</Td>
+                  <Td>{data.quantity - data.ordered_quantity}</Td>
                   <Td>
                     <NumberInput
-                    key={data.id}
-                    onChange={event => handleInputChange(event, i)}
-                    value={inputValues[i]}
+                      key={data.id}
+                      onChange={(event) => handleInputChange(event, i)}
+                      value={inputValues[i]}
                     >
                       <NumberInputField />
                       <NumberInputStepper>
@@ -122,29 +129,58 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                         <NumberDecrementStepper />
                       </NumberInputStepper>
                     </NumberInput>
-                    {(data.quantity-data.ordered_quantity === 0 && errorIndex === i || data.quantity-data.ordered_quantity < inputValues[i] ) ? <Text color='tomato'> No stocks!</Text> : (errorMessage && errorIndex) === i ?? <Text color='tomato'> {errorMessage}!</Text>} 
-
+                    {(() => {
+                      if (
+                        (data.quantity - data.ordered_quantity === 0 &&
+                          errorIndex === i) ||
+                        data.quantity - data.ordered_quantity <
+                          inputValues[i] ||
+                        inputValues[i] <= 0
+                      ) {
+                        return (
+                          <Text color='tomato'>
+                            {errorMessage !== '' ? errorMessage : 'No stocks'}
+                          </Text>
+                        )
+                      } else if (errorMessage && errorIndex === i) {
+                        return <Text color='tomato'>{errorMessage}!</Text>
+                      }
+                    })()}
                   </Td>
-
                   <Td>
                     {' '}
                     <Checkbox
                       key={data.id}
                       isChecked={checkedItems.includes(data.id)}
                       onChange={() => handleCheck(data.id)}
+                      onKeyPress={(event) => handleKeyPress(event, data.id)}
                     >
-                      { data.is_vatable ? (data.srp_price / 1.12 * (20 / 100)).toFixed(2) : (data.srp_price  * (20 / 100)).toFixed(2)}
+                      {data.is_vatable
+                        ? ((data.srp_price / 1.12) * (20 / 100)).toFixed(2)
+                        : (data.srp_price * (20 / 100)).toFixed(2)}
                     </Checkbox>
                   </Td>
-                  <Td>{data.is_vatable ?   <Badge colorScheme='green'>With VAT</Badge> : <Badge colorScheme='red'>Non VAT</Badge>}</Td>
-
+                  <Td>
+                    {data.is_vatable ? (
+                      <Badge colorScheme='green'>With VAT</Badge>
+                    ) : (
+                      <Badge colorScheme='red'>Non VAT</Badge>
+                    )}
+                  </Td>
 
                   <Td>
                     <Button
                       colorScheme='blue'
-                      isDisabled={data.quantity-data.ordered_quantity < inputValues[i]}
+                      isDisabled={
+                        data.quantity - data.ordered_quantity < inputValues[i]
+                      }
                       onClick={() =>
-                        handleAdd(data, checkedItems.includes(data.id), parseInt(inputValues[i]), i)
+                        handleAdd(
+                          data,
+                          checkedItems.includes(data.id),
+                          parseInt(inputValues[i]),
+                          i
+                        )
                       }
                     >
                       Add
@@ -154,8 +190,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                   <Td>{data.products.generic_name}</Td>
                   <Td>{`₱ ${data.manufacture_price}`}</Td>
                   <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
-                  <Td>{data.quantity -data.ordered_quantity}</Td>
-         
+                  <Td>{data.quantity - data.ordered_quantity}</Td>
                 </Tr>
               )
             })}
