@@ -92,15 +92,16 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
         <Thead>
           <Tr>
             <Th>Product Name</Th>
+            <Th>Quantity</Th>
+            <Th>Discount</Th>
+            <Th>VAT</Th>
+            <Th>Action</Th>
             <Th>Type</Th>
             <Th>Generic name</Th>
             <Th>Manufacture Price</Th>
             <Th>Store Price</Th>
             <Th>Available Stocks</Th>
-            <Th>Quantity</Th>
-            <Th>Discount</Th>
-            <Th>VAT</Th>
-            <Th>Action</Th>
+ 
           </Tr>
         </Thead>
         <Tbody>
@@ -109,11 +110,6 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
               return (
                 <Tr key={i}>
                   <Td>{data.products.name}</Td>
-                  <Td>{data.products.category}</Td>
-                  <Td>{data.products.generic_name}</Td>
-                  <Td>{`₱ ${data.manufacture_price}`}</Td>
-                  <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
-                  <Td>{data.quantity -data.ordered_quantity}</Td>
                   <Td>
                     <NumberInput
                     key={data.id}
@@ -154,6 +150,12 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                       Add
                     </Button>
                   </Td>
+                  <Td>{data.products.category}</Td>
+                  <Td>{data.products.generic_name}</Td>
+                  <Td>{`₱ ${data.manufacture_price}`}</Td>
+                  <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
+                  <Td>{data.quantity -data.ordered_quantity}</Td>
+         
                 </Tr>
               )
             })}
