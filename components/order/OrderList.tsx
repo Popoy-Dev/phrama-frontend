@@ -89,8 +89,8 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
   }
   const paginatedData = paginate(inventoryData, 10, currentPage)
   function handleKeyPress(event: any, id: number) {
-    if (event.key === "Enter") {
-      handleCheck(id);
+    if (event.key === 'Enter') {
+      handleCheck(id)
     }
   }
   return (
@@ -100,6 +100,7 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
         <Thead>
           <Tr>
             <Th>Product Name</Th>
+            <Th>Store Price</Th>
             <Th>Quantity</Th>
             <Th>Discount</Th>
             <Th>VAT</Th>
@@ -107,7 +108,6 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
             <Th>Type</Th>
             <Th>Generic name</Th>
             <Th>Manufacture Price</Th>
-            <Th>Store Price</Th>
             <Th>Available Stocks</Th>
           </Tr>
         </Thead>
@@ -116,7 +116,8 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
             paginatedData?.map((data: Inventory, i: number) => {
               return (
                 <Tr key={i}>
-                  <Td>{data.quantity - data.ordered_quantity}</Td>
+                  <Td>{data.products.name}</Td>
+                  <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
                   <Td>
                     <NumberInput
                       key={data.id}
@@ -189,7 +190,6 @@ const OrderList = ({ inventoryData, handleAddOrder }: any) => {
                   <Td>{data.products.category}</Td>
                   <Td>{data.products.generic_name}</Td>
                   <Td>{`₱ ${data.manufacture_price}`}</Td>
-                  <Td>{`₱ ${data.srp_price.toFixed(2)}`}</Td>
                   <Td>{data.quantity - data.ordered_quantity}</Td>
                 </Tr>
               )
